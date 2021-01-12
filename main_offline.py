@@ -80,4 +80,7 @@ def main_loop():
     game()
     while human_to_bool(italic("Voulez-vous rejouer ?\n")): game()
 
+if __name__ == "__main__":
+    main_loop()
+
 
