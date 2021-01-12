@@ -11,7 +11,7 @@
 ||                                                    By Alexis Rossfelder      ||
 ||                                                                              ||
 ||  Votre but est de former le plus long mot possible avec %%letters%% lettres fournies. ||
-||Vous gagnez si votre mot est plus long que celui de votre adversaire.         ||
+||     Vous gagnez si votre mot est plus long que celui de votre adversaire.    ||
 ||                                                                              ||
 ||                          Bonne chance !!!                                    ||
 |+==============================================================================+|
