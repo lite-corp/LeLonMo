@@ -125,7 +125,7 @@ class MenuComponent(object):
 
     @staticmethod
     def _alignment_char(align):
-        if colors.colors.strip_color(str(align).strip()) == 'center':
+        if str(align).strip() == 'center':
             return '^'
         elif str(align).strip() == 'right':
             return '>'
