@@ -1,6 +1,7 @@
 import textwrap
 
 from consolemenu.format import MenuStyle
+import colors.colors
 
 
 class Dimension(object):
@@ -124,7 +125,7 @@ class MenuComponent(object):
 
     @staticmethod
     def _alignment_char(align):
-        if str(align).strip() == 'center':
+        if colors.colors.strip_color(str(align).strip()) == 'center':
             return '^'
         elif str(align).strip() == 'right':
             return '>'
@@ -134,9 +135,10 @@ class MenuComponent(object):
     def _format_content(self, content='', align='left'):
         return '{lp}{text:{al}{width}}{rp}'.format(lp=' ' * self.padding.left,
                                                    rp=' ' * self.padding.right,
-                                                   text=content, al=self._alignment_char(align),
+                                                   text=content, al=self._alignment_char(
+                                                       align),
                                                    width=(self.calculate_border_width() - self.padding.left -
-                                                          self.padding.right - 2))
+                                                          self.padding.right - 2 - colors.colors.ansilen(content)+len(content)))
 
 
 class MenuHeader(MenuComponent):
