@@ -1,7 +1,7 @@
 import letter_generator
 import word_check
 from getpass import getpass
-from default_settings import *
+from persist_data import *
 from colors.colors import *
 
 score_j1 = 0
@@ -45,7 +45,7 @@ def intro():
         
 
 
-def main():
+def game():
     global score_j1
     global score_j2
 
@@ -75,9 +75,9 @@ def main():
     score_j2 += len(j2)
     print(f"{name_j1} a {score_j1} points et {name_j2} en a {score_j2}. ")
 
-if __name__ == "__main__":
+def main_loop():
     intro()
-    main()
-    while human_to_bool(italic("Voulez-vous rejouer ?\n")): main()
+    game()
+    while human_to_bool(italic("Voulez-vous rejouer ?\n")): game()
 
 

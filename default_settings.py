@@ -28,11 +28,11 @@ SKIP_INTRO = False
 ###########################
 
 
-
+version = "0.1-dev"
 
 ##############################################
 ########## DEBUG RUN DO NOT EDIT #############
 ##############################################
 if __name__ == "__main__":
-    import main
-    main.main()
+    import main_offline
+    main_offline.game()
