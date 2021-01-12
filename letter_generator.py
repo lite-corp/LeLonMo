@@ -1,5 +1,5 @@
 from random import randint as ri
-from settings import *
+from default_settings import *
 
 
 def generate(letter_range=(97, 122), lenght=7, language="fr"):

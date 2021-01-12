@@ -1,5 +1,5 @@
 import unicodedata
-from settings import *
+from default_settings import *
 
 def remove_accents(input_str):
     nkfd_form = unicodedata.normalize('NFKD', input_str)

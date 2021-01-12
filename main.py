@@ -1,7 +1,7 @@
 import letter_generator
 import word_check
 from getpass import getpass
-from settings import *
+from default_settings import *
 from colors.colors import *
 
 score_j1 = 0
