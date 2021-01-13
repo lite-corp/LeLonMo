@@ -6,6 +6,9 @@ import main_online
 from colors.colors import *
 from persist_data import *
 
+def bye():
+    print("Au revoir")
+    exit()
 
 menu_format = MenuFormatBuilder().set_border_style_type(MenuBorderStyleType.HEAVY_BORDER) \
     .set_prompt(">> ") \
@@ -17,9 +20,10 @@ menu_format = MenuFormatBuilder().set_border_style_type(MenuBorderStyleType.HEAV
 
 select = ["Mode Local", "Mode en Ligne", "Options", "Quitter"]
 link = [main_offline.main_loop, main_online.main_online,
-        main_online.main_online, exit]
+        main_online.main_online, bye]
 menu = SelectionMenu(select, f"{blue('L')}{yellow('e')}{blue('L')}{magenta('o')}{cyan('n')}{green('M')}{magenta('o')} {red(f'v{version}')}", subtitle="Le jeu du long mot",
                 prologue_text="Choisisser votre mode de jeu :", show_exit_option=False, formatter=menu_format)
-menu.show()
-menu.join()
-link[menu.selected_option]()
+while True:
+    menu.show()
+    menu.join()
+    link[menu.selected_option]()
