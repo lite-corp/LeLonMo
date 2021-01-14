@@ -1,3 +1,4 @@
 /LeLonMo.zip
 *.pyc
 .vscode/tasks.json
+.save.json
