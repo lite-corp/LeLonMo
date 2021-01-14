@@ -5,6 +5,23 @@ from default_settings import *
 
 save_file = ".\\.save.json"
 
+default_data = dict(
+    version="0.2-dev",
+    settings=dict(
+        USE_INPROVED_GENERATOR=True,
+        GAME_LANGUAGE="fr"
+    ),
+    game=dict(
+        LETTER_NUMBER=7,
+        DICT_LANGUAGE="fr"
+    ),
+    debug=dict(
+        ACCEPT_ANY_WORD=False,
+        ACCEPT_ANY_LETTER=False,
+        DEBUG_WORDS=False,
+        SKIP_INTRO=False
+    )
+)
 
 def get_save(f):
     global data
@@ -17,19 +34,8 @@ def get_save(f):
             raise ValueError(
                 "Invalid JSON data\nPlease do not edit setting file without knowing what you are doing")
     else:
-        default_data = dict(
-            version=version,
-            settings=dict(
-                USE_INPROVED_GENERATOR=USE_INPROVED_GENERATOR,
-                GAME_LANGUAGE=GAME_LANGUAGE
-                ),
-            game=dict(
-                LETTER_NUMBER=LETTER_NUMBER,
-                DICT_LANGUAGE=DICT_LANGUAGE
-                )
-            )
-        f = open(save_file, "w+")
-        f.write(json.dumps(default_data))
+        data_file = open(f, "w+")
+        data_file.write(json.dumps(default_data))
         return default_data
 
 
