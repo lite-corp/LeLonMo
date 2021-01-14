@@ -36,7 +36,7 @@ def is_string(obj):
     """
     Is the given object a string?
     """
-    return isinstance(obj, string_types)
+    return isinstance(obj, str)
 
 
 def _join(*values):
