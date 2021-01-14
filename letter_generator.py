@@ -2,7 +2,7 @@ from random import randint as ri
 from persist_data import *
 
 
-def generate(letter_range=(97, 122), lenght=7, language="fr"):
+def generate(letter_range=(97, 122), lenght=7, language=DICT_LANGUAGE):
     if lenght > 20:
         raise ValueError(f"Trop de lettres ({lenght})")
     if USE_INPROVED_GENERATOR:
