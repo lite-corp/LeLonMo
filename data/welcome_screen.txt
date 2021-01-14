@@ -13,6 +13,7 @@
 ┃┃  Votre but est de former le plus long mot possible avec %%letters%% lettres fournies. ┃┃
 ┃┃     Vous gagnez si votre mot est plus long que celui de votre adversaire.    ┃┃
 ┃┃                                                                              ┃┃
+┃┃            Il est normal de ne pas voir les lettres que vous écrivez         ┃┃
 ┃┃                          Bonne chance !!!                                    ┃┃
 ┃┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
