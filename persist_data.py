@@ -23,12 +23,12 @@ default_data = dict(
     )
 )
 
-def get_save(f):
-    global data
+
+def get_save(f=save_file):
     if os.path.exists(f):
-        f = open(save_file)
+        data_file = open(f)
         try:
-            data = json.load(f)
+            data = json.load(data_file)
             return data
         except:
             raise ValueError(
@@ -39,19 +39,36 @@ def get_save(f):
         return default_data
 
 
-settings = get_save(save_file)
-if settings["version"] != version:
-    print("Updated from another version, please remove {file} if you encouter any problem"
-          .format(file=os.path.abspath(save_file))
-          )
+def update_variables(f=save_file):
 
-try:
-    LETTER_NUMBER = settings["game"]["LETTER_NUMBER"]
-    DICT_LANGUAGE = settings["game"]["DICT_LANGUAGE"]
-    USE_INPROVED_GENERATOR = settings["settings"]["USE_INPROVED_GENERATOR"]
-    GAME_LANGUAGE = settings["settings"]["GAME_LANGUAGE"]
-except KeyError:
-    print("Error while reading settings, rolling back to default")
-    os.remove(save_file)
-    get_save(save_file)
-    print("Please restart the game for the changes to take effect")
+    global LETTER_NUMBER
+    global DICT_LANGUAGE
+    global USE_INPROVED_GENERATOR
+    global GAME_LANGUAGE
+
+    settings = get_save()
+    if settings["version"] != version:
+        print("Updated from another version, please remove {file} if you encouter any problem"
+              .format(file=os.path.abspath(f))
+              )
+
+    try:
+        LETTER_NUMBER = settings["game"]["LETTER_NUMBER"]
+        DICT_LANGUAGE = settings["game"]["DICT_LANGUAGE"]
+        USE_INPROVED_GENERATOR = settings["settings"]["USE_INPROVED_GENERATOR"]
+        GAME_LANGUAGE = settings["settings"]["GAME_LANGUAGE"]
+    except KeyError:
+        print("Error while reading settings, rolling back to default")
+        os.remove(f)
+        get_save(f)
+        print("Please restart the game for the changes to take effect")
+
+
+def write(key, value, f=save_file):
+    data = get_save(f)
+    data[key] = value
+    json.dump(data, open(f, "w"))
+    update_variables()
+
+
+update_variables()
