@@ -17,84 +17,70 @@ default_data = dict(
         ACCEPT_ANY_WORD=False,
         ACCEPT_ANY_LETTER=False,
         DEBUG_WORDS=False,
-        SKIP_INTRO=False,
-        TEST_VALUE=5
+        SKIP_INTRO=False
     )
 )
 
+DATA = dict()
 
-def get_save(f=save_file):
-    if os.path.exists(f):
-        data_file = open(f)
-        try:
-            data = json.load(data_file)
-            return data
-        except:
-            raise ValueError(
-                "Invalid JSON data\nPlease do not edit setting file without knowing what you are doing")
+
+def _create_database(f=save_file):
+    file = open(save_file, "w+")
+    json.dump(default_data, file)
+    file.close()
+
+
+def _fill_data(f=save_file):
+    global DATA
+    file = open(save_file, "r")
+    DATA = json.load(file)
+    file.close()
+
+def _repair_data():
+    global DATA
+
+    for key1 in default_data.keys():
+        if not DATA.get(key1):
+            DATA[key1] = default_data[key1]
+            print(key1, "missing")
+            continue
+        elif key1 == "version":
+            if DATA[key1] != default_data[key1]:
+                print("Version changed")
+                DATA[key1] = default_data[key1]
+        else:
+            for key2 in default_data[key1].keys():
+                if not DATA[key1].get(key2):
+                    DATA[key1][key2] = default_data[key1][key2]
+                    print(key1, key2, "missing")
+                    continue
+
+def _apply_changes(f=save_file, DATA=DATA):
+    file=open(f, "w")
+    json.dump(DATA, f)
+    file.close()
+
+def update_key(key, value, master=str()):
+    global DATA
+
+    if not master:
+        working_dict = DATA
     else:
-        data_file = open(f, "w+")
-        data_file.write(json.dumps(default_data))
-        return default_data
+        working_dict = DATA[master]
 
+    working_dict[key] = value
+    if master:
+        DATA[master] = working_dict
 
-def update_variables(f=save_file):
+    _apply_changes()
 
-    global LETTER_NUMBER
-    global DICT_LANGUAGE
-    global USE_INPROVED_GENERATOR
-    global GAME_LANGUAGE
-    global ACCEPT_ANY_WORD
-    global ACCEPT_ANY_LETTER
-    global DEBUG_WORDS
-    global SKIP_INTRO
-    global TEST_VALUE
-    global version
+def update_data():
+    global DATA
 
-    settings = get_save()
-    if settings["version"] != default_data["version"]:
-        update_settings()
-        print("Updated from another version, please remove {file} if you encouter any problem"
-              .format(file=os.path.abspath(f))
-              )
+    if not os.path.exists(save_file):
+        _create_database()
+    
+    _fill_data()
+    _repair_data()
 
-    try:
-        LETTER_NUMBER = settings["game"]["LETTER_NUMBER"]
-        DICT_LANGUAGE = settings["game"]["DICT_LANGUAGE"]
-        USE_INPROVED_GENERATOR = settings["settings"]["USE_INPROVED_GENERATOR"]
-        GAME_LANGUAGE = settings["settings"]["GAME_LANGUAGE"]
-        ACCEPT_ANY_WORD = settings["debug"]["ACCEPT_ANY_WORD"]
-        ACCEPT_ANY_LETTER = settings["debug"]["ACCEPT_ANY_LETTER"]
-        DEBUG_WORDS = settings["debug"]["DEBUG_WORDS"]
-        SKIP_INTRO = settings["debug"]["SKIP_INTRO"]
-        TEST_VALUE = settings["debug"]["TEST_VALUE"]
-        version = settings["version"]
-    except KeyError:
-        update_settings()
-
-def update_settings(f=save_file, default=default_data):
-    try:
-        data = get_save(f)
-        for i in default.keys():
-            if i == "version":
-                data[i] = default[i]
-                continue
-            if not data.get(i):
-                data[i] = default[i]
-            for j in default[i]:
-                if not data.get(i).get(j):
-                    data[i][j]=default[i][j]
-    except:
-        print("Error while updating settings, rolling back to default")
-        os.remove(f)
-        get_save(f)
-        print("Please restart the game for the changes to take effect")
-
-def write(key, value, f=save_file):
-    data = get_save(f)
-    data[key] = value
-    json.dump(data, open(f, "w"))
-    update_variables(f)
-
-
-update_variables()
+update_data()
