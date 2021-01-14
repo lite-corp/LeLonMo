@@ -40,7 +40,7 @@ def _repair_data():
     global DATA
 
     for key1 in default_data.keys():
-        if not DATA.get(key1):
+        if not key1 in DATA:
             DATA[key1] = default_data[key1]
             print(key1, "missing")
             continue
@@ -50,14 +50,14 @@ def _repair_data():
                 DATA[key1] = default_data[key1]
         else:
             for key2 in default_data[key1].keys():
-                if not DATA[key1].get(key2):
+                if not key2 in DATA[key1]:
                     DATA[key1][key2] = default_data[key1][key2]
                     print(key1, key2, "missing")
                     continue
 
 def _apply_changes(f=save_file, DATA=DATA):
     file=open(f, "w")
-    json.dump(DATA, f)
+    json.dump(DATA, file)
     file.close()
 
 def update_key(key, value, master=str()):
@@ -82,5 +82,6 @@ def update_data():
     
     _fill_data()
     _repair_data()
+    _apply_changes(f=save_file, DATA=DATA)
 
 update_data()
