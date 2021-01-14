@@ -7,7 +7,8 @@ default_data = dict(
     version="0.2-dev",
     settings=dict(
         USE_INPROVED_GENERATOR=True,
-        GAME_LANGUAGE="fr"
+        GAME_LANGUAGE="fr",
+        USE_COLORS=True
     ),
     game=dict(
         LETTER_NUMBER=7,
