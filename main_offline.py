@@ -22,9 +22,10 @@ def intro():
     global name_j1
     global name_j2
     if not SKIP_INTRO:
-        letters = str(LETTER_NUMBER) if len(str(LETTER_NUMBER)) > 1 else str(LETTER_NUMBER) + " "
-        intro_txt = open("data\\welcome_screen.txt", "r").read().replace(
-            "%%letters%%", bold(letters))
+        letters = str(LETTER_NUMBER) if len(
+            str(LETTER_NUMBER)) > 1 else str(LETTER_NUMBER) + " "
+        intro_txt = open("data\\welcome_screen.txt", "rb").read().decode("utf-8")\
+            .replace("%%letters%%", bold(letters))
         intro_ln = intro_txt.splitlines(keepends=False)
         for i, l in enumerate(intro_ln):
             if i in range(4,9):
