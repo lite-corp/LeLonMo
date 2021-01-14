@@ -1,5 +1,5 @@
 import unicodedata
-from persist_data import *
+from persist_data import DATA as settings
 
 def remove_accents(input_str):
     nkfd_form = unicodedata.normalize('NFKD', input_str)
@@ -7,7 +7,7 @@ def remove_accents(input_str):
 
 
 def check_dict(word, language="fr"):
-    if ACCEPT_ANY_WORD:
+    if settings["debug"]["ACCEPT_ANY_WORD"]:
         return True
     word = word.lower()
     for w in open(f"data/dict/dict_{language}.txt", "r", encoding="UTF-8").readlines():
@@ -17,7 +17,7 @@ def check_dict(word, language="fr"):
 
 
 def check_list(word, letters):
-    if ACCEPT_ANY_LETTER:
+    if settings["debug"]["ACCEPT_ANY_LETTER"]:
         return True
     for l in remove_accents(word):
         if not l.lower() in letters:

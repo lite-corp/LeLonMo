@@ -18,6 +18,7 @@ from __future__ import absolute_import, print_function
 import re
 import sys
 from .csscolors import parse_rgb, css_colors
+from persist_data import DATA as settings
 
 _PY2 = sys.version_info[0] == 2
 
@@ -93,22 +94,25 @@ def color(s, fg=None, bg=None, style=None):
     :returns: Formatted string.
     :rtype: str (or unicode in Python 2, if s is unicode)
     """
-    codes = []
+    if settings["settings"]["USE_COLORS"]:
+        codes = []
 
-    if fg:
-        codes.append(_color_code(fg, 30))
-    if bg:
-        codes.append(_color_code(bg, 40))
-    if style:
-        for style_part in style.split('+'):
-            if style_part in STYLES:
-                codes.append(STYLES.index(style_part))
-            else:
-                raise ValueError('Invalid style "%s"' % style_part)
+        if fg:
+            codes.append(_color_code(fg, 30))
+        if bg:
+            codes.append(_color_code(bg, 40))
+        if style:
+            for style_part in style.split('+'):
+                if style_part in STYLES:
+                    codes.append(STYLES.index(style_part))
+                else:
+                    raise ValueError('Invalid style "%s"' % style_part)
 
-    if codes:
-        template = '\x1b[{0}m{1}\x1b[0m'
-        return template.format(_join(*codes), s)
+        if codes:
+            template = '\x1b[{0}m{1}\x1b[0m'
+            return template.format(_join(*codes), s)
+        else:
+            return s
     else:
         return s
 
