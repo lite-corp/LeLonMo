@@ -36,6 +36,7 @@ def _fill_data(f=save_file):
     DATA = json.load(file)
     file.close()
 
+
 def _repair_data():
     global DATA
 
@@ -55,10 +56,12 @@ def _repair_data():
                     print(key1, key2, "missing")
                     continue
 
+
 def _apply_changes(f=save_file, DATA=DATA):
-    file=open(f, "w")
+    file = open(f, "w")
     json.dump(DATA, file)
     file.close()
+
 
 def update_key(key, value, master=str()):
     global DATA
@@ -71,17 +74,21 @@ def update_key(key, value, master=str()):
     working_dict[key] = value
     if master:
         DATA[master] = working_dict
+    else:
+        DATA = working_dict
 
     _apply_changes()
+
 
 def update_data():
     global DATA
 
     if not os.path.exists(save_file):
         _create_database()
-    
+
     _fill_data()
     _repair_data()
     _apply_changes(f=save_file, DATA=DATA)
+
 
 update_data()
