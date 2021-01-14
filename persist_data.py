@@ -19,11 +19,15 @@ def get_save(f):
     else:
         default_data = dict(
             version=version,
-            LETTER_NUMBER=LETTER_NUMBER,
-            DICT_LANGUAGE=DICT_LANGUAGE,
-            USE_INPROVED_GENERATOR=USE_INPROVED_GENERATOR,
-            GAME_LANGUAGE=GAME_LANGUAGE
-        )
+            settings=dict(
+                USE_INPROVED_GENERATOR=USE_INPROVED_GENERATOR,
+                GAME_LANGUAGE=GAME_LANGUAGE
+                ),
+            game=dict(
+                LETTER_NUMBER=LETTER_NUMBER,
+                DICT_LANGUAGE=DICT_LANGUAGE
+                )
+            )
         f = open(save_file, "w+")
         f.write(json.dumps(default_data))
         return default_data
@@ -36,10 +40,10 @@ if settings["version"] != version:
           )
 
 try:
-    LETTER_NUMBER = settings["LETTER_NUMBER"]
-    DICT_LANGUAGE = settings["DICT_LANGUAGE"]
-    USE_INPROVED_GENERATOR = settings["USE_INPROVED_GENERATOR"]
-    GAME_LANGUAGE = settings["GAME_LANGUAGE"]
+    LETTER_NUMBER = settings["game"]["LETTER_NUMBER"]
+    DICT_LANGUAGE = settings["game"]["DICT_LANGUAGE"]
+    USE_INPROVED_GENERATOR = settings["settings"]["USE_INPROVED_GENERATOR"]
+    GAME_LANGUAGE = settings["settings"]["GAME_LANGUAGE"]
 except KeyError:
     print("Error while reading settings, rolling back to default")
     os.remove(save_file)
