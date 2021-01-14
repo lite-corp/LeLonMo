@@ -4,7 +4,10 @@
 LETTER_NUMBER = 7
 
 # Langue du dictionnaire
-LANGUAGE = "fr"
+DICT_LANGUAGE = "fr"
+
+# Langue du jeu
+GAME_LANGUAGE = "fr"
 
 ###########################
 
