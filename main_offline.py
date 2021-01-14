@@ -38,7 +38,7 @@ def intro():
                     .replace("M", green("M"))
             if i == 10:
                 l = l.replace("By Alexis Rossfelder",
-                            red("By Alexis Rossfelder"))
+                              red("By Alexis Rossfelder"))
             print(l)
 
     name_j1 = input(cyan("Joueur 1, veuiller entrer votre nom : "))
@@ -73,13 +73,13 @@ def game():
     print(f"Les mots: \nJ1 : {cyan(j1)}\nJ2 : {magenta(j2)}")
     if len(j1) > len(j2):
         print(cyan(f"{name_j1} a gagné"))
+        score_j1 += 1
     elif len(j2) > len(j1):
         print(magenta(f"{name_j2} a gagné"))
+        score_j2 += 1
     else:
         print(yellow("Egalité parfaite"))
 
-    score_j1 += len(j1)
-    score_j2 += len(j2)
     print(f"{name_j1} a {score_j1} points et {name_j2} en a {score_j2}. ")
 
 
