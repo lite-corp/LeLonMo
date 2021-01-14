@@ -1,7 +1,7 @@
 import letter_generator
 import word_check
 from getpass import getpass
-from persist_data import *
+from persist_data import DATA as settings
 from colors.colors import *
 
 score_j1 = 0
@@ -23,9 +23,9 @@ def human_to_bool(q: str):
 def intro():
     global name_j1
     global name_j2
-    if not SKIP_INTRO:
-        letters = str(LETTER_NUMBER) if len(
-            str(LETTER_NUMBER)) > 1 else str(LETTER_NUMBER) + " "
+    if not settings["debug"]["SKIP_INTRO"]:
+        letters = str(settings["game"]["LETTER_NUMBER"]) if len(
+            str(settings["game"]["LETTER_NUMBER"])) > 1 else str(settings["game"]["LETTER_NUMBER"]) + " "
         intro_txt = open("data\\welcome_screen.txt", "rb").read().decode("utf-8")\
             .replace("%%letters%%", bold(letters))
         intro_ln = intro_txt.splitlines(keepends=False)
@@ -52,7 +52,7 @@ def game():
     global score_j2
 
     letters = letter_generator.generate(
-        (97, 123), LETTER_NUMBER, DICT_LANGUAGE)
+        (97, 123), settings["game"]["LETTER_NUMBER"], settings["game"]["DICT_LANGUAGE"])
     print("Les lettres avec lesquelles vous devez composer votre mot sont ")
 
     for i in letters:
@@ -60,13 +60,13 @@ def game():
     print()
     j1 = getpass(
         f"{name_j1}, entrez votre mot à l'abris des regards indiscrets : ")
-    while not (word_check.check_dict(j1, DICT_LANGUAGE) and word_check.check_list(j1, letters)):
+    while not (word_check.check_dict(j1, settings["game"]["DICT_LANGUAGE"]) and word_check.check_list(j1, letters)):
         j1 = getpass(
             red("Votre mot n'est pas valide, veuillez en entrer un autre : "))
 
     j2 = getpass(
         f"{name_j2}, entrez votre mot à l'abris des regards indiscrets : ")
-    while not (word_check.check_dict(j2, DICT_LANGUAGE) and word_check.check_list(j2, letters)):
+    while not (word_check.check_dict(j2, settings["game"]["DICT_LANGUAGE"]) and word_check.check_list(j2, letters)):
         j2 = getpass(
             red("Votre mot n'est pas valide, veuillez en entrer un autre : "))
 

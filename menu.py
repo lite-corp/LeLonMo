@@ -4,8 +4,9 @@ from consolemenu.format import MenuBorderStyleType
 import main_offline
 import main_online
 from colors.colors import *
-from persist_data import *
+from persist_data import DATA as settings
 
+version = settings["version"]
 def bye():
     print("Au revoir")
     exit()
