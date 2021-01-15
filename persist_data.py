@@ -4,7 +4,7 @@ import os
 save_file = ".\\.save.json"
 
 default_data = dict(
-    version="0.2-dev",
+    version="0.3-dev",
     settings=dict(
         USE_INPROVED_GENERATOR=True,
         GAME_LANGUAGE="fr",
