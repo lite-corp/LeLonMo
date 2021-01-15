@@ -78,7 +78,7 @@ def update_key(key, value, master=str()):
     else:
         DATA = working_dict
 
-    _apply_changes()
+    _apply_changes(DATA=DATA)
 
 
 def update_data():
