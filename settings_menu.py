@@ -104,6 +104,10 @@ def main(c=(-1,-1,-1)):
             main_menu.start()
             main_menu.join()
             c3 = main_menu.selected_option
+            master = settings_link[c1][0]
+            key = settings_link[c1][1][c2][0]
+            value = settings_link[c1][1][c2][1][c3]
+            update_key(master=master, key=key, value=value)
     except IndexError:
         if c3!=-1:
             c3=-1
@@ -115,10 +119,6 @@ def main(c=(-1,-1,-1)):
             menu.main()
         main(c=(c1,c2,c3))
 
-    master = settings_link[c1][0]
-    key = settings_link[c1][1][c2][0]
-    value = settings_link[c1][1][c2][1][c3]
-    update_key(master=master, key=key, value=value)
 
 
 if __name__ == "__main__":
