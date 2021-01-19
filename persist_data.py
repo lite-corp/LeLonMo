@@ -1,10 +1,15 @@
 import json
 import os
+import uuid
 
 save_file = ".\\.save.json"
 
 default_data = dict(
     version="0.3-dev",
+    online=dict(
+        uuid=str(uuid.uuid4()),
+        name=""
+    ),
     settings=dict(
         USE_INPROVED_GENERATOR=True,
         GAME_LANGUAGE="fr",
@@ -18,7 +23,8 @@ default_data = dict(
         ACCEPT_ANY_WORD=False,
         ACCEPT_ANY_LETTER=False,
         DEBUG_WORDS=False,
-        SKIP_INTRO=False
+        SKIP_INTRO=False,
+        RANDOMIZE_UUID=True
     )
 )
 
@@ -56,6 +62,10 @@ def _repair_data():
                     DATA[key1][key2] = default_data[key1][key2]
                     print(key1, key2, "missing")
                     continue
+                else:
+                    if DATA[key1][key2]=="" and not default_data[key1][key2]=="":
+                        DATA[key1][key2] = default_data[key1][key2]
+                        print("Reseting", key2)
 
 
 def _apply_changes(f=save_file, DATA=DATA):
