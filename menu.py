@@ -1,4 +1,3 @@
-from main_online import main_online
 from consolemenu import SelectionMenu, MenuFormatBuilder
 from consolemenu.format import MenuBorderStyleType
 import main_offline
@@ -39,3 +38,6 @@ def main():
         menu.show()
         menu.join()
         link[menu.selected_option]()
+
+if __name__ == "__main__":
+    main()
