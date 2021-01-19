@@ -194,7 +194,7 @@ class MenuTextSection(MenuComponent):
         for x in range(0, self.padding.top):
             yield self.row()
         if self.text is not None and self.text != '':
-            for line in textwrap.wrap(self.text, width=self.calculate_content_width()):
+            for line in [textwrap.wrap(a, width=self.calculate_content_width(), replace_whitespace=False) for a in self.text.splitlines(False) if a]:
                 yield self.row(content=line, align=self.text_align)
         for x in range(0, self.padding.bottom):
             yield self.row()
