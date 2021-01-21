@@ -1,5 +1,5 @@
 /LeLonMo.zip
 *.pyc
-.vscode/tasks.json
+.vscode/
 .save.json
 format_dict.py
