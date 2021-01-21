@@ -5,10 +5,11 @@ import uuid
 save_file = ".\\.save.json"
 
 default_data = dict(
-    version="0.3-dev",
+    version="0.4-dev",
     online=dict(
         uuid=str(uuid.uuid4()),
-        name=""
+        name="",
+        update_speed=1
     ),
     settings=dict(
         USE_INPROVED_GENERATOR=True,
@@ -23,8 +24,7 @@ default_data = dict(
         ACCEPT_ANY_WORD=False,
         ACCEPT_ANY_LETTER=False,
         DEBUG_WORDS=False,
-        SKIP_INTRO=False,
-        RANDOMIZE_UUID=True
+        SKIP_INTRO=False
     )
 )
 

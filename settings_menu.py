@@ -41,6 +41,12 @@ def main(c=(-1, -1, -1)):
             ]],
             ["Reset UUID", [
                 "Confirm ?"
+            ]],
+            ["Status update rate", [
+                "Very Slow",
+                "Slow",
+                "Normal",
+                "Fast"
             ]]
         ]],
         ["Debug [Advanced]", [
@@ -71,7 +77,13 @@ def main(c=(-1, -1, -1)):
             ]]]],
         ["online", [
             ["name", [""]],
-            ["uuid", [""]]
+            ["uuid", [""]],
+            ["update_speed", [
+                5,
+                2,
+                1,
+                0.5
+            ]]
 
             ]],
         ["debug", [
