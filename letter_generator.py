@@ -1,5 +1,6 @@
 from random import randint as ri
 from persist_data import DATA as settings
+from word_check import remove_accents
 
 word_dict = open(f"data/dict/dict_{settings['game']['DICT_LANGUAGE']}.txt", "r", encoding='UTF-8').readlines()
 
@@ -16,7 +17,7 @@ def generate(letter_range=(97, 122), lenght=settings["game"]["LETTER_NUMBER"], l
                 valid=False
                 pass
             elif len(list(set(list(shuffle_word)))) == lenght:
-                return list(set(list(shuffle_word)))
+                return list(set(list(remove_accents(shuffle_word))))
             else:
                 r=list(set(list(shuffle_word)))
                 while len(r) < lenght:

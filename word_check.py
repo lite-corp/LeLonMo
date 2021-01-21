@@ -5,12 +5,15 @@ def remove_accents(input_str):
     nkfd_form = unicodedata.normalize('NFKD', input_str)
     return u"".join([c for c in nkfd_form if not unicodedata.combining(c)])
 
-
+word_list = None
 def check_dict(word, language="fr"):
+    global word_list
+    if word_list is None:
+        word_list=open(f"data/dict/dict_{language}.txt", "r", encoding="UTF-8").readlines()
     if settings["debug"]["ACCEPT_ANY_WORD"]:
         return True
     word = word.lower()
-    for w in open(f"data/dict/dict_{language}.txt", "r", encoding="UTF-8").readlines():
+    for w in word_list:
         if remove_accents(word) == remove_accents(w).replace("\n", ""):
             return True
     return False
