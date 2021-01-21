@@ -12,7 +12,7 @@ print("[I] Starting server...", end="\r")
 
 # Settings #
 LANGUAGE = "fr"
-PORT = 1111
+PORT = 11111
 
 
 class Game():

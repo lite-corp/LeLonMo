@@ -9,7 +9,7 @@ from time import sleep as wait
 from main_offline import human_to_bool
 
 
-PORT = 1111
+PORT = 11111
 
 def _send_data(data: str, host: str):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
