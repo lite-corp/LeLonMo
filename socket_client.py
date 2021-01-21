@@ -144,12 +144,13 @@ def main(host="localhost"):
     playerboard.enable = False
     wb.updatable = ""
 
-
     result_data = json.loads(_status(host)[7:])
     wb.clear()
     wb.add(
         "Results : \n Winner(s):\n * " + "\n  * ".join([i[0] + " : " + i[1] for i in result_data["best"]]) +
-        "\n\n Scores :\n * " + "\n  * ".join([i["name"] + " : " + i["word"] for i in result_data["players"]])
+        "\n\n Scores :\n * " +
+        "\n  * ".join([i["name"] + " : " + i["word"]
+                       for i in result_data["players"]])
     )
 
 
