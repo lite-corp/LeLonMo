@@ -5,7 +5,7 @@ import uuid
 save_file = ".\\.save.json"
 
 default_data = dict(
-    version="0.4-dev",
+    version="0.41-dev",
     online=dict(
         uuid=str(uuid.uuid4()),
         name="",
@@ -24,7 +24,8 @@ default_data = dict(
         ACCEPT_ANY_WORD=False,
         ACCEPT_ANY_LETTER=False,
         DEBUG_WORDS=False,
-        SKIP_INTRO=False
+        SKIP_INTRO=False,
+        RANDOMIZE_UUID=False
     )
 )
 
