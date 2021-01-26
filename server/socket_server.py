@@ -4,8 +4,8 @@ import re
 import threading
 import socket
 
-from . import letter_generator
-from . import word_check
+from server import letter_generator
+from server import word_check
 
 
 class Game():
@@ -121,7 +121,7 @@ class Game():
                 self._reset()
                 self.handle_data(data, client_socket, client_thread)
             elif msg.startswith("join%"):
-                self._answer("started", client_socket)
+                self._answer("wait%", client_socket)
 
 
 class ClientThread(threading.Thread):

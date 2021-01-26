@@ -34,11 +34,19 @@ def _wait_for_status(key, host):  # Wait for a specific status in order to conti
         wait(persist_data.DATA["online"]["update_speed"])
 
 
-def join_game(ip="localhost"):  # Initiate the connexion between client and server
+def join_game(wb, ip="localhost"):  # Initiate the connexion between client and server
     player_id = _send_data("join%" + persist_data.DATA["online"]["name"], ip)
     if player_id == b"started":
         print("The game you tried to join already started")
         exit()
+    elif player_id == b"wait%":
+        wb.add("Waiting for admin to restart the game ...")
+        while player_id == b"wait%":
+            wait(persist_data.DATA["online"]["update_speed"])
+            player_id = _send_data("join%" + persist_data.DATA["online"]["name"], ip)
+        return int(player_id)
+    elif player_id == b"":
+        print("Error while joining, try again later")
     else:
         return int(player_id)
 
@@ -113,7 +121,7 @@ def main(host="localhost"):
         wb.add("You are logged in as", persist_data.DATA["online"]["name"])
 
     wb.add(f"Joining the game hosted at {host}")
-    player_id = join_game(host)
+    player_id = join_game(host, wb)
     wb.add("Joined successfully")
     admin = False
     if player_id == 0:  # Player id =
