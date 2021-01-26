@@ -1,8 +1,9 @@
-from . import main_offline, main_online, settings_menu
-from .colors.colors import *
-from .consolemenu import MenuFormatBuilder, SelectionMenu
-from .consolemenu.format import MenuBorderStyleType
-from .persist_data import DATA as settings
+from lelonmo import main_offline, main_online, settings_menu
+from lelonmo.colors.colors import *
+from lelonmo.consolemenu import MenuFormatBuilder, SelectionMenu
+from lelonmo.consolemenu.format import MenuBorderStyleType
+from lelonmo.persist_data import DATA as settings
+import main_server
 
 version = settings["version"]
 
@@ -10,7 +11,6 @@ version = settings["version"]
 def bye():
     print("Au revoir")
     exit()
-
 
 menu_format = MenuFormatBuilder().set_border_style_type(MenuBorderStyleType.HEAVY_BORDER) \
     .set_prompt(">> ") \
@@ -22,9 +22,9 @@ menu_format = MenuFormatBuilder().set_border_style_type(MenuBorderStyleType.HEAV
 
 
 def main():
-    select = ["Mode Local", "Mode en Ligne", "Options", "Quitter"]
+    select = ["Mode Local", "Mode en Ligne", "Options", "Run the server", "Quitter"]
     link = [main_offline.main_loop, main_online.main_online,
-            settings_menu.main, bye]
+            settings_menu.main, main_server.main, bye]
     menu = SelectionMenu(
         select, f"{blue('L')}{yellow('e')}{blue('L')}{magenta('o')}{cyan('n')}{green('M')}{magenta('o')} {red(f'v{version}')}",
         subtitle="Le jeu du long mot",

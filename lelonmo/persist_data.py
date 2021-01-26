@@ -21,7 +21,8 @@ default_data = dict(
     ),
     game=dict(
         LETTER_NUMBER=7,
-        DICT_LANGUAGE="fr"
+        DICT_LANGUAGE="fr",
+        FIRST_RUN=True
     ),
     debug=dict(
         ACCEPT_ANY_WORD=False,
