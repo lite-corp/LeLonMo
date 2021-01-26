@@ -4,7 +4,7 @@ import uuid
 from os.path import expanduser
 
 home = expanduser("~")
-save_file = home + "\\.lelonmo_save.json"
+save_file = home + "\\.lelonmo_server_save.json"
 
 default_data = dict(
     version="0.42-dev",
