@@ -121,7 +121,7 @@ def main(host="localhost"):
         wb.add("You are logged in as", persist_data.DATA["online"]["name"])
 
     wb.add(f"Joining the game hosted at {host}")
-    player_id = join_game(host, wb)
+    player_id = join_game(wb, host)
     wb.add("Joined successfully")
     admin = False
     if player_id == 0:  # Player id =

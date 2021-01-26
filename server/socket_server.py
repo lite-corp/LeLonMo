@@ -9,10 +9,11 @@ from server import word_check
 
 
 class Game():
-    def __init__(self):
+    def __init__(self, LANGUAGE):
         self.state = 0
         print("[I] Waiting for admin ...")
         self.game_data = dict(players=list())
+        self.LANGUAGE = LANGUAGE
 
     def _new_player(self, uuid, name, ip, status="Connected"):
         self.game_data["players"].append(
@@ -93,7 +94,7 @@ class Game():
                         uuid)]["status"] = "Playing"
             elif not self._get_player_id(uuid) == -1:
                 if self.game_data["players"][self._get_player_id(uuid)]["status"] != "Finished":
-                    if word_check.check_dict(msg, LANGUAGE) and word_check.check_list(msg, self.game_data["letters"]):
+                    if word_check.check_dict(msg, self.LANGUAGE) and word_check.check_list(msg, self.game_data["letters"]):
                         self._answer("valid%", client_socket)
                         self.game_data["players"][self._get_player_id(
                             uuid)]["status"] = "Finished"
@@ -149,7 +150,7 @@ class MainThread(threading.Thread):
             self.tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.tcpsock.bind(("", self.port))
-            game = Game()
+            game = Game("fr")
             while True:
                 self.tcpsock.listen(10)
                 (self.clientsocket, (ip, port)) = self.tcpsock.accept()
