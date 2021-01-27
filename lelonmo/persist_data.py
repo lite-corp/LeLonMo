@@ -7,7 +7,7 @@ home = expanduser("~")
 save_file = home + "\\.lelonmo_save.json"
 
 default_data = dict(
-    version="0.42-dev",
+    version="0.4.5",
     online=dict(
         uuid=str(uuid.uuid4()),
         name="",
@@ -56,6 +56,7 @@ def _repair_data():
         if not key1 in DATA:
             DATA[key1] = default_data[key1]
             print(key1, "missing")
+            print("Ducon arrête de modifier ce que tu comprends pas")
             continue
         elif key1 == "version":
             if DATA[key1] != default_data[key1]:
