@@ -22,9 +22,14 @@ class Game():
         return len(self.game_data["players"])-1
 
     def _delete_player(self, player_id: int, admin: bool):
-        del self.game_data["players"]
-        if admin:
-            self.game_data["admin"] = self.game_data["players"][0]
+        if not player_id==-1:
+            print(f"[I] Player {self.game_data['players'][player_id]['name']} left.")
+            del self.game_data["players"][player_id]
+            if admin:
+                try:
+                    self.game_data["admin"] = self.game_data["players"][0]
+                except IndexError:
+                    self._reset()
 
     def _answer(self, msg, socket):
         socket.send(bytearray(str(msg), "utf-8"))
