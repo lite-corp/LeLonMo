@@ -22,7 +22,7 @@ class Game():
         return len(self.game_data["players"])-1
 
     def _delete_player(self, player_id: int, admin: bool):
-        del self.game_data["player"]
+        del self.game_data["players"]
         if admin:
             self.game_data["admin"] = self.game_data["player"][0]
 
@@ -49,6 +49,17 @@ class Game():
                 word=i["word"]
             ))
         return json.dumps(result)
+
+    def _get_points(self):
+        results = list()
+        for i in self.game_data["players"]:
+            if not results:
+                results.append(i)
+            for k, j in enumerate(results):
+                if len(i["word"]) > len(j["word"]):
+                    results.insert(k, i)
+        for i, j in enumerate(results):
+            print("j: ", json.dumps(j, indent=2))
 
     def _reset(self):
         self.state = 0
