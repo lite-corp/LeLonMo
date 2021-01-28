@@ -21,6 +21,11 @@ class Game():
         print("[I] Added player", name, "with uuid", uuid)
         return len(self.game_data["players"])-1
 
+    def _delete_player(self, player_id: int, admin: bool):
+        del self.game_data["player"]
+        if admin:
+            self.game_data["admin"] = self.game_data["player"][0]
+
     def _answer(self, msg, socket):
         socket.send(bytearray(str(msg), "utf-8"))
 
@@ -67,6 +72,8 @@ class Game():
                 )
             except:
                 self._answer("Nobody", client_socket)
+        elif msg == "leave%":
+            self._delete_player(self._get_player_id(uuid), admin)
         elif self.state == 0 and msg.startswith("join%"):
             self.state = 1
             self.game_data["admin"] = dict(
@@ -82,7 +89,7 @@ class Game():
                     letter_generator.generate(letter_range=(97, 122)))
                 self._answer('ok%', client_socket)
                 print("[I] Game started")
-            elif msg=="%start":
+            elif msg == "%start":
                 self._answer('unauthorized%', client_socket)
             else:
                 if self._get_player_id(uuid) == -1 and msg.startswith("join%"):
@@ -95,6 +102,8 @@ class Game():
                 if "" == self.game_data["players"][self._get_player_id(uuid)]["word"]:
                     self.game_data["players"][self._get_player_id(
                         uuid)]["status"] = "Playing"
+            elif msg.startswith("join%"):
+                self._answer("started", client_socket)
             elif not self._get_player_id(uuid) == -1:
                 if self.game_data["players"][self._get_player_id(uuid)]["status"] != "Finished":
                     if word_check.check_dict(msg, self.LANGUAGE) and word_check.check_list(msg, self.game_data["letters"]):
