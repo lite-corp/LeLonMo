@@ -16,7 +16,7 @@ def check_dict(word, language="fr"):
     global word_list
     if word_list is None:
         word_list = open(
-            f"{path}/data/dict/dict_{language}.txt", "r", encoding="UTF-8").readlines()
+            f"{path}/dict/dict_{language}.txt", "r", encoding="UTF-8").readlines()
     if settings["debug"]["ACCEPT_ANY_WORD"]:
         return True
     word = word.lower()
