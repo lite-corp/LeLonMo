@@ -7,7 +7,6 @@ os_name = platform.system()
 parser = argparse.ArgumentParser(description='Play LeLonMo')
 parser.add_argument("--server", help="Start the server", action="store_true")
 args = parser.parse_args()
-print(args.server)
 
 if args.server:
     print("[I] Starting server...", end="\r")
@@ -35,15 +34,13 @@ else:
     if os_name == "Windows":
         import lelonmo.persist_data as persist
         if platform.version().startswith("10."):
-            import lelonmo.menu as menu
             persist.update_key("FIRST_RUN", False, "game")
-            menu.main()
         elif persist.DATA["game"]['FIRST_RUN']:
             persist.update_key("FIRST_RUN", False, "game")
             input("Colors are not supported on this version of windows, and are disabled by default. ")
             persist.update_key("USE_COLORS", False, "settings")
-            import lelonmo.menu as menu
-            menu.main()
+        import lelonmo.menu as menu
+        menu.main()
     else:
         import lelonmo.menu as menu
         input(
