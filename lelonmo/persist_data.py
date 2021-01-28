@@ -45,7 +45,12 @@ def _create_database(f=save_file):
 def _fill_data(f=save_file):
     global DATA
     file = open(save_file, "r")
-    DATA = json.load(file)
+    try:
+        DATA = json.load(file)
+    except:
+        _create_database(save_file)
+        print("Database corrupted, reseting to default")
+        DATA = default_data
     file.close()
 
 
