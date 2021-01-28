@@ -17,7 +17,7 @@ class Game():
 
     def _new_player(self, uuid, name, ip, status="Connected"):
         self.game_data["players"].append(
-            dict(uuid=uuid, name=name, ip=ip, status=status))
+            dict(uuid=uuid, name=name, ip=ip, word="", status=status, computer_afk="false"))
         print("[I] Added player", name, "with uuid", uuid)
         return len(self.game_data["players"])-1
 
@@ -80,7 +80,10 @@ class Game():
                 self.state = 2
                 self.game_data["letters"] = ''.join(
                     letter_generator.generate(letter_range=(97, 122)))
-                self._answer('ok', client_socket)
+                self._answer('ok%', client_socket)
+                print("[I] Game started")
+            elif msg=="%start":
+                self._answer('unauthorized%', client_socket)
             else:
                 if self._get_player_id(uuid) == -1 and msg.startswith("join%"):
                     self._answer(self._new_player(
@@ -89,7 +92,7 @@ class Game():
             if msg == "status%":
                 self._answer(
                     f"start{self.game_data['letters']}", client_socket)
-                if not "word" in self.game_data["players"][self._get_player_id(uuid)]:
+                if "" == self.game_data["players"][self._get_player_id(uuid)]["word"]:
                     self.game_data["players"][self._get_player_id(
                         uuid)]["status"] = "Playing"
             elif not self._get_player_id(uuid) == -1:
@@ -113,8 +116,10 @@ class Game():
                         self._answer("invalid", client_socket)
                 else:
                     self._answer("valid%", client_socket)
+            elif msg.startswith("join%"):
+                self._answer("wait%", client_socket)
             else:
-                self._answer("", client_socket)
+                self._answer("valid%", client_socket)
         elif self.state == 3:
             if msg == "status%":
                 self._answer("results"+self._get_results(), client_socket)
@@ -147,6 +152,7 @@ class MainThread(threading.Thread):
     def run(self):
         try:
             print("[I] Server started, listening...")
+            print("[V] Use portmapper for UPnP : link port 11111 to 11111. ")
             self.tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.tcpsock.bind(("", self.port))
