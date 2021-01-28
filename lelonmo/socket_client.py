@@ -1,5 +1,5 @@
 
-import json
+import json, sys
 import socket
 import threading
 from time import sleep as wait
@@ -13,16 +13,25 @@ PORT = 11111
 
 
 def _send_data(data: str, host: str):
+    socket.timeout = 2
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((host, PORT))
+    try:
+        s.connect((host, PORT))
 
-    # Allow identifying users at anytime
-    s.send(bytearray(f"{persist_data.DATA['online']['uuid']}%{data}", "utf-8"))
-    # UUID is never shared with other players
-    v = s.recv(1024)
-    s.close()
-    return v
-
+        # Allow identifying users at anytime
+        s.send(bytearray(f"{persist_data.DATA['online']['uuid']}%{data}", "utf-8"))
+        # UUID is never shared with other players
+        v = s.recv(1024)
+        s.close()
+        return v
+    except ConnectionRefusedError:
+        print("Server error : Connexion refused")
+        s.close()
+        sys.exit()
+    except Exception as e:
+        s.close()
+        print("Server error :", e)
+        sys.exit(0)
 
 def _status(host):  # Small function to get server status
     return _send_data("status%", host).decode('utf-8')
@@ -34,7 +43,7 @@ def _wait_for_status(key, host):  # Wait for a specific status in order to conti
         wait(persist_data.DATA["online"]["update_speed"])
 
 
-def join_game(wb, ip="localhost"):  # Initiate the connexion between client and server
+def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and server
     player_id = _send_data("join%" + persist_data.DATA["online"]["name"], ip)
     if player_id == b"started":
         print("The game you tried to join already started")
@@ -86,10 +95,12 @@ class PlayerUpdate(threading.Thread):  # Thread dedicated to player list update
         self.host = host
         self.invert = False
         threading.Thread.__init__(self)
+        self.setDaemon(True)
 
     def run(self, run=False):  # Run is set to prevent the thread from looping if only one run is needed
         while self.enable or run:
             status = _send_data("players%", self.host).decode("utf-8")
+            self.players = status
             self.board.add(updatable="Players :\n * " +
                            "\n * ".join(status.split("%")), invert=self.invert)
             if not run:
@@ -121,7 +132,7 @@ def main(host="localhost"):
         wb.add("You are logged in as", persist_data.DATA["online"]["name"])
 
     wb.add(f"Joining the game hosted at {host}")
-    player_id = join_game(wb, host)
+    player_id = _join_game(wb, host)
     wb.add("Joined successfully")
     admin = False
     if player_id == 0:  # Player id =
@@ -131,11 +142,19 @@ def main(host="localhost"):
     playerboard.start()
     if admin:
         input()
-        if _send_data("start%", host) == "ok":
+        if _send_data("start%", host) == "ok%":
             wb.add("Game started successfully")
         else:
-            wb.add("")
+            wb.add("Unauthorized")
+            if not persist_data.DATA["online"]["name"] in playerboard.players:
+                playerboard.enable = False
+                del admin
+                del wb
+                del player_id
+                from lelonmo.main_online import main_online
+                main_online(host)
 
+                    
     _wait_for_status("start", host)
 
     wb.clear()
