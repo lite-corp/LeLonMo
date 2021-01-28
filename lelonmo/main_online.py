@@ -18,6 +18,7 @@ def main_online(host=''):
             socket_client.main(host)
         exit()
     except KeyboardInterrupt:
+        socket_client.exit_server(host)
         print("Exiting ...")
         exit(0)
     except Exception as e:

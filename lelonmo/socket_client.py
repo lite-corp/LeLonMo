@@ -1,8 +1,10 @@
 
-import json, sys
+import json
+import sys
 import socket
 import threading
 from time import sleep as wait
+import atexit
 
 from lelonmo import persist_data
 from lelonmo.consolemenu import *
@@ -19,19 +21,23 @@ def _send_data(data: str, host: str):
         s.connect((host, PORT))
 
         # Allow identifying users at anytime
-        s.send(bytearray(f"{persist_data.DATA['online']['uuid']}%{data}", "utf-8"))
+        s.send(
+            bytearray(f"{persist_data.DATA['online']['uuid']}%{data}", "utf-8"))
         # UUID is never shared with other players
         v = s.recv(1024)
         s.close()
         return v
     except ConnectionRefusedError:
         print("Server error : Connexion refused")
+        exit_server()
         s.close()
         sys.exit()
     except Exception as e:
+        exit_server()
         s.close()
         print("Server error :", e)
         sys.exit(0)
+
 
 def _status(host):  # Small function to get server status
     return _send_data("status%", host).decode('utf-8')
@@ -52,7 +58,8 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
         wb.add("Waiting for admin to restart the game ...")
         while player_id == b"wait%":
             wait(persist_data.DATA["online"]["update_speed"])
-            player_id = _send_data("join%" + persist_data.DATA["online"]["name"], ip)
+            player_id = _send_data(
+                "join%" + persist_data.DATA["online"]["name"], ip)
         return int(player_id)
     elif player_id == b"":
         print("Error while joining, try again later")
@@ -108,7 +115,12 @@ class PlayerUpdate(threading.Thread):  # Thread dedicated to player list update
             run = False
 
 
+server_ip = "localhost"
+
+
 def main(host="localhost"):
+    global server_ip
+    server_ip = host
     menu_format = MenuFormatBuilder() \
         .set_border_style_type(MenuBorderStyleType.DOUBLE_LINE_OUTER_LIGHT_INNER_BORDER) \
         .set_prompt("") \
@@ -154,7 +166,6 @@ def main(host="localhost"):
                 from lelonmo.main_online import main_online
                 main_online(host)
 
-                    
     _wait_for_status("start", host)
 
     wb.clear()
@@ -185,6 +196,22 @@ def main(host="localhost"):
         "\n  * ".join([i["name"] + " : " + i["word"]
                        for i in result_data["players"]])
     )
+
+
+def exit_server():
+    global server_ip
+    socket.timeout = persist_data.DATA["online"]["update_speed"]
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect((server_ip, PORT))
+        s.send(
+            bytearray(f"{persist_data.DATA['online']['uuid']}%{'leave%'}", "utf-8"))
+        s.close()
+    except:
+        pass
+
+
+atexit.register(exit_server)
 
 
 if __name__ == "__main__":
