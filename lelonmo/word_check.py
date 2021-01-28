@@ -1,6 +1,6 @@
 import unicodedata
 from os import path
-from .persist_data import DATA as settings
+from lelonmo.persist_data import DATA as settings
 
 
 def remove_accents(input_str):

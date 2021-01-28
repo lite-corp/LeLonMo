@@ -1,6 +1,6 @@
 import uuid
 
-from . import persist_data, socket_client
+from lelonmo import persist_data, socket_client
 
 
 def main_online(host=''):

@@ -1,9 +1,9 @@
 from getpass import getpass
 from os import path
 
-from . import letter_generator, word_check
-from .colors.colors import *
-from .persist_data import DATA as settings
+from lelonmo import letter_generator, word_check
+from lelonmo.colors.colors import *
+from lelonmo.persist_data import DATA as settings
 
 score_j1 = 0
 score_j2 = 0

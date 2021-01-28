@@ -4,10 +4,10 @@ import socket
 import threading
 from time import sleep as wait
 
-from . import persist_data
-from .consolemenu import *
-from .consolemenu.format import *
-from .main_offline import human_to_bool
+from lelonmo import persist_data
+from lelonmo.consolemenu import *
+from lelonmo.consolemenu.format import *
+from lelonmo.main_offline import human_to_bool
 
 PORT = 11111
 

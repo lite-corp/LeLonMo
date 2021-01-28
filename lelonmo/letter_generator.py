@@ -1,8 +1,8 @@
 from random import randint as ri
 from os import path
 
-from .persist_data import DATA as settings
-from .word_check import remove_accents
+from lelonmo.persist_data import DATA as settings
+from lelonmo.word_check import remove_accents
 
 path = path.abspath(path.join(path.dirname(__file__),"."))
 word_dict = open(

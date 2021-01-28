@@ -1,9 +1,9 @@
-from . import menu
-from .colors.colors import *
-from .consolemenu import *
-from .consolemenu.console_menu import MenuItem
-from .consolemenu.format import *
-from .persist_data import *
+from lelonmo import menu
+from lelonmo.colors.colors import *
+from lelonmo.consolemenu import *
+from lelonmo.consolemenu.console_menu import MenuItem
+from lelonmo.consolemenu.format import *
+from lelonmo.persist_data import *
 
 
 def main(c=(-1, -1, -1)):
