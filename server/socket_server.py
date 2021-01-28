@@ -24,7 +24,7 @@ class Game():
     def _delete_player(self, player_id: int, admin: bool):
         del self.game_data["players"]
         if admin:
-            self.game_data["admin"] = self.game_data["player"][0]
+            self.game_data["admin"] = self.game_data["players"][0]
 
     def _answer(self, msg, socket):
         socket.send(bytearray(str(msg), "utf-8"))
