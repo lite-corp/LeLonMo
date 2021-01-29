@@ -16,10 +16,23 @@ class Game():
         self.LANGUAGE = LANGUAGE
 
     def _new_player(self, uuid, name, ip, status="Connected"):
-        self.game_data["players"].append(
-            dict(uuid=uuid, name=name, ip=ip, word="", status=status, computer_afk="false"))
-        print("[I] Added player", name, "with uuid", uuid)
-        return len(self.game_data["players"])-1
+        if name in [i['name'] for i in self.game_data["players"]]:
+            print("[V] Refused ", uuid, "with name", name)
+            return -4
+        elif [0 for i in ["admin", "%", "connected", " ", "\t", "\n", "playing"] if i in name.lower()]:
+            print("[V] Refused ", uuid, "with name", name)
+            return -3
+        elif name.isspace():
+            print("[V] Refused ", uuid)
+            return -2
+        elif name == "":
+            print("[V] Refused ", uuid)
+            return -1
+        else: 
+            self.game_data["players"].append(
+                dict(uuid=uuid, name=name, ip=ip, word="", status=status, computer_afk="false"))
+            print("[I] Added player", name, "with uuid", uuid)
+            return len(self.game_data["players"])-1
 
     def _delete_player(self, player_id: int, admin: bool):
         if not player_id==-1:
