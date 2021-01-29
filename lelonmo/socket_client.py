@@ -6,7 +6,7 @@ import threading
 from time import sleep as wait
 import atexit
 
-from lelonmo import persist_data
+from lelonmo import PACKAGE_PARENT, persist_data
 from lelonmo.consolemenu import *
 from lelonmo.consolemenu.format import *
 from lelonmo.main_offline import human_to_bool
@@ -52,7 +52,7 @@ def _wait_for_status(key, host):  # Wait for a specific status in order to conti
 def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and server
     player_id = _send_data("join%" + persist_data.DATA["online"]["name"], ip)
     if player_id == b"started":
-        print("The game you tried to join already started")
+        wb.add("The game you tried to join already started")
         exit()
     elif player_id == b"wait%":
         wb.add("Waiting for admin to restart the game ...")
@@ -62,9 +62,33 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
                 "join%" + persist_data.DATA["online"]["name"], ip)
         return int(player_id)
     elif player_id == b"":
-        print("Error while joining, try again later")
+        wb.add("Error while joining, try again later")
     else:
-        return int(player_id)
+        try:
+            int(player_id)
+        except:
+            wb.add("Error while joining, try again later")
+            exit()
+        if int(player_id) >= 0:
+            return int(player_id)
+        else:
+            name = ""
+            while not int(player_id) >= 0:
+                wb.clear()
+                wb.add({
+                    -1 : "Please enter a username",
+                    -2 : "Username cannot be a space",
+                    -3 : "Username contains forbiden words or characters",
+                    -4 : "This username is already taken"
+                }[int(player_id)])
+                name = input("Please enter your username : ")
+                try:
+                    player_id = int(_send_data("join%" + name, ip))
+                except ValueError:
+                    wb.add("Error while joining, try again later")
+                    exit()
+            persist_data.update_key('name', name, "online")
+            return int(player_id)
 
 
 class WhiteBoard:  # Manages the menu on screen, used to update things unig threads
@@ -133,21 +157,11 @@ def main(host="localhost"):
 
     wb = WhiteBoard(menu_format)
 
-    # Set the name if not set already (or if it has been reset)
-    if not persist_data.DATA["online"]["name"]:
-        name = ""
-        while (not name) or ("%" in name):
-            name = input("Please enter your username : ")
-        persist_data.update_key(master='online', key='name', value=name)
-        wb.add("Username updated, go to Settings > Online Settings to change it")
-    else:
-        wb.add("You are logged in as", persist_data.DATA["online"]["name"])
-
     wb.add(f"Joining the game hosted at {host}")
     player_id = _join_game(wb, host)
     wb.add("Joined successfully")
     admin = False
-    if player_id == 0:  # Player id =
+    if player_id == 0:  # Admin detection
         wb.add("You are the administrator, press [ENTER] to start the game")
         admin = True
     playerboard = PlayerUpdate(wb, host)
@@ -165,8 +179,19 @@ def main(host="localhost"):
                 del player_id
                 from lelonmo.main_online import main_online
                 main_online(host)
-
-    _wait_for_status("start", host)
+    else:
+        status = _status(host)
+        while not status.startswith("start"):
+            status = _status(host)
+            # Avoid spamming the server
+            if not persist_data.DATA["online"]["name"] in _send_data("players%", host).decode("utf-8"):
+                playerboard.enable = False
+                del admin
+                del wb
+                del player_id
+                from lelonmo.main_online import main_online
+                main_online(host)
+            wait(persist_data.DATA["online"]["update_speed"])
 
     wb.clear()
     wb.add(
