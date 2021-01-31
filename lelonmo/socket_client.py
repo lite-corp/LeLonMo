@@ -6,6 +6,7 @@ import threading
 from time import sleep as wait
 import atexit
 
+from lelonmo.async_input import Input
 from lelonmo import PACKAGE_PARENT, persist_data
 from lelonmo.consolemenu import *
 from lelonmo.consolemenu.format import *
@@ -98,23 +99,30 @@ class WhiteBoard:  # Manages the menu on screen, used to update things unig thre
             "LeLonMo X", "Online Mode", prologue_text=self.text, formatter=format)
         # Part of the data that will be overwritten on updates (player list and status)
         self.updatable = ""
+        self.updatable_2 = ""
 
-    def add(self, *args, updatable="", invert=False):  # Add a line to the menu
+    def add(self, *args, updatable="", invert=False, updatable_2=""):  # Add a line to the menu
         args = list(args)
         if not updatable:
             updatable = self.updatable
+        if not updatable_2:
+            updatable_2 = self.updatable_2
+        self.updatable_2 = updatable_2
         self.updatable = updatable
         self.text = self.text + "\n" + " ".join(args)
         self.menu.prologue_text = self.text + updatable
         # invert updatable text and normal text (used during the game itself)
         if invert:
             self.menu.prologue_text = updatable + self.text
+        self.menu.prologue_text = self.menu.prologue_text + updatable_2
         self.menu.clear_screen()
         self.menu.draw()
-
+    def update_letter(self, letters):
+        self.add(updatable_2="".join(letters), invert=True)
     def clear(self):  # Clear and update the menu, removes the text and the updates
         self.text = str()
         self.updatable = str()
+        self.updatable_2 = str()
         self.menu.clear_screen()
         self.menu.draw()
 
@@ -200,11 +208,13 @@ def main(host="localhost"):
         " ".join(_status(host)[5:])
     )
 
-    playerboard.enable = False
     playerboard.invert = True
-    playerboard.run(True)  # Show the players once after update then stop
-    while not _send_data(input("Enter your word : "), host).decode("utf-8").startswith("valid%"):
-        print("Invalid, try again")
+    wb.add("Enter your word : ")
+    
+    while not _send_data(''.join(Input(wb.update_letter, "_").run()), host).decode("utf-8").startswith("valid%"):
+        wb.add(updatable_2='Your word is not valid', invert=True)
+    input() # Clear the buffer
+    playerboard.enable = False
     wb.clear()
     wb.add("Waiting for other players to finish")
     playerboard = PlayerUpdate(wb, host)
