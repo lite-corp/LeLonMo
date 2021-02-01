@@ -202,14 +202,14 @@ def main(host="localhost"):
             wait(persist_data.DATA["online"]["update_speed"])
 
     wb.clear()
+    playerboard.invert = True
     wb.add(
         "Game started\n",
         "You have to compose your word with these letters\n",
-        " ".join(_status(host)[5:])
+        " ".join(_status(host)[5:]),
+        "\n Enter your word : "
     )
 
-    playerboard.invert = True
-    wb.add("Enter your word : ")
     
     while not _send_data(''.join(Input(wb.update_letter, "_").run()), host).decode("utf-8").startswith("valid%"):
         wb.add(updatable_2='Your word is not valid', invert=True)
