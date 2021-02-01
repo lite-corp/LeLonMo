@@ -29,7 +29,7 @@ import six
 
 import objc
 import CoreFoundation
-import quartz
+import Quartz
 
 from . import AbstractListener
 
@@ -180,7 +180,7 @@ def get_unicode_to_keycode_map():
 
 
 class ListenerMixin(object):
-    """A mixin for *quartz* event listeners.
+    """A mixin for *Quartz* event listeners.
 
     Subclasses should set a value for :attr:`_EVENTS` and implement
     :meth:`_handle`.
@@ -196,23 +196,23 @@ class ListenerMixin(object):
                 self._mark_ready()
                 return
 
-            loop_source = quartz.CFMachPortCreateRunLoopSource(
+            loop_source = Quartz.CFMachPortCreateRunLoopSource(
                 None, tap, 0)
-            self._loop = quartz.CFRunLoopGetCurrent()
+            self._loop = Quartz.CFRunLoopGetCurrent()
 
-            quartz.CFRunLoopAddSource(
-                self._loop, loop_source, quartz.kCFRunLoopDefaultMode)
-            quartz.CGEventTapEnable(tap, True)
+            Quartz.CFRunLoopAddSource(
+                self._loop, loop_source, Quartz.kCFRunLoopDefaultMode)
+            Quartz.CGEventTapEnable(tap, True)
 
             self._mark_ready()
 
             # pylint: disable=W0702; we want to silence errors
             try:
                 while self.running:
-                    result = quartz.CFRunLoopRunInMode(
-                        quartz.kCFRunLoopDefaultMode, 1, False)
+                    result = Quartz.CFRunLoopRunInMode(
+                        Quartz.kCFRunLoopDefaultMode, 1, False)
                     try:
-                        if result != quartz.kCFRunLoopRunTimedOut:
+                        if result != Quartz.kCFRunLoopRunTimedOut:
                             break
                     except AttributeError:
                         # This happens during teardown of the virtual machine
@@ -231,7 +231,7 @@ class ListenerMixin(object):
         # loop around run loop invocations to terminate and set this event
         try:
             if self._loop is not None:
-                quartz.CFRunLoopStop(self._loop)
+                Quartz.CFRunLoopStop(self._loop)
         except AttributeError:
             # The loop may not have been created
             pass
@@ -241,14 +241,14 @@ class ListenerMixin(object):
 
         :return: an event tap
         """
-        return quartz.CGEventTapCreate(
-            quartz.kCGSessionEventTap,
-            quartz.kCGHeadInsertEventTap,
-            quartz.kCGEventTapOptionListenOnly if (
+        return Quartz.CGEventTapCreate(
+            Quartz.kCGSessionEventTap,
+            Quartz.kCGHeadInsertEventTap,
+            Quartz.kCGEventTapOptionListenOnly if (
                 True
                 and not self.suppress
                 and self._intercept is None)
-            else quartz.kCGEventTapOptionDefault,
+            else Quartz.kCGEventTapOptionDefault,
             self._EVENTS,
             self._handler,
             None)
