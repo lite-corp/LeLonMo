@@ -17,16 +17,16 @@ class Game():
 
     def _new_player(self, uuid, name, ip, status="Connected"):
         if name in [i['name'] for i in self.game_data["players"]]:
-            print("[V] Refused ", uuid, "with name", name)
+            print("[V] Refused", uuid, "with name", name)
             return -4
         elif [0 for i in ["admin", "%", "connected", " ", "\t", "\n", "playing"] if i in name.lower()]:
-            print("[V] Refused ", uuid, "with name", name)
+            print("[V] Refused", uuid, "with name", name)
             return -3
         elif name.isspace():
-            print("[V] Refused ", uuid)
+            print("[V] Refused", uuid, ": isspace")
             return -2
         elif name == "":
-            print("[V] Refused ", uuid)
+            print("[V] Refused", uuid, ": Empty name")
             return -1
         else: 
             self.game_data["players"].append(
