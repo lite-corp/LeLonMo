@@ -58,7 +58,7 @@ else:
             import Quartz
             import objc
         except:
-            print("six is not installed, trying to install it automatically ...")
+            print("Quartz and objc is not installed, trying to install it automatically ...")
             import subprocess
             import sys
             command = [sys.executable, "-m", "pip", "install",
