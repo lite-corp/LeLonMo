@@ -4,9 +4,9 @@ from os import path
 from lelonmo.persist_data import DATA as settings
 from lelonmo.word_check import remove_accents
 
-path = path.abspath(path.join(path.dirname(__file__),"."))
+program_path = path.abspath(path.join(path.dirname(__file__),"."))
 word_dict = open(
-    f"{path}/data/dict/dict_{settings['game']['DICT_LANGUAGE']}.txt", "r", encoding='UTF-8').readlines()
+    f"{program_path}{path.sep}data{path.sep}dict{path.sep}dict_{settings['game']['DICT_LANGUAGE']}.txt", "r", encoding='UTF-8').readlines()
 
 
 def generate(letter_range=(97, 122), lenght=settings["game"]["LETTER_NUMBER"], language=settings["game"]["DICT_LANGUAGE"]):

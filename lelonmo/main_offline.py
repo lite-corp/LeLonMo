@@ -28,7 +28,7 @@ def intro():
     if not settings["debug"]["SKIP_INTRO"]:
         letters = str(settings["game"]["LETTER_NUMBER"]) if len(
             str(settings["game"]["LETTER_NUMBER"])) > 1 else str(settings["game"]["LETTER_NUMBER"]) + " "
-        intro_txt = open(program_path + "\\data\\welcome_screen.txt", "rb").read().decode("utf-8")\
+        intro_txt = open(program_path + f"{path.sep}data{path.sep}welcome_screen.txt", "rb").read().decode("utf-8")\
             .replace("%%letters%%", bold(letters))
         intro_ln = intro_txt.splitlines(keepends=False)
         for i, l in enumerate(intro_ln):

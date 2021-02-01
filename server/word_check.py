@@ -10,13 +10,13 @@ def remove_accents(input_str):
 
 
 word_list = None
-path = path.abspath(path.join(path.dirname(__file__),"."))
+program_path = path.abspath(path.join(path.dirname(__file__),"."))
 
 def check_dict(word, language="fr"):
     global word_list
     if word_list is None:
         word_list = open(
-            f"{path}/dict/dict_{language}.txt", "r", encoding="UTF-8").readlines()
+            f"{program_path}{path.sep}dict{path.sep}dict_{language}.txt", "r", encoding="UTF-8").readlines()
     if settings["debug"]["ACCEPT_ANY_WORD"]:
         return True
     word = word.lower()
