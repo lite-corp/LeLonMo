@@ -1,12 +1,13 @@
-from lelonmo.pynput import keyboard
-
-
+keyboard = None # Avoid re-import on each Input call
 class Input:
     def __init__(self, on_update, hide_char=""):
+        global keyboard
         self.text = list()
         self.text_shown = str()
         self.hide_char = hide_char
         self.on_update = on_update
+        from lelonmo.pynput import keyboard_module
+        keyboard = keyboard_module
     def run(self):    
         with keyboard.Listener(on_press=self._press) as listener:
             listener.join()
