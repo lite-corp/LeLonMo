@@ -35,7 +35,7 @@ else:
     print("Checking dependancies ... ")
     try:
         import six
-    except ImportError:
+    except ModuleNotFoundError:
         print("six is not installed, trying to install it automatically ...")
         import subprocess
         import sys
@@ -55,7 +55,7 @@ else:
     elif os_name == "darwin":
         try:
             import Quartz, objc
-        except ImportError:
+        except ModuleNotFoundError:
             print("six is not installed, trying to install it automatically ...")
             import subprocess
             import sys
