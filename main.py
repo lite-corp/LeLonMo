@@ -1,3 +1,4 @@
+import os
 import platform
 import argparse
 
@@ -31,6 +32,16 @@ if args.server:
         exit()
 else:
     print("Starting the game, please wait ...")
+    print("Checking dependancies ... ")
+    try:
+        import six
+    except ImportError:
+        print("six is not installed, trying to install it automatically ...")
+        import subprocess
+        import sys
+        command = f"{sys.executable} -m pip install six pyobjc"
+        subprocess.run(command)
+
     if os_name == "Windows":
         import lelonmo.persist_data as persist
         if platform.version().startswith("10."):
@@ -41,6 +52,15 @@ else:
             persist.update_key("USE_COLORS", False, "settings")
         import lelonmo.menu as menu
         menu.main()
+    elif os_name == "darwin":
+        try:
+            import Quartz, objc
+        except ImportError:
+            print("six is not installed, trying to install it automatically ...")
+            import subprocess
+            import sys
+            command = f"{sys.executable} -m pip install pyobjc-framework-Quartz pyobjc"
+            subprocess.run(command)
     else:
         import lelonmo.menu as menu
         input(
