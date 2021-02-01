@@ -26,7 +26,7 @@ The keyboard implementation for *macOS*.
 
 import enum
 
-import Quartz
+import quartz
 
 from lelonmo.pynput._util.darwin import (
     get_unicode_to_keycode_map,
@@ -49,7 +49,7 @@ kSystemDefinedEventMediaKeysSubtype = 8
 
 # We extract this here since the name is very long
 otherEventWithType = getattr(
-        Quartz.NSEvent,
+        quartz.NSEvent,
         'otherEventWithType_'
         'location_'
         'modifierFlags_'
@@ -82,7 +82,7 @@ class KeyCode(_base.KeyCode):
         return cls.from_vk(vk, _is_media=True, **kwargs)
 
     def _event(self, modifiers, mapping, is_pressed):
-        """This key as a *Quartz* event.
+        """This key as a *quartz* event.
 
         :param set modifiers: The currently active modifiers.
 
@@ -90,12 +90,12 @@ class KeyCode(_base.KeyCode):
 
         :param bool is_press: Whether to generate a press event.
 
-        :return: a *Quartz* event
+        :return: a *quartz* event
         """
         vk = self.vk or mapping.get(self.char)
         if self._is_media:
             result = otherEventWithType(
-                Quartz.NSSystemDefined,
+                quartz.NSSystemDefined,
                 (0, 0),
                 0xa00 if is_pressed else 0xb00,
                 0,
@@ -105,26 +105,26 @@ class KeyCode(_base.KeyCode):
                 (self.vk << 16) | ((0xa if is_pressed else 0xb) << 8),
                 -1).CGEvent()
         else:
-            result = Quartz.CGEventCreateKeyboardEvent(
+            result = quartz.CGEventCreateKeyboardEvent(
                 None, 0 if vk is None else vk, is_pressed)
 
-        Quartz.CGEventSetFlags(
+        quartz.CGEventSetFlags(
             result,
             0
-            | (Quartz.kCGEventFlagMaskAlternate
+            | (quartz.kCGEventFlagMaskAlternate
                if Key.alt in modifiers else 0)
 
-            | (Quartz.kCGEventFlagMaskCommand
+            | (quartz.kCGEventFlagMaskCommand
                if Key.cmd in modifiers else 0)
 
-            | (Quartz.kCGEventFlagMaskControl
+            | (quartz.kCGEventFlagMaskControl
                if Key.ctrl in modifiers else 0)
 
-            | (Quartz.kCGEventFlagMaskShift
+            | (quartz.kCGEventFlagMaskShift
                if Key.shift in modifiers else 0))
 
         if vk is None and self.char is not None:
-            Quartz.CGEventKeyboardSetUnicodeString(
+            quartz.CGEventKeyboardSetUnicodeString(
                 result, len(self.char), self.char)
 
         return result
@@ -201,8 +201,8 @@ class Controller(_base.Controller):
 
     def _handle(self, key, is_press):
         with self.modifiers as modifiers:
-            Quartz.CGEventPost(
-                Quartz.kCGHIDEventTap,
+            quartz.CGEventPost(
+                quartz.kCGHIDEventTap,
                 (key if key not in (k for k in Key) else key.value)._event(
                     modifiers, self._mapping, is_press))
 
@@ -210,10 +210,10 @@ class Controller(_base.Controller):
 class Listener(ListenerMixin, _base.Listener):
     #: The events that we listen to
     _EVENTS = (
-        Quartz.CGEventMaskBit(Quartz.kCGEventKeyDown) |
-        Quartz.CGEventMaskBit(Quartz.kCGEventKeyUp) |
-        Quartz.CGEventMaskBit(Quartz.kCGEventFlagsChanged) |
-        Quartz.CGEventMaskBit(Quartz.NSSystemDefined)
+        quartz.CGEventMaskBit(quartz.kCGEventKeyDown) |
+        quartz.CGEventMaskBit(quartz.kCGEventKeyUp) |
+        quartz.CGEventMaskBit(quartz.kCGEventFlagsChanged) |
+        quartz.CGEventMaskBit(quartz.NSSystemDefined)
     )
 
     # pylint: disable=W0212
@@ -225,11 +225,11 @@ class Listener(ListenerMixin, _base.Listener):
 
     #: The event flags set for the various modifier keys
     _MODIFIER_FLAGS = {
-        Key.alt: Quartz.kCGEventFlagMaskAlternate,
-        Key.alt_l: Quartz.kCGEventFlagMaskAlternate,
-        Key.alt_r: Quartz.kCGEventFlagMaskAlternate,
-        Key.cmd: Quartz.kCGEventFlagMaskCommand,
-        Key.cmd_l: Quartz.kCGEventFlagMaskCommand,
+        Key.alt: quartz.kCGEventFlagMaskAlternate,
+        Key.alt_l: quartz.kCGEventFlagMaskAlternate,
+        Key.alt_r: quartz.kCGEventFlagMaskAlternate,
+        Key.cmd: quartz.kCGEventFlagMaskCommand,
+        Key.cmd_l: quartz.kCGEventFlagMaskCommand,
         Key.cmd_r: Quartz.kCGEventFlagMaskCommand,
         Key.ctrl: Quartz.kCGEventFlagMaskControl,
         Key.ctrl_l: Quartz.kCGEventFlagMaskControl,

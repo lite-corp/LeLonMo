@@ -35,7 +35,9 @@ import six
 
 from six.moves import queue
 
-
+class CustomError(Exception):
+    def __init__(self):
+        pass
 #: Possible resolutions for import related errors.
 RESOLUTIONS = {
     'darwin': 'Please make sure that you have Python bindings for the '
@@ -57,9 +59,9 @@ def backend(package):
     if backend_name:
         modules = [backend_name]
     elif sys.platform == 'darwin':
-        modules = ['darwin']
+        modules = [sys.platform]
     elif sys.platform == 'win32':
-        modules = ['win32']
+        modules = [sys.platform]
     else:
         modules = ['xorg']
 
@@ -68,10 +70,11 @@ def backend(package):
     for module in modules:
         try:
             return importlib.import_module('._' + module, package)
-        except ImportError as e:
+        except CustomError as e:
             errors.append(e)
             if module in RESOLUTIONS:
                 resolutions.append(RESOLUTIONS[module])
+    """
 
     raise ImportError('this platform is not supported: {}'.format(
         '; '.join(str(e) for e in errors)) + ('\n\n'
@@ -80,7 +83,7 @@ def backend(package):
                 ' * {}'.format(s)
                 for s in resolutions))
             if resolutions else '')
-
+    """
 
 
 class AbstractListener(threading.Thread):
