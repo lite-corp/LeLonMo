@@ -1,10 +1,11 @@
 from lelonmo import menu
+from lelonmo import persist_data
 from lelonmo.colors.colors import *
 from lelonmo.consolemenu import *
 from lelonmo.consolemenu.console_menu import MenuItem
 from lelonmo.consolemenu.format import *
 from lelonmo.persist_data import *
-
+from importlib import reload 
 
 def main(c=(-1, -1, -1)):
     menu_format = MenuFormatBuilder()\
@@ -133,6 +134,7 @@ def main(c=(-1, -1, -1)):
             key = settings_link[c1][1][c2][0]
             value = settings_link[c1][1][c2][1][c3]
             update_key(master=master, key=key, value=value)
+            reload(persist_data)
             main()
     except IndexError:
         if c3 != -1:
