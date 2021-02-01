@@ -3,6 +3,7 @@ def main():
     import server.socket_server as server
     PORT = 11111
     main_thread = server.MainThread(PORT)
+    main_thread.setDaemon(True)
     main_thread.start()
     while True:
         try:
@@ -14,7 +15,7 @@ def main():
                 main_thread.tcpsock.close()
             except OSError:
                 pass
-        exit()
+            exit()
 
 
 if __name__ == "__main__":
