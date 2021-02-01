@@ -52,7 +52,7 @@ else:
             persist.update_key("USE_COLORS", False, "settings")
         import lelonmo.menu as menu
         menu.main()
-    elif os_name == "darwin":
+    elif os_name == "Darwin":
         try:
             import Quartz, objc
         except:
