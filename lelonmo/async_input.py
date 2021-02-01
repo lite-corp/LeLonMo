@@ -24,10 +24,13 @@ class Input:
         except AttributeError:
             if key == keyboard.Key.backspace: # Delete
                 try:
-                    del self.text[-1]
-                    s = list(self.text_shown)
-                    del s[-1]
-                    self.text_shown = "".join(s)
+                    if len(self.text) == 1:
+                        self.text_shown = ""
+                    else:
+                        del self.text[-1]
+                        s = list(self.text_shown)
+                        del s[-1]
+                        self.text_shown = "".join(s)
                 except IndexError:
                     self.text = list()
                     self.text_shown = str()
