@@ -39,7 +39,7 @@ else:
         print("six is not installed, trying to install it automatically ...")
         import subprocess
         import sys
-        command = f"{sys.executable} -m pip install six pyobjc"
+        command = [sys.executable, "-m", "pip", "install", "six"]
         subprocess.run(command)
 
     if os_name == "Windows":
@@ -48,18 +48,21 @@ else:
             persist.update_key("FIRST_RUN", False, "game")
         elif persist.DATA["game"]['FIRST_RUN']:
             persist.update_key("FIRST_RUN", False, "game")
-            input("Colors are not supported on this version of windows, and are disabled by default. ")
+            input(
+                "Colors are not supported on this version of windows, and are disabled by default. ")
             persist.update_key("USE_COLORS", False, "settings")
         import lelonmo.menu as menu
         menu.main()
     elif os_name == "Darwin":
         try:
-            import Quartz, objc
+            import Quartz
+            import objc
         except:
             print("six is not installed, trying to install it automatically ...")
             import subprocess
             import sys
-            command = f"{sys.executable} -m pip install pyobjc-framework-Quartz pyobjc"
+            command = [sys.executable, "-m", "pip", "install",
+                       "pyobjc-framework-Quartz", "pyobjc"]
             subprocess.run(command)
     else:
         import lelonmo.menu as menu
