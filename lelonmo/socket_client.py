@@ -209,11 +209,13 @@ def main(host="localhost"):
         " ".join(_status(host)[5:]),
         "\n Enter your word : "
     )
-
     
-    while not _send_data(''.join(Input(wb.update_letter, "_").run()), host).decode("utf-8").startswith("valid%"):
+    input_method = Input(wb.update_letter, "_").run if persist_data.DATA["online"]["async_input"] else input
+    if input_method is input: 
+        playerboard.enable = False
+    while not _send_data(''.join(input_method()), host).decode("utf-8").startswith("valid%"):
         wb.add(updatable_2='Your word is not valid', invert=True)
-    input() # Clear the buffer
+    sys.stdin.flush() # Clear the buffer
     playerboard.enable = False
     wb.clear()
     wb.add("Waiting for other players to finish")

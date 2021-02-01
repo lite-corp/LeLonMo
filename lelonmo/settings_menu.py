@@ -48,6 +48,10 @@ def main(c=(-1, -1, -1)):
                 "Slow",
                 "Normal",
                 "Fast"
+            ]],
+            ["Asynchronous input",[
+                "Enable",
+                "Disable (if you can't write in online games)"
             ]]
         ]],
         ["Debug [Advanced]", [
@@ -84,6 +88,10 @@ def main(c=(-1, -1, -1)):
                 2,
                 1,
                 0.5
+            ]],
+            ["async_input",[
+                True,
+                False
             ]]
 
         ]],

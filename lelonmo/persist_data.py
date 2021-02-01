@@ -12,7 +12,8 @@ default_data = dict(
         uuid=str(uuid.uuid4()),
         name="",
         update_speed=1,
-        last_ip="localhost"
+        last_ip="localhost",
+        async_input=False
     ),
     settings=dict(
         USE_INPROVED_GENERATOR=True,
