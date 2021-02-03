@@ -4,16 +4,17 @@ import re
 import threading
 import socket
 
-from server import letter_generator
+from server import letter_generator, persist_data
 from server import word_check
 
 
 class Game():
-    def __init__(self, LANGUAGE):
+    def __init__(self, LANGUAGE, MAX_PLAYERS = 10):
         self.state = 0
         print("[I] Waiting for admin ...")
         self.game_data = dict(players=list())
         self.LANGUAGE = LANGUAGE
+        self.MAX_PLAYERS = MAX_PLAYERS
 
     def _new_player(self, uuid, name, ip, status="Connected"):
         if name in [i['name'] for i in self.game_data["players"]]:
@@ -28,9 +29,11 @@ class Game():
         elif name == "":
             print("[V] Refused", uuid, ": Empty name")
             return -1
+        elif len(self.game_data["players"]) > self.MAX_PLAYERS:
+            print("Refused", uuid, ": Too many people")
         else: 
             self.game_data["players"].append(
-                dict(uuid=uuid, name=name, ip=ip, word="", status=status, computer_afk="false"))
+                dict(uuid=uuid, name=name, ip=ip, word="", status=status, computer_afk=False))
             print("[I] Added player", name, "with uuid", uuid)
             return len(self.game_data["players"])-1
 
@@ -85,9 +88,21 @@ class Game():
         self.game_data = dict(players=list())
 
     def handle_data(self, data: str, client_socket, client_thread):
-        r = re.search("(.{36})%(.*)", data)
-        uuid = r.group(1)
-        msg = r.group(2)
+        try:
+            r = re.search("%llm_client%(.{4})%(.{36})%(.*)", data)
+            version = r.group(1)
+            uuid = r.group(2)
+            msg = r.group(3)
+        except:
+            print("[W] Invalid request :", data)
+            return data, client_socket, client_socket
+        try:
+            if int(version) < int(persist_data.DATA["client_version"]):
+                self._answer("outdated%", client_socket)
+                return
+        except:
+            self._answer("outdated%", client_socket)
+            return
         try:
             admin = uuid == self.game_data["admin"]["uuid"]
         except KeyError:
@@ -145,7 +160,7 @@ class Game():
                             f'[I] {self.game_data["players"][self._get_player_id(uuid)]["name"]} finished')
                         all_finished = True
                         for i in self.game_data["players"]:
-                            if i["status"] != "Finished":
+                            if i["status"] != "Finished" and not i["computer_afk"]:
                                 all_finished = False
                                 break
                         if all_finished:
@@ -166,6 +181,7 @@ class Game():
                 self.handle_data(data, client_socket, client_thread)
             elif msg.startswith("join%"):
                 self._answer("wait%", client_socket)
+        return
 
 
 class ClientThread(threading.Thread):
@@ -177,8 +193,11 @@ class ClientThread(threading.Thread):
         self.clientsocket = clientsocket
 
     def run(self):
-        data = self.clientsocket.recv(1024)
-        self.game.handle_data(data.decode("utf-8"), self.clientsocket, self)
+        data = self.clientsocket.recv(1024).decode("utf-8")
+        if data.startswith("%llm_client%"):
+            self.game.handle_data(data, self.clientsocket, self)
+        else:
+            self.game._answer("outdated%", self.clientsocket)
 
 
 class MainThread(threading.Thread):

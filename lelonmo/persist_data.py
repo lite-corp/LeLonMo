@@ -7,7 +7,8 @@ home = expanduser("~") + os.path.sep
 save_file = home + ".lelonmo_save.json"
 
 default_data = dict(
-    version="0.4.7",
+    version="00.4.8",
+    update_url='https://github.com/claj-ndc/LeLonMo/releases/latest',
     online=dict(
         uuid=str(uuid.uuid4()),
         name="",
@@ -68,6 +69,8 @@ def _repair_data():
             if DATA[key1] != default_data[key1]:
                 print("Version changed")
                 DATA[key1] = default_data[key1]
+        elif key1 == "update_url":
+            DATA[key1] = default_data[key1]
         else:
             for key2 in default_data[key1].keys():
                 if not key2 in DATA[key1]:

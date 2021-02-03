@@ -1,4 +1,3 @@
-
 import json
 import sys
 import socket
@@ -23,21 +22,26 @@ def _send_data(data: str, host: str):
 
         # Allow identifying users at anytime
         s.send(
-            bytearray(f"{persist_data.DATA['online']['uuid']}%{data}", "utf-8"))
+            bytearray(
+                "%llm_client%" \
+                f"{persist_data.DATA['version'].replace('.', str())}%" \
+                f"{persist_data.DATA['online']['uuid']}%" \
+                f"{data}",
+                "utf-8"
+            )
+        )
         # UUID is never shared with other players
         v = s.recv(1024)
         s.close()
         return v
     except ConnectionRefusedError:
         print("Server error : Connexion refused")
-        exit_server()
         s.close()
-        sys.exit()
+        exit()
     except Exception as e:
-        exit_server()
         s.close()
         print("Server error :", e)
-        sys.exit(0)
+        exit(0)
 
 
 def _status(host):  # Small function to get server status
@@ -53,8 +57,12 @@ def _wait_for_status(key, host):  # Wait for a specific status in order to conti
 def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and server
     player_id = _send_data("join%" + persist_data.DATA["online"]["name"], ip)
     if player_id == b"started":
+        wb.clear()
         wb.add("The game you tried to join already started")
-        exit()
+        wb.add("Press [ENTER] to try again")
+        wait(1) # Avoid spam
+        input() 
+        return _join_game(wb, ip)
     elif player_id == b"wait%":
         wb.add("Waiting for admin to restart the game ...")
         while player_id == b"wait%":
@@ -64,6 +72,16 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
         return int(player_id)
     elif player_id == b"":
         wb.add("Error while joining, try again later")
+    elif player_id == b"outdated%":
+        wb.add("Your client is outdated, please download the latest version")
+        import webbrowser
+        webbrowser.open(persist_data.DATA["update_url"])
+        exit_server()
+    elif player_id == b"outdated%update":
+        wb.add("Your client is outdated and automatic update install is not available")
+        import webbrowser
+        webbrowser.open(persist_data.DATA["update_url"])
+        exit_server()
     else:
         try:
             int(player_id)
@@ -229,6 +247,7 @@ def main(host="localhost"):
     playerboard = PlayerUpdate(wb, host)
     playerboard.start()
     _wait_for_status("results", host)
+    wait(0.25) # Avoid replay spam for the last player if it has low ping
     playerboard.enable = False
     wb.updatable = ""
 
@@ -249,13 +268,12 @@ def exit_server():
     try:
         s.connect((server_ip, PORT))
         s.send(
-            bytearray(f"{persist_data.DATA['online']['uuid']}%{'leave%'}", "utf-8"))
+            bytearray(f"%llm_client%{persist_data.DATA['version'].replace('.', str())}%{persist_data.DATA['online']['uuid']}%leave%", "utf-8"))
         s.close()
     except:
         pass
-
-
-atexit.register(exit_server)
+    finally:
+        s.close()
 
 
 if __name__ == "__main__":
