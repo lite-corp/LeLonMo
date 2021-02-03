@@ -7,7 +7,7 @@ from time import sleep as wait
 import atexit
 
 from lelonmo.async_input import Input
-from lelonmo import PACKAGE_PARENT, persist_data
+from lelonmo import persist_data
 from lelonmo.consolemenu import *
 from lelonmo.consolemenu.format import *
 from lelonmo.main_offline import human_to_bool
@@ -77,10 +77,10 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
             while not int(player_id) >= 0:
                 wb.clear()
                 wb.add({
-                    -1 : "Please enter a username",
-                    -2 : "Username cannot be a space",
-                    -3 : "Username contains forbiden words or characters",
-                    -4 : "This username is already taken"
+                    -1: "Please enter a username",
+                    -2: "Username cannot be a space",
+                    -3: "Username contains forbiden words or characters",
+                    -4: "This username is already taken"
                 }[int(player_id)])
                 name = input("Please enter your username : ")
                 try:
@@ -100,25 +100,32 @@ class WhiteBoard:  # Manages the menu on screen, used to update things unig thre
         # Part of the data that will be overwritten on updates (player list and status)
         self.updatable = ""
         self.updatable_2 = ""
+        self.last_text = str()
 
-    def add(self, *args, updatable="", invert=False, updatable_2=""):  # Add a line to the menu
+    def add(self, *args, updatable="", invert=False, updatable_2=None):  # Add a line to the menu
         args = list(args)
         if not updatable:
             updatable = self.updatable
-        if not updatable_2:
+        if updatable_2 is None:
             updatable_2 = self.updatable_2
         self.updatable_2 = updatable_2
         self.updatable = updatable
         self.text = self.text + "\n" + " ".join(args)
+        self.text = self.text.replace("\n\n", '\n')
         self.menu.prologue_text = self.text + updatable
         # invert updatable text and normal text (used during the game itself)
         if invert:
             self.menu.prologue_text = updatable + self.text
         self.menu.prologue_text = self.menu.prologue_text + updatable_2
-        self.menu.clear_screen()
-        self.menu.draw()
+        
+        if not str(self.last_text) == str(self.menu.prologue_text):  # Avoid screen refres spam
+            self.menu.clear_screen()
+            self.menu.draw()
+        self.last_text = self.menu.prologue_text
+
     def update_letter(self, letters):
         self.add(updatable_2="".join(letters), invert=True)
+
     def clear(self):  # Clear and update the menu, removes the text and the updates
         self.text = str()
         self.updatable = str()
@@ -135,6 +142,7 @@ class PlayerUpdate(threading.Thread):  # Thread dedicated to player list update
         self.invert = False
         threading.Thread.__init__(self)
         self.setDaemon(True)
+        self.setName("Playerboard")
 
     def run(self, run=False):  # Run is set to prevent the thread from looping if only one run is needed
         while self.enable or run:
@@ -209,13 +217,12 @@ def main(host="localhost"):
         " ".join(_status(host)[5:]),
         "\n Enter your word : "
     )
-    
-    input_method = Input(wb.update_letter, "_").run if persist_data.DATA["online"]["async_input"] else input
-    if input_method is input: 
+
+    input_method = input if not persist_data.DATA["online"]["async_input"] else Input(wb.update_letter).run
+    if input_method is input:
         playerboard.enable = False
-    while not _send_data(''.join(input_method()), host).decode("utf-8").startswith("valid%"):
+    while not _send_data(input_method(), host).decode("utf-8").startswith("valid%"):
         wb.add(updatable_2='Your word is not valid', invert=True)
-    sys.stdin.flush() # Clear the buffer
     playerboard.enable = False
     wb.clear()
     wb.add("Waiting for other players to finish")
@@ -252,10 +259,4 @@ atexit.register(exit_server)
 
 
 if __name__ == "__main__":
-    host = input(
-        "Please enter the IP of the server (leave empty for local) : ")
-    if not host:
-        host = "localhost"
-    main(host)
-    while human_to_bool("Do you want to play again ?\n"):
-        main(host)
+    print("Cannot run from here, run main.py")
