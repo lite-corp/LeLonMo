@@ -3,7 +3,6 @@ from lelonmo.colors.colors import *
 from lelonmo.consolemenu import MenuFormatBuilder, SelectionMenu
 from lelonmo.consolemenu.format import MenuBorderStyleType
 from lelonmo.persist_data import DATA as settings
-import main_server
 
 version = settings["version"]
 
@@ -22,9 +21,9 @@ menu_format = MenuFormatBuilder().set_border_style_type(MenuBorderStyleType.HEAV
 
 
 def main():
-    select = ["Mode Local", "Mode en Ligne", "Options", "Run the server", "Quitter"]
+    select = ["Mode Local", "Mode en Ligne", "Options", "Quitter"]
     link = [main_offline.main_loop, main_online.main_online,
-            settings_menu.main, main_server.main, bye]
+            settings_menu.main, bye]
     
     menu = SelectionMenu(
         select, f"{blue('L')}{yellow('e')}{blue('L')}{magenta('o')}{cyan('n')}{green('M')}{magenta('o')} {red(f'v{version}')}",
