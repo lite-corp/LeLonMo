@@ -6,6 +6,15 @@ from os.path import expanduser
 home = expanduser("~") + os.path.sep
 save_file = home + ".lelonmo_save.json"
 
+if not os.access(os.path.dirname(save_file), os.W_OK):
+    for i in [save_file, "/sdcard/.lelonmo_save.json", "/storage/emulated/0/.lelonmo_save.json", "/tmp/.lelonmo_save.json"]:
+        if os.access(os.path.dirname(i), os.W_OK):
+            save_file = i
+            break
+        else:
+            print("Cannot save to", i)
+    save_file = input("Please enter the location of your save file : ")
+
 default_data = dict(
     version="00.4.8",
     update_url='https://github.com/claj-ndc/LeLonMo/releases/latest',
