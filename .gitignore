@@ -6,3 +6,5 @@ format_dict.py
 lelonmo_2
 main_2.py
 __pycache__
+server/LeLonMo_client_v*.zip
+tmp_update.zip
