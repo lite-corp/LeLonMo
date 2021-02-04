@@ -1,6 +1,6 @@
+from sys import argv
 def main(): 
     print("[I] Starting server...", end="\r")
-    import server.socket_server as server
     PORT = 11111
     main_thread = server.MainThread(PORT)
     main_thread.setDaemon(True)
@@ -19,4 +19,8 @@ def main():
 
 
 if __name__ == "__main__":
+    import server.socket_server as server
+    if "release" in argv:
+        from release_tools import create_release_zip
+        create_release_zip.main()
     main()

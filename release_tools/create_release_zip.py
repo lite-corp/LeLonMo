@@ -20,10 +20,13 @@ def zipdir(path, zip_handle):
                 )
 
 
-if __name__ == '__main__':
+def main():
     version = DATA["version"].replace(".", "")
     zipf = zipfile.ZipFile(
         f'server{os.path.sep}LeLonMo_client_v{version}.zip', 'w', zipfile.ZIP_DEFLATED)
     zipdir(f'lelonmo', zipf)
     zipf.write(f"main.py", "main.py")
     zipf.close()
+
+if __name__ == "__main__":
+    main()
