@@ -12,6 +12,7 @@ from lelonmo.consolemenu.format import *
 from lelonmo.main_offline import human_to_bool
 
 PORT = 11111
+BUFFER_SIZE = 4096
 
 
 def _send_data(data: str, host: str):
@@ -31,7 +32,7 @@ def _send_data(data: str, host: str):
             )
         )
         # UUID is never shared with other players
-        v = s.recv(1024)
+        v = s.recv(BUFFER_SIZE)
         s.close()
         return v
     except ConnectionRefusedError:
@@ -78,10 +79,14 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
         webbrowser.open(persist_data.DATA["update_url"])
         exit_server()
     elif player_id == b"outdated%update":
-        wb.add("Your client is outdated and automatic update install is not available")
-        import webbrowser
-        webbrowser.open(persist_data.DATA["update_url"])
+        wb.add(f"You are about to receive an update from {ip}.")
+        if human_to_bool("Do you trust this server ?\n"):
+            import lelonmo.updater as updater
+            updater.auto_update(ip, wb)
+        else:
+            wb.add("Aborted update, you cannot play on this server. ")
         exit_server()
+
     else:
         try:
             int(player_id)
@@ -274,6 +279,7 @@ def exit_server():
         pass
     finally:
         s.close()
+        sys.exit()
 
 
 if __name__ == "__main__":

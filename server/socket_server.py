@@ -3,11 +3,12 @@ import json
 import re
 import threading
 import socket
+import os
 
 from server import letter_generator, persist_data
 from server import word_check
 
-
+BUFFER_SIZE = 4096
 class Game():
     def __init__(self, LANGUAGE, MAX_PLAYERS = 10):
         self.state = 0
@@ -15,6 +16,7 @@ class Game():
         self.game_data = dict(players=list())
         self.LANGUAGE = LANGUAGE
         self.MAX_PLAYERS = MAX_PLAYERS
+        self.update_file = f'server{os.path.sep}LeLonMo_client_v{persist_data.DATA["client_version"]}.zip'
 
     def _new_player(self, uuid, name, ip, status="Connected"):
         if name in [i['name'] for i in self.game_data["players"]]:
@@ -49,6 +51,7 @@ class Game():
 
     def _answer(self, msg, socket):
         socket.send(bytearray(str(msg), "utf-8"))
+        socket.close()
 
     def _get_player_id(self, uuid):
         for i, j in enumerate(self.game_data["players"]):
@@ -96,13 +99,21 @@ class Game():
         except:
             print("[W] Invalid request :", data)
             return data, client_socket, client_socket
+        
+        # Allow updates
         try:
-            if int(version) < int(persist_data.DATA["client_version"]):
-                self._answer("outdated%", client_socket)
-                return
+            if not msg in ['size%', 'latest_file%']:
+                if int(version) < int(persist_data.DATA["client_version"]) and os.path.exists(self.update_file):
+                    self._answer("outdated%update", client_socket)
+                    return
+                elif int(version) < int(persist_data.DATA["client_version"]):
+                    self._answer("outdated%", client_socket)
+                    return
         except:
             self._answer("outdated%", client_socket)
             return
+        
+        
         try:
             admin = uuid == self.game_data["admin"]["uuid"]
         except KeyError:
@@ -118,6 +129,28 @@ class Game():
                 self._answer("Nobody", client_socket)
         elif msg == "leave%":
             self._delete_player(self._get_player_id(uuid), admin)
+        
+        # Update sending part
+        elif msg == "latest_file%":
+            try:
+                print("[I] Uploading update")
+                f = open(self.update_file,'rb')
+                l = f.read(BUFFER_SIZE)
+                while (l):
+                   client_socket.send(l)
+                   l = f.read(BUFFER_SIZE)
+                f.close()
+                client_socket.close()
+                print("[I] Update done")
+            except Exception as e:
+                print("[E] Error while sending update :", e)
+        elif msg == "size%":
+            try:
+                f = open(self.update_file,'rb')
+                self._answer(len(f.read()), client_socket)
+                f.close()
+            except Exception as e:
+                print("[E] Error while calculating update :", e)
         elif self.state == 0 and msg.startswith("join%"):
             self.state = 1
             self.game_data["admin"] = dict(
@@ -193,7 +226,7 @@ class ClientThread(threading.Thread):
         self.clientsocket = clientsocket
 
     def run(self):
-        data = self.clientsocket.recv(1024).decode("utf-8")
+        data = self.clientsocket.recv(BUFFER_SIZE).decode("utf-8")
         if data.startswith("%llm_client%"):
             self.game.handle_data(data, self.clientsocket, self)
         else:
