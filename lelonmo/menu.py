@@ -3,7 +3,6 @@ from lelonmo.colors.colors import *
 from lelonmo.consolemenu import MenuFormatBuilder, SelectionMenu
 from lelonmo.consolemenu.format import MenuBorderStyleType
 from lelonmo.persist_data import DATA as settings
-import main_server
 
 version = settings["version"]
 
@@ -25,6 +24,13 @@ def main():
     select = ["Mode Local", "Mode en Ligne", "Options", "Run the server", "Quitter"]
     link = [main_offline.main_loop, main_online.main_online,
             settings_menu.main, main_server.main, bye]
+
+    try:  # Do not import the server on client-only version
+        import main_server
+    except:
+        del select[3]
+        del link[3]
+    
     menu = SelectionMenu(
         select, f"{blue('L')}{yellow('e')}{blue('L')}{magenta('o')}{cyan('n')}{green('M')}{magenta('o')} {red(f'v{version}')}",
         subtitle="Le jeu du long mot",
