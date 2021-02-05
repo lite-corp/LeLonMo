@@ -42,8 +42,9 @@ else:
         command = [sys.executable, "-m", "pip", "install", "six"]
         subprocess.run(command)
 
-    if os_name == "Windows":
+    if os_name == "Windows" and persist.DATA["game"]['FIRST_RUN']:
         import lelonmo.persist_data as persist
+        persist.update_key("async_input", True, "online")
         if platform.version().startswith("10."):
             persist.update_key("FIRST_RUN", False, "game")
         elif persist.DATA["game"]['FIRST_RUN']:
@@ -51,8 +52,6 @@ else:
             input(
                 "Colors are not supported on this version of windows, and are disabled by default. ")
             persist.update_key("USE_COLORS", False, "settings")
-        import lelonmo.menu as menu
-        menu.main()
     elif os_name == "Darwin":
         try:
             import Quartz
@@ -64,10 +63,5 @@ else:
             command = [sys.executable, "-m", "pip", "install",
                        "pyobjc-framework-Quartz", "pyobjc"]
             subprocess.run(command)
-        import lelonmo.menu as menu
-        menu.main()
-    else:
-        import lelonmo.menu as menu
-        input(
-            "This platform is not officially supported press [ENTER] to continue")
-        menu.main()
+    import lelonmo.menu as menu
+    menu.main()
