@@ -64,8 +64,8 @@ else:
             command = [sys.executable, "-m", "pip", "install",
                        "pyobjc-framework-Quartz", "pyobjc"]
             subprocess.run(command)
-            import lelonmo.menu as menu
-            menu.main()
+        import lelonmo.menu as menu
+        menu.main()
     else:
         import lelonmo.menu as menu
         input(
