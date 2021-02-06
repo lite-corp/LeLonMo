@@ -41,9 +41,8 @@ else:
         import sys
         command = [sys.executable, "-m", "pip", "install", "six"]
         subprocess.run(command)
-
+    import lelonmo.persist_data as persist
     if os_name == "Windows" and persist.DATA["game"]['FIRST_RUN']:
-        import lelonmo.persist_data as persist
         persist.update_key("async_input", True, "online")
         if platform.version().startswith("10."):
             persist.update_key("FIRST_RUN", False, "game")
