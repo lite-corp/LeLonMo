@@ -26,12 +26,13 @@ class Input:
             key.char # Detect non-char key (ctrl, esc, ...)
             if key.char == '\x03': # CTRL+C
                 raise KeyboardInterrupt
-            if self.hide_char:
-                self.text_shown = [self.hide_char for i in range(len(self.text))]
-                self.text_shown.append(key.char)
-            else:
-                self.text_shown.append(key.char)
-            self.text.append(key.char)
+            if len(self.text) < 65:
+                if self.hide_char:
+                    self.text_shown = [self.hide_char for i in range(len(self.text))]
+                    self.text_shown.append(key.char)
+                else:
+                    self.text_shown.append(key.char)
+                self.text.append(key.char)
             
         except AttributeError:
             if key == keyboard.Key.backspace: # Delete
