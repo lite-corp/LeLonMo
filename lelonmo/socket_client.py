@@ -1,12 +1,14 @@
+import atexit
 import json
-import sys
+from os import stat
 import socket
+import sys
 import threading
 from time import sleep as wait
-import atexit
 
-from lelonmo.async_input import Input
 from lelonmo import persist_data
+from lelonmo.async_input import Input
+from lelonmo.colors.colors import *
 from lelonmo.consolemenu import *
 from lelonmo.consolemenu.format import *
 from lelonmo.main_offline import human_to_bool
@@ -24,9 +26,9 @@ def _send_data(data: str, host: str):
         # Allow identifying users at anytime
         s.send(
             bytearray(
-                "%llm_client%" \
-                f"{persist_data.DATA['version'].replace('.', str())}%" \
-                f"{persist_data.DATA['online']['uuid']}%" \
+                "%llm_client%"
+                f"{persist_data.DATA['version'].replace('.', str())}%"
+                f"{persist_data.DATA['online']['uuid']}%"
                 f"{data}",
                 "utf-8"
             )
@@ -59,27 +61,27 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
     player_id = _send_data("join%" + persist_data.DATA["online"]["name"], ip)
     if player_id == b"started":
         wb.clear()
-        wb.add("The game you tried to join already started")
+        wb.add("The game you tried to join already started", status=red("Connection failed"))
         wb.add("Press [ENTER] to try again")
-        wait(1) # Avoid spam
-        input() 
+        wait(1)  # Avoid spam
+        input()
         return _join_game(wb, ip)
     elif player_id == b"wait%":
-        wb.add("Waiting for admin to restart the game ...")
+        wb.add("Waiting for admin to restart the game ...", status=yellow("Waiting ..."))
         while player_id == b"wait%":
             wait(persist_data.DATA["online"]["update_speed"])
             player_id = _send_data(
                 "join%" + persist_data.DATA["online"]["name"], ip)
         return int(player_id)
     elif player_id == b"":
-        wb.add("Error while joining, try again later")
+        wb.add("Error while joining, try again later", status=red("Unknown error"))
     elif player_id == b"outdated%":
-        wb.add("Your client is outdated, please download the latest version")
+        wb.add("Your client is outdated, please download the latest version", status=red("Client outdated"))
         import webbrowser
         webbrowser.open(persist_data.DATA["update_url"])
         exit_server()
     elif player_id == b"outdated%update":
-        wb.add(f"You are about to receive an update from {ip}.")
+        wb.add(f"You are about to receive an update from {ip}.", status=red("Client outdated"))
         if human_to_bool("Do you trust this server ?\n"):
             import lelonmo.updater as updater
             updater.auto_update(ip, wb)
@@ -91,7 +93,7 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
         try:
             int(player_id)
         except:
-            wb.add("Error while joining, try again later")
+            wb.add("Error while joining, try again later", status=red("Unknown error"))
             exit()
         if int(player_id) >= 0:
             return int(player_id)
@@ -104,170 +106,199 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
                     -2: "Username cannot be a space",
                     -3: "Username contains forbiden words or characters",
                     -4: "This username is already taken"
-                }[int(player_id)])
+                }[int(player_id)], status=red("Invalid username"))
                 name = input("Please enter your username : ")
                 try:
                     player_id = int(_send_data("join%" + name, ip))
                 except ValueError:
-                    wb.add("Error while joining, try again later")
+                    wb.add("Error while joining, try again later", status=red("Unknown error"))
                     exit()
             persist_data.update_key('name', name, "online")
             return int(player_id)
 
 
 class WhiteBoard:  # Manages the menu on screen, used to update things unig threads
-    def __init__(self, format, text=""):
-        self.text = text  # Text on the menu
+    def __init__(self, status="Initializing"):
+
         self.menu = ConsoleMenu(
-            "LeLonMo X", "Online Mode", prologue_text=self.text, formatter=format)
+            f"{blue('LeLonMo')} {red('Online')}", status,
+            formatter=MenuFormatBuilder()
+            .set_border_style_type(MenuBorderStyleType.DOUBLE_LINE_OUTER_LIGHT_INNER_BORDER)
+            .set_prompt("")
+            .set_title_align('center')
+            .set_subtitle_align('center')
+            .set_left_margin(4)
+            .set_right_margin(4)
+            .show_header_bottom_border(True)
+            .set_prologue_text_align('left')
+        )
+        # Text on the menu
+        self.text = str()
+        self.status = status
+
         # Part of the data that will be overwritten on updates (player list and status)
         self.updatable = ""
         self.updatable_2 = ""
-        self.last_text = str()
+        self.invert = False
+        self.clear()
 
-    def add(self, *args, updatable="", invert=False, updatable_2=None):  # Add a line to the menu
-        args = list(args)
-        if not updatable:
-            updatable = self.updatable
-        if updatable_2 is None:
-            updatable_2 = self.updatable_2
-        self.updatable_2 = updatable_2
-        self.updatable = updatable
-        self.text = self.text + "\n" + " ".join(args)
-        self.text = self.text.replace("\n\n", '\n')
-        self.menu.prologue_text = self.text + updatable
-        # invert updatable text and normal text (used during the game itself)
+    def update(self, add=None, updatable=None, updatable_2=None, status=None, invert=None):
+
+        update_screen = False
+        if updatable is not None and self.updatable != updatable:
+            update_screen = True
+            self.updatable = updatable
+        if updatable_2 is not None and self.updatable_2 != updatable_2:
+            update_screen = True
+            self.updatable_2 = updatable_2
+        if status is not None and self.status != status:
+            update_screen = True
+            self.status = status
+        if add is not None:
+            update_screen = True
+            self.text += "\n" + str(add)
+        if invert is not None and self.invert != invert:
+            update_screen = True
+            self.invert = invert
+
         if invert:
-            self.menu.prologue_text = updatable + self.text
-        self.menu.prologue_text = self.menu.prologue_text + updatable_2
-        
-        if not str(self.last_text) == str(self.menu.prologue_text):  # Avoid screen refres spam
+            self.menu.prologue_text = \
+                self.updatable +\
+                "\n\n" + \
+                self.text
+        else:
+            self.menu.prologue_text = \
+                self.text +\
+                "\n" + \
+                self.updatable
+        self.menu.subtitle = self.status
+        self.menu.epilogue_text = self.updatable_2
+
+        if update_screen:
             self.menu.clear_screen()
             self.menu.draw()
-        self.last_text = self.menu.prologue_text
 
     def update_letter(self, letters):
-        self.add(updatable_2="".join(letters), invert=True)
+        self.update(updatable_2="Enter your word : \n "+"".join(letters), invert=True)
+
+    def update_status(self, status):
+        self.update(status=status)
 
     def clear(self):  # Clear and update the menu, removes the text and the updates
         self.text = str()
         self.updatable = str()
         self.updatable_2 = str()
+        self.menu.epilogue_text = str()
+        self.menu.prologue_text = str()
         self.menu.clear_screen()
         self.menu.draw()
 
 
 class PlayerUpdate(threading.Thread):  # Thread dedicated to player list update
-    def __init__(self, board: WhiteBoard, host: str):
+    def __init__(self, board: WhiteBoard, host: str, reconnect_if_missing=False, invert=False):
         self.enable = True
         self.board = board
         self.host = host
-        self.invert = False
+        self.invert = invert
+        self.reconnect_if_missing = reconnect_if_missing
         threading.Thread.__init__(self)
         self.setDaemon(True)
         self.setName("Playerboard")
 
     def run(self, run=False):  # Run is set to prevent the thread from looping if only one run is needed
         while self.enable or run:
-            status = _send_data("players%", self.host).decode("utf-8")
-            self.players = status
-            self.board.add(updatable="Players :\n * " +
-                           "\n * ".join(status.split("%")), invert=self.invert)
+            players = json.loads(_send_data("players%", self.host).decode("utf-8"))
+            player_list_str = str()
+            for i in players:
+                player_list_str += f"\n  * {i['name']} ({i['status']})"
+
+            self.board.update(updatable="Players :" + player_list_str, invert=self.invert)
+
+            # Reconnect to the server if name is not in player list
+            if self.reconnect_if_missing:
+                if not persist_data.DATA["online"]['name'] in [i["name"] for i in players if i]:
+                    self.enable = False
+                    from lelonmo.main_online import main_online
+                    main_online(self.host)
+
             if not run:
                 wait(persist_data.DATA["online"]["update_speed"])
             run = False
 
 
 server_ip = "localhost"
-
+wb = WhiteBoard()
 
 def main(host="localhost"):
     global server_ip
+    global wb
+    wb.clear()
     server_ip = host
-    menu_format = MenuFormatBuilder() \
-        .set_border_style_type(MenuBorderStyleType.DOUBLE_LINE_OUTER_LIGHT_INNER_BORDER) \
-        .set_prompt("") \
-        .set_title_align('center') \
-        .set_subtitle_align('center') \
-        .set_left_margin(4) \
-        .set_right_margin(4) \
-        .show_header_bottom_border(True) \
-        .set_prologue_text_align('left')
 
-    wb = WhiteBoard(menu_format)
-
-    wb.add(f"Joining the game hosted at {host}")
+    wb.update_status(yellow(f"Joining {host}"))
     player_id = _join_game(wb, host)
-    wb.add("Joined successfully")
+    wb.update_status(green("Connected"))
     admin = False
     if player_id == 0:  # Admin detection
-        wb.add("You are the administrator, press [ENTER] to start the game")
+        wb.update("You are the administrator, press [ENTER] to start the game")
         admin = True
-    playerboard = PlayerUpdate(wb, host)
+    playerboard = PlayerUpdate(wb, host, True)
     playerboard.start()
     if admin:
         input()
         if _send_data("start%", host) == "ok%":
-            wb.add("Game started successfully")
+            wb.update("Game started successfully")
         else:
-            wb.add("Unauthorized")
-            if not persist_data.DATA["online"]["name"] in playerboard.players:
-                playerboard.enable = False
-                del admin
-                del wb
-                del player_id
-                from lelonmo.main_online import main_online
-                main_online(host)
+            wb.update(red("Unauthorized")) # Should not happen with non-modded client
+            _wait_for_status("start", host)
     else:
-        status = _status(host)
-        while not status.startswith("start"):
-            status = _status(host)
-            # Avoid spamming the server
-            if not persist_data.DATA["online"]["name"] in _send_data("players%", host).decode("utf-8"):
-                playerboard.enable = False
-                del admin
-                del wb
-                del player_id
-                from lelonmo.main_online import main_online
-                main_online(host)
-            wait(persist_data.DATA["online"]["update_speed"])
+        _wait_for_status("start", host)
 
     wb.clear()
-    playerboard.invert = True
-    wb.add(
-        "Game started\n",
-        "You have to compose your word with these letters\n",
-        " ".join(_status(host)[5:]),
-        "\n Enter your word : "
+    wb.update(
+        green("Game started\n\n")+
+        "You have to compose your word with these letters\n"+
+        bold(" ".join(_status(host)[5:])), 
+        updatable_2="Enter your word : ",
+        status=green("Playing)"),
+        invert=True
     )
+    playerboard.invert = True
 
-    input_method = input if not persist_data.DATA["online"]["async_input"] else Input(wb.update_letter).run
+    input_method = input if not persist_data.DATA["online"]["async_input"] else Input(
+        wb.update_letter).run
     if input_method is input:
         playerboard.enable = False
+    else:
+        wb.update_letter("Start typing your word")
     while not _send_data(input_method(), host).decode("utf-8").startswith("valid%"):
-        wb.add(updatable_2='Your word is not valid', invert=True)
+        wb.update(updatable_2='Your word is not valid', invert=True)
     playerboard.enable = False
     wb.clear()
-    wb.add("Waiting for other players to finish")
+    wb.update("Waiting for other players to finish")
     playerboard = PlayerUpdate(wb, host)
     playerboard.start()
     _wait_for_status("results", host)
-    wait(0.25) # Avoid replay spam for the last player if it has low ping
+    wait(0.25)  # Avoid replay spam for the last player if it has low ping
     playerboard.enable = False
     wb.updatable = ""
 
     result_data = json.loads(_status(host)[7:])
     wb.clear()
-    wb.add(
-        "Results : \n Winner(s):\n * " + "\n  * ".join([i[0] + " : " + i[1] for i in result_data["best"]]) +
-        "\n\n Scores :\n * " +
-        "\n  * ".join([i["name"] + " : " + i["word"]
-                       for i in result_data["players"]])
+    wb.update(
+        add="Winner(s):\n * " + "\n  * ".join([i[0] +
+        " : " + i[1] for i in result_data["best"]]) +
+        "\n\n Scores :\n * " + "\n  * ".join([i["name"] +
+        " : " +
+        i["word"]for i in result_data["players"]]),
+        status=bold("Finished")
     )
 
 
 def exit_server():
     global server_ip
+    global wb
+    print("Exiting ...", end="\r")
     socket.timeout = persist_data.DATA["online"]["update_speed"]
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -279,6 +310,8 @@ def exit_server():
         pass
     finally:
         s.close()
+        wb.update_status(red("Disconnected"))
+        wb.update(updatable_2="You left the game")
         sys.exit()
 
 
