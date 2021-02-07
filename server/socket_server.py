@@ -139,6 +139,8 @@ class Game():
             version = r.group(1)
             uuid = r.group(2)
             msg = r.group(3)
+            if not msg:
+                print("[W] Empty message from", uuid)
         except:
             print("[W] Invalid request :", data)
             return data, client_socket, client_socket
@@ -163,11 +165,9 @@ class Game():
             admin = True
         if msg == "players%":
             try:
-                self._answer(
-                    "%".join(
-                        [f'{i["name"]} ({i["status"]})' for i in self.game_data["players"]]),
-                    client_socket
-                )
+                self._answer(json.dumps(
+                    [dict(name=i['name'], status=i['status']) for i in self.game_data["players"]]
+                ),client_socket)
             except:
                 self._answer("Nobody", client_socket)
         elif msg == "leave%":
