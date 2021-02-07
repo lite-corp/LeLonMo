@@ -7,8 +7,8 @@ home = expanduser("~") + os.path.sep
 save_file = home + ".lelonmo_server_save.json"
 
 default_data = dict(
-    version="0.5.1",
-    client_version="0051",
+    version="0.5.2",
+    client_version="0052",
     online=dict(
         uuid=str(uuid.uuid4()),
         name="",
@@ -60,7 +60,7 @@ def _repair_data():
             if DATA[key1] != default_data[key1]:
                 print("Version changed")
                 DATA[key1] = default_data[key1]
-        elif key1 in ["client_version", "update_url"]:
+        elif key1 in ["client_version"]:
             DATA[key1] = default_data[key1]
         else:
             for key2 in default_data[key1].keys():

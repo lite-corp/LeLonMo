@@ -21,9 +21,9 @@ def main_online(host=''):
         exit()
     except KeyboardInterrupt:
         socket_client.exit_server()
-    except Exception as e:
-        print("Something went wrong :", e)
-        socket_client.exit_server()
+    #except Exception as e:
+    #    print("Something went wrong :", e)
+    #    socket_client.exit_server()
 
 if __name__ == "__main__":
     main_online()

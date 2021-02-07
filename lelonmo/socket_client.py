@@ -1,6 +1,5 @@
 import atexit
 import json
-from os import stat
 import socket
 import sys
 import threading
@@ -61,39 +60,39 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
     player_id = _send_data("join%" + persist_data.DATA["online"]["name"], ip)
     if player_id == b"started":
         wb.clear()
-        wb.add("The game you tried to join already started", status=red("Connection failed"))
-        wb.add("Press [ENTER] to try again")
+        wb.update("The game you tried to join already started", status=red("Connection failed"))
+        wb.update("Press [ENTER] to try again")
         wait(1)  # Avoid spam
         input()
         return _join_game(wb, ip)
     elif player_id == b"wait%":
-        wb.add("Waiting for admin to restart the game ...", status=yellow("Waiting ..."))
+        wb.update("Waiting for admin to restart the game ...", status=yellow("Waiting ..."))
         while player_id == b"wait%":
             wait(persist_data.DATA["online"]["update_speed"])
             player_id = _send_data(
                 "join%" + persist_data.DATA["online"]["name"], ip)
         return int(player_id)
     elif player_id == b"":
-        wb.add("Error while joining, try again later", status=red("Unknown error"))
+        wb.update("Error while joining, try again later", status=red("Unknown error"))
     elif player_id == b"outdated%":
-        wb.add("Your client is outdated, please download the latest version", status=red("Client outdated"))
+        wb.update("Your client is outdated, please download the latest version", status=red("Client outdated"))
         import webbrowser
         webbrowser.open(persist_data.DATA["update_url"])
         exit_server()
     elif player_id == b"outdated%update":
-        wb.add(f"You are about to receive an update from {ip}.", status=red("Client outdated"))
+        wb.update(f"You are about to receive an update from {ip}.", status=red("Client outdated"))
         if human_to_bool("Do you trust this server ?\n"):
             import lelonmo.updater as updater
             updater.auto_update(ip, wb)
         else:
-            wb.add("Aborted update, you cannot play on this server. ")
+            wb.update("Aborted update, you cannot play on this server. ")
         exit_server()
 
     else:
         try:
             int(player_id)
         except:
-            wb.add("Error while joining, try again later", status=red("Unknown error"))
+            wb.update("Error while joining, try again later", status=red("Unknown error"))
             exit()
         if int(player_id) >= 0:
             return int(player_id)
@@ -101,7 +100,7 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
             name = ""
             while not int(player_id) >= 0:
                 wb.clear()
-                wb.add({
+                wb.update({
                     -1: "Please enter a username",
                     -2: "Username cannot be a space",
                     -3: "Username contains forbiden words or characters",
@@ -111,7 +110,7 @@ def _join_game(wb, ip="localhost"):  # Initiate the connexion between client and
                 try:
                     player_id = int(_send_data("join%" + name, ip))
                 except ValueError:
-                    wb.add("Error while joining, try again later", status=red("Unknown error"))
+                    wb.update("Error while joining, try again later", status=red("Unknown error"))
                     exit()
             persist_data.update_key('name', name, "online")
             return int(player_id)
@@ -310,8 +309,8 @@ def exit_server():
         pass
     finally:
         s.close()
-        wb.update_status(red("Disconnected"))
-        wb.update(updatable_2="You left the game")
+        #wb.update_status(red("Disconnected"))
+        #wb.update(updatable_2="You left the game")
         sys.exit()
 
 

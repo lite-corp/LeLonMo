@@ -35,13 +35,13 @@ def _send_data(data: str, host: str):
 
 def auto_update(ip, wb):
     size = int(_send_data("size%", ip))
-    wb.add("The update is available")
+    wb.update("The update is available")
     tmp_file = open("tmp_update.zip", "wb")
     s = socket.socket()  
     s.connect((ip, SERVER_PORT))
     s.send(bytearray(f"%llm_client%{persist_data.DATA['version'].replace('.', str())}%{persist_data.DATA['online']['uuid']}%latest_file%","utf-8"))
     data = b'1'
-    wb.add("Downloading ...")
+    wb.update("Downloading ...")
     while data:
         data = s.recv(BUFFER_SIZE)
         if not data:
@@ -49,10 +49,10 @@ def auto_update(ip, wb):
         # write data to a file
         tmp_file.write(data)
     tmp_file.close()
-    wb.add("Done")
+    wb.update("Done")
     ziph = ZipFile('tmp_update.zip', 'r')
-    wb.add("Extracting update ...")
+    wb.update("Extracting update ...")
     for file in ziph.namelist():
         ziph.extract(file, os.path.realpath(os.path.join(__file__, f"..{os.path.sep}..")))
-    wb.add("Update successful")
+    wb.update("Update successful")
     exit(0)
