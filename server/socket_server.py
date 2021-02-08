@@ -1,6 +1,7 @@
 
 import json
 import re
+import sys
 import threading
 import socket
 import os
@@ -14,7 +15,7 @@ class Game():
         """Initialize the game
         """
         self.state = 0
-        print("[I] Waiting for admin ...")
+        print("\r\r[I] Waiting for admin ...")
         self.game_data = dict(players=list())
         self.LANGUAGE = LANGUAGE
         self.MAX_PLAYERS = MAX_PLAYERS
@@ -36,21 +37,21 @@ class Game():
             print("[W]Refused", uuid, ": Too many people")
             return -5
         elif name in [i['name'] for i in self.game_data["players"]]:
-            print("[W] Refused", uuid, "with name", name)
+            print("\r[W] Refused", uuid, "with name", name)
             return -4
         elif [0 for i in ["admin", "%", "connected", " ", "\t", "\n", "playing"] if i in name.lower()]:
-            print("[W] Refused", uuid, "with name", name)
+            print("\r[W] Refused", uuid, "with name", name)
             return -3
         elif name.isspace():
-            print("[V] Refused", uuid, ": isspace")
+            print("\r[V] Refused", uuid, ": isspace")
             return -2
         elif name == "":
-            print("[V] Refused", uuid, ": Empty name")
+            print("\r[V] Refused", uuid, ": Empty name")
             return -1
         else: 
             self.game_data["players"].append(
                 dict(uuid=uuid, name=name, ip=ip, word="", status=status, computer_afk=False))
-            print("[I] Added player", name, "with uuid", uuid)
+            print("\r[I] Added player", name, "with uuid", uuid)
             return len(self.game_data["players"])-1
 
     def _delete_player(self, uuid: str, admin: bool):
@@ -59,7 +60,7 @@ class Game():
         """
         player_id = self._get_player_id(uuid)
         if not player_id == -1:
-            print(f"[I] Player {self.game_data['players'][player_id]['name']} left.")
+            print(f"\r[I] Player {self.game_data['players'][player_id]['name']} left.")
             del self.game_data["players"][player_id]
             if admin:
                 try:
@@ -115,7 +116,7 @@ class Game():
             word_len.append(j)
             self.game_data["players"][i]["points"] =\
                 len(player_word_len) - word_len.index(j) - 1
-            #print(f"[V] Gave {len(player_word_len) - word_len.index(j) - 1} to player {i}") 
+            #print(f"\r[V] Gave {len(player_word_len) - word_len.index(j) - 1} to player {i}") 
             if self.game_data["players"][i]['uuid'] in self.scores.keys():
                 self.scores[self.game_data["players"][i]['uuid']] += self.game_data["players"][i]["points"]
             else:
@@ -126,7 +127,7 @@ class Game():
         Does not reset points
         """
         self.state = 0
-        print("[I] Reseting game")
+        print("\r[I] Reseting game")
         self.game_data = dict(players=list())
 
     def handle_data(self, data: str, client_socket, client_thread):
@@ -140,9 +141,9 @@ class Game():
             uuid = r.group(2)
             msg = r.group(3)
             if not msg:
-                print("[W] Empty message from", uuid)
+                print("\r[W] Empty message from", uuid)
         except:
-            print("[W] Invalid request :", data)
+            print("\r[W] Invalid request :", data)
             return data, client_socket, client_socket
         
         # Allow updates
@@ -176,7 +177,7 @@ class Game():
         # Update sending part
         elif msg == "latest_file%":
             try:
-                print("[I] Uploading update")
+                print("\r[I] Uploading update")
                 f = open(self.update_file,'rb')
                 l = f.read(BUFFER_SIZE)
                 while (l):
@@ -184,16 +185,16 @@ class Game():
                    l = f.read(BUFFER_SIZE)
                 f.close()
                 client_socket.close()
-                print("[I] Update done")
+                print("\r[I] Update done")
             except Exception as e:
-                print("[E] Error while sending update :", e)
+                print("\r[E] Error while sending update :", e)
         elif msg == "size%":
             try:
                 f = open(self.update_file,'rb')
                 self._answer(len(f.read()), client_socket)
                 f.close()
             except Exception as e:
-                print("[E] Error while calculating update :", e)
+                print("\r[E] Error while calculating update :", e)
         elif self.state == 0 and msg.startswith("join%"):
             self.state = 1
             self.game_data["admin"] = dict(
@@ -208,7 +209,7 @@ class Game():
                 self.game_data["letters"] = ''.join(
                     letter_generator.generate(letter_range=(97, 122)))
                 self._answer('ok%', client_socket)
-                print("[I] Game started")
+                print("\r[I] Game started")
             elif msg == "%start":
                 self._answer('unauthorized%', client_socket)
             else:
@@ -227,7 +228,7 @@ class Game():
                         self._answer("valid%", client_socket)
                         self.game_data["players"][self._get_player_id(uuid)]["status"] = "Finished"
                         self.game_data["players"][self._get_player_id(uuid)]["word"] = msg
-                        print(f'[I] {self.game_data["players"][self._get_player_id(uuid)]["name"]} finished')
+                        print(f'\r[I] {self.game_data["players"][self._get_player_id(uuid)]["name"]} finished')
                         all_finished = True
                         for i in self.game_data["players"]:
                             if i["status"] != "Finished" and not i["computer_afk"]:
@@ -274,22 +275,24 @@ class ClientThread(threading.Thread):
 class MainThread(threading.Thread):
     def __init__(self, port):
         threading.Thread.__init__(self)
-        print("[I] Started server thread")
+        print("\r[I] Started server thread")
         self.port = port
+        self.update = False
+        self.enabled = True
+        self.game = None
 
     def run(self):
         try:
-            print("[I] Server started, listening...")
-            #print("[V] Use portmapper for UPnP : link port 11111 to 11111. ")
+            print("\r[I] Server started, listening...")
+            #print("\r[V] Use portmapper for UPnP : link port 11111 to 11111. ")
             self.tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.tcpsock.bind(("", self.port))
-            game = Game("fr")
-            while True:
+            self.game = Game("fr")
+            while self.enabled:
                 self.tcpsock.listen(10)
                 (self.clientsocket, (ip, port)) = self.tcpsock.accept()
-
-                newthread = ClientThread(ip, port, self.clientsocket, game)
+                newthread = ClientThread(ip, port, self.clientsocket, self.game)
                 newthread.start()
         except OSError:
-            print("[I] Exiting")
+            print("\r[I] Exiting")
