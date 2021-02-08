@@ -259,7 +259,7 @@ def main(host="localhost"):
         "You have to compose your word with these letters\n"+
         bold(" ".join(_status(host)[5:])), 
         updatable_2="Enter your word : ",
-        status=green("Playing)"),
+        status=green("Playing"),
         invert=True
     )
     playerboard.invert = True
