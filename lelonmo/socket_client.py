@@ -245,7 +245,7 @@ def main(host="localhost"):
     playerboard.start()
     if admin:
         input()
-        if _send_data("start%", host) == "ok%":
+        if _send_data("start%", host) == b'ok%':
             wb.update("Game started successfully")
         else:
             wb.update(red("Unauthorized")) # Should not happen with non-modded client
