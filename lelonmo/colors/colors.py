@@ -146,6 +146,7 @@ blue = partial(color, fg='blue')
 magenta = partial(color, fg='magenta')
 cyan = partial(color, fg='cyan')
 white = partial(color, fg='white')
+default = partial(color, fg='default')
 
 # Style shortcuts
 bold = partial(color, style='bold')

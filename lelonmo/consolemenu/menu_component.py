@@ -22,13 +22,14 @@ class MenuComponent(object):
     Base class for a menu component.
     """
 
-    def __init__(self, menu_style, max_dimension=None):
+    def __init__(self, menu_style, max_dimension=None, color=colors.cyan):
         if not isinstance(menu_style, MenuStyle):
             raise TypeError('menu_style must be of type MenuStyle')
         if max_dimension is None:
             max_dimension = Dimension(width=80, height=40)
         self.__max_dimension = max_dimension
         self.__style = menu_style
+        self.color = color
 
     @property
     def max_dimension(self):
@@ -80,39 +81,39 @@ class MenuComponent(object):
         """
         The inner horizontal border section (not including the menu margins or verticals).
         """
-        return u"{0}".format(self.border_style.inner_horizontal * (self.calculate_border_width() - 2))
+        return self.color(u"{0}".format(self.border_style.inner_horizontal * (self.calculate_border_width() - 2)))
 
     def inner_horizontal_border(self):
         """
         The complete inner horizontal border section.
         """
-        return u"{lm}{lv}{hz}{rv}".format(lm=' ' * self.margins.left,
-                                          lv=self.border_style.outer_vertical_inner_right,
-                                          rv=self.border_style.outer_vertical_inner_left,
-                                          hz=self.inner_horizontals())
+        return self.color(u"{lm}{lv}{hz}{rv}".format(lm=' ' * self.margins.left,
+                                          lv=self.color(self.border_style.outer_vertical_inner_right),
+                                          rv=self.color(self.border_style.outer_vertical_inner_left),
+                                          hz=self.inner_horizontals()))
 
     def outer_horizontals(self):
         """
         The outer horizontal border section (not including the menu margins or verticals).
         """
-        return u"{0}".format(self.border_style.outer_horizontal * (self.calculate_border_width() - 2))
+        return self.color(u"{0}".format(self.border_style.outer_horizontal * (self.calculate_border_width() - 2)))
 
     def outer_horizontal_border_bottom(self):
         """
         The complete outer top horizontal border section, including left and right margins.
         """
-        return u"{lm}{lv}{hz}{rv}".format(lm=' ' * self.margins.left,
+        return self.color(u"{lm}{lv}{hz}{rv}".format(lm=' ' * self.margins.left,
                                           lv=self.border_style.bottom_left_corner,
                                           rv=self.border_style.bottom_right_corner,
-                                          hz=self.outer_horizontals())
+                                          hz=self.outer_horizontals()))
 
     def outer_horizontal_border_top(self):
         """
         The complete outer top horizontal border section, including left and right margins.
         """
         return u"{lm}{lv}{hz}{rv}".format(lm=' ' * self.margins.left,
-                                          lv=self.border_style.top_left_corner,
-                                          rv=self.border_style.top_right_corner,
+                                          lv=self.color(self.border_style.top_left_corner),
+                                          rv=self.color(self.border_style.top_right_corner),
                                           hz=self.outer_horizontals())
 
     def row(self, content='', align='left'):
@@ -120,7 +121,7 @@ class MenuComponent(object):
         A row of the menu, which comprises the left and right verticals plus the given content.
         """
         return u"{lm}{vert}{cont}{vert}".format(lm=' ' * self.margins.left,
-                                                vert=self.border_style.outer_vertical,
+                                                vert=self.color(self.border_style.outer_vertical),
                                                 cont=self._format_content(content, align))
 
     @staticmethod
