@@ -5,13 +5,16 @@ import sys
 import threading
 import socket
 import os
+import time
 
 from server import letter_generator, persist_data
 from server import word_check
 
 BUFFER_SIZE = 4096
+
+
 class Game():
-    def __init__(self, LANGUAGE, MAX_PLAYERS = 10):
+    def __init__(self, LANGUAGE, MAX_PLAYERS=10):
         """Initialize the game
         """
         self.state = 0
@@ -48,7 +51,7 @@ class Game():
         elif name == "":
             print("\r[V] Refused", uuid, ": Empty name")
             return -1
-        else: 
+        else:
             self.game_data["players"].append(
                 dict(uuid=uuid, name=name, ip=ip, word="", status=status, computer_afk=False))
             print("\r[I] Added player", name, "with uuid", uuid)
@@ -60,7 +63,8 @@ class Game():
         """
         player_id = self._get_player_id(uuid)
         if not player_id == -1:
-            print(f"\r[I] Player {self.game_data['players'][player_id]['name']} left.")
+            print(
+                f"\r[I] Player {self.game_data['players'][player_id]['name']} left.")
             del self.game_data["players"][player_id]
             if admin:
                 try:
@@ -108,7 +112,8 @@ class Game():
             5th gets 0 point
 
         """
-        player_word_len = [(len(j["word"]), i) for i, j in enumerate(self.game_data["players"])]
+        player_word_len = [(len(j["word"]), i)
+                           for i, j in enumerate(self.game_data["players"])]
         player_word_len.sort(reverse=True)
 
         word_len = []
@@ -116,11 +121,13 @@ class Game():
             word_len.append(j)
             self.game_data["players"][i]["points"] =\
                 len(player_word_len) - word_len.index(j) - 1
-            #print(f"\r[V] Gave {len(player_word_len) - word_len.index(j) - 1} to player {i}") 
+            #print(f"\r[V] Gave {len(player_word_len) - word_len.index(j) - 1} to player {i}")
             if self.game_data["players"][i]['uuid'] in self.scores.keys():
-                self.scores[self.game_data["players"][i]['uuid']] += self.game_data["players"][i]["points"]
+                self.scores[self.game_data["players"][i]['uuid']
+                            ] += self.game_data["players"][i]["points"]
             else:
-                self.scores[self.game_data["players"][i]['uuid']] = self.game_data["players"][i]["points"]
+                self.scores[self.game_data["players"][i]['uuid']
+                            ] = self.game_data["players"][i]["points"]
 
     def _reset(self):
         """Restart the game
@@ -145,7 +152,7 @@ class Game():
         except:
             print("\r[W] Invalid request :", data)
             return data, client_socket, client_socket
-        
+
         # Allow updates
         try:
             if not msg in ['size%', 'latest_file%']:
@@ -158,8 +165,7 @@ class Game():
         except:
             self._answer("outdated%", client_socket)
             return
-        
-        
+
         try:
             admin = uuid == self.game_data["admin"]["uuid"]
         except KeyError:
@@ -167,22 +173,23 @@ class Game():
         if msg == "players%":
             try:
                 self._answer(json.dumps(
-                    [dict(name=i['name'], status=i['status']) for i in self.game_data["players"]]
-                ),client_socket)
+                    [dict(name=i['name'], status=i['status'])
+                     for i in self.game_data["players"]]
+                ), client_socket)
             except:
                 self._answer("Nobody", client_socket)
         elif msg == "leave%":
             self._delete_player(uuid, admin)
-        
+
         # Update sending part
         elif msg == "latest_file%":
             try:
                 print("\r[I] Uploading update")
-                f = open(self.update_file,'rb')
+                f = open(self.update_file, 'rb')
                 l = f.read(BUFFER_SIZE)
                 while (l):
-                   client_socket.send(l)
-                   l = f.read(BUFFER_SIZE)
+                    client_socket.send(l)
+                    l = f.read(BUFFER_SIZE)
                 f.close()
                 client_socket.close()
                 print("\r[I] Update done")
@@ -190,7 +197,7 @@ class Game():
                 print("\r[E] Error while sending update :", e)
         elif msg == "size%":
             try:
-                f = open(self.update_file,'rb')
+                f = open(self.update_file, 'rb')
                 self._answer(len(f.read()), client_socket)
                 f.close()
             except Exception as e:
@@ -214,21 +221,27 @@ class Game():
                 self._answer('unauthorized%', client_socket)
             else:
                 if self._get_player_id(uuid) == -1 and msg.startswith("join%"):
-                    self._answer(self._new_player(uuid, msg.split("%")[1], client_thread.ip), client_socket)
+                    self._answer(self._new_player(uuid, msg.split(
+                        "%")[1], client_thread.ip), client_socket)
         elif self.state == 2:
             if msg == "status%":
-                self._answer(f"start{self.game_data['letters']}", client_socket)
+                self._answer(
+                    f"start{self.game_data['letters']}", client_socket)
                 if "" == self.game_data["players"][self._get_player_id(uuid)]["word"]:
-                    self.game_data["players"][self._get_player_id(uuid)]["status"] = "Playing"
+                    self.game_data["players"][self._get_player_id(
+                        uuid)]["status"] = "Playing"
             elif msg.startswith("join%"):
                 self._answer("started", client_socket)
             elif not self._get_player_id(uuid) == -1:
                 if self.game_data["players"][self._get_player_id(uuid)]["status"] != "Finished":
                     if word_check.check_dict(msg, self.LANGUAGE) and word_check.check_list(msg, self.game_data["letters"]):
                         self._answer("valid%", client_socket)
-                        self.game_data["players"][self._get_player_id(uuid)]["status"] = "Finished"
-                        self.game_data["players"][self._get_player_id(uuid)]["word"] = msg
-                        print(f'\r[I] {self.game_data["players"][self._get_player_id(uuid)]["name"]} finished')
+                        self.game_data["players"][self._get_player_id(
+                            uuid)]["status"] = "Finished"
+                        self.game_data["players"][self._get_player_id(
+                            uuid)]["word"] = msg
+                        print(
+                            f'\r[I] {self.game_data["players"][self._get_player_id(uuid)]["name"]} finished')
                         all_finished = True
                         for i in self.game_data["players"]:
                             if i["status"] != "Finished" and not i["computer_afk"]:
@@ -257,11 +270,12 @@ class Game():
 
 
 class ClientThread(threading.Thread):
-    def __init__(self, ip, port, clientsocket, game):
+    def __init__(self, ip, port, clientsocket, web_translator, game):
         threading.Thread.__init__(self)
         self.ip = ip
         self.port = port
         self.game = game
+        self.web_translator = web_translator
         self.clientsocket = clientsocket
 
     def run(self):
@@ -269,7 +283,57 @@ class ClientThread(threading.Thread):
         if data.startswith("%llm_client%"):
             self.game.handle_data(data, self.clientsocket, self)
         else:
-            self.game._answer("outdated%", self.clientsocket)
+            self.web_translator.web_handle(
+                data, self.clientsocket, self.ip, self.port)
+
+
+class WebTranslator:
+    def __init__(self, game):
+        self.game = game
+        self.web_dir = os.path.dirname(os.path.realpath(os.path.join(
+            os.getcwd(), os.path.expanduser(__file__)))) + os.path.sep + "web" + os.path.sep
+        self.packet_size = 2048
+
+    def _generate_headers(self, response_code):
+        header = ''
+        if response_code == 200:
+            header += 'HTTP/1.1 200 OK\n\r'
+        elif response_code == 404:
+            header += 'HTTP/1.1 404 Not Found\n\r'
+
+        time_now = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
+        header += 'Date: {now}\n\r'.format(now=time_now)
+        header += f'Server: LeLonMo-Server-v{persist_data.DATA["version"]}\n\r'
+        header += 'Connection: close\n\r'
+        return header.encode("utf-8")
+    
+    def _parse_request(self, data):
+        data = data.split(" ")
+        method = data[0]
+        filename = data[1][1:]
+        return method, filename
+
+    def web_handle(self, data, csock, ip, port):
+        print(f"Web Mode connexion from {ip}")
+        method, filename = self._parse_request(data)
+        if not filename.startswith("%game%"):
+            if os.path.exists(self.web_dir+filename):
+                csock.send(self._generate_headers(200))
+                try:
+                    f = open(self.web_dir+filename, "rb")
+                    csock.send(f.read())
+                    f.close()
+                    csock.close()
+                except Exception as e:
+                    print("Error", e)
+                    csock.close()
+            else:
+                print(self.web_dir+filename)
+                csock.send(self._generate_headers(404))
+                csock.send(b"404 not found")
+                csock.close()
+        else:
+            print('Special request')
 
 
 class MainThread(threading.Thread):
@@ -280,6 +344,7 @@ class MainThread(threading.Thread):
         self.update = False
         self.enabled = True
         self.game = None
+        self.web = None
 
     def run(self):
         try:
@@ -289,10 +354,12 @@ class MainThread(threading.Thread):
             self.tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.tcpsock.bind(("", self.port))
             self.game = Game("fr")
+            self.web = WebTranslator(self.game)
             while self.enabled:
                 self.tcpsock.listen(10)
                 (self.clientsocket, (ip, port)) = self.tcpsock.accept()
-                newthread = ClientThread(ip, port, self.clientsocket, self.game)
+                newthread = ClientThread(
+                    ip, port, self.clientsocket, self.web, self.game)
                 newthread.start()
         except OSError:
             print("\r[I] Exiting")
