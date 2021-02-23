@@ -62,15 +62,21 @@ def game():
     print()
     j1 = getpass(
         f"{name_j1}, entrez votre mot à l'abris des regards indiscrets : ")
-    while not (word_check.check_dict(j1, settings["game"]["DICT_LANGUAGE"]) and word_check.check_list(j1, letters)):
+    while not (word_check.check_dict(j1, settings["game"]["DICT_LANGUAGE"]) and bool(word_check.check_list(j1, letters))):
         j1 = getpass(
             red("Votre mot n'est pas valide, veuillez en entrer un autre : "))
+    if str(word_check.check_list(j1, letters)) == "scrabble":
+        print(green(f"{name_j1} a fait un Scrabble, +2 points"))
+        score_j1 += 2
 
     j2 = getpass(
         f"{name_j2}, entrez votre mot à l'abris des regards indiscrets : ")
-    while not (word_check.check_dict(j2, settings["game"]["DICT_LANGUAGE"]) and word_check.check_list(j2, letters)):
+    while not (word_check.check_dict(j2, settings["game"]["DICT_LANGUAGE"]) and bool(word_check.check_list(j2, letters))):
         j2 = getpass(
             red("Votre mot n'est pas valide, veuillez en entrer un autre : "))
+    if str(word_check.check_list(j2, letters)) == "scrabble":
+        print(green(f"{name_j2} a fait un Scrabble, +2 points"))
+        score_j2 += 2
 
     print(f"Les mots: \nJ1 : {cyan(j1)}\nJ2 : {magenta(j2)}")
     if len(j1) > len(j2):

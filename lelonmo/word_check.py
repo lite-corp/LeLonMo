@@ -32,4 +32,6 @@ def check_list(word, letters):
     for l in remove_accents(word):
         if not l.lower() in letters:
             return False
+    if set(word) == set(letters) and len(word)== settings["game"]["LETTER_NUMBER"]:
+        return "scrabble"
     return True
