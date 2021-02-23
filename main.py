@@ -39,7 +39,7 @@ else:
         print("six is not installed, trying to install it automatically ...")
         import subprocess
         import sys
-        command = [sys.executable, "-m", "pip", "install", "six"]
+        command = [sys.executable, "-m", "pip", "install", "six", "--user"]
         subprocess.run(command)
     import lelonmo.persist_data as persist
     if os_name == "Windows" and persist.DATA["game"]['FIRST_RUN']:
@@ -60,7 +60,7 @@ else:
             import subprocess
             import sys
             command = [sys.executable, "-m", "pip", "install",
-                       "pyobjc-framework-Quartz", "pyobjc"]
+                       "pyobjc-framework-Quartz", "pyobjc", "--user"]
             subprocess.run(command)
     import lelonmo.menu as menu
     menu.main()
