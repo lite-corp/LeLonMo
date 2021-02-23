@@ -7,8 +7,8 @@ home = expanduser("~") + os.path.sep
 save_file = home + ".lelonmo_server_save.json"
 
 default_data = dict(
-    version="0.5.3",
-    client_version="0053",
+    version="0.5.6",
+    client_version="0056",
     online=dict(
         uuid=str(uuid.uuid4()),
         name="",

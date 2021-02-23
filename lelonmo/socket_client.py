@@ -274,22 +274,24 @@ def main(host="localhost"):
         wb.update(updatable_2='Your word is not valid', invert=True)
     playerboard.enable = False
     wb.clear()
-    wb.update("Waiting for other players to finish")
+    wb.update("Waiting for other players to finish", status=yellow("Waiting ..."))
     playerboard = PlayerUpdate(wb, host)
     playerboard.start()
     _wait_for_status("results", host)
-    wait(0.25)  # Avoid replay spam for the last player if it has low ping
     playerboard.enable = False
     wb.updatable = ""
 
     result_data = json.loads(_status(host)[7:])
     wb.clear()
+    end_message = "Winner(s) :\n"
+    for i in result_data["best"]:
+        end_message += f" * {i[0]} : {i[1]}\n"
+    end_message += "Scores :\n"
+    for i in result_data["players"]:
+        end_message += f" {i['total_points']}\t{i['name']} : {i['word']} (+{i['points']})\n"
+
     wb.update(
-        add="Winner(s):\n * " + "\n  * ".join([i[0] +
-        " : " + i[1] for i in result_data["best"]]) +
-        "\n\n Scores :\n * " + "\n  * ".join([i["name"] +
-        " : " +
-        i["word"]for i in result_data["players"]]),
+        add=end_message,
         status=bold("Finished")
     )
 

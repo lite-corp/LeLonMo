@@ -311,21 +311,24 @@ class WebTranslator:
         data = data.split(" ")
         method = data[0]
         filename = data[1][1:]
+        if filename == '':
+            filename = "default.html"
         return method, filename
 
     def web_handle(self, data, csock, ip, port):
         print(f"Web Mode connexion from {ip}")
         method, filename = self._parse_request(data)
-        if not filename.startswith("%game%"):
+        if not filename.startswith("game"):
             if os.path.exists(self.web_dir+filename):
                 csock.send(self._generate_headers(200))
                 try:
                     f = open(self.web_dir+filename, "rb")
-                    csock.send(f.read())
+                    filecontent = f.read()
+                    csock.send(filecontent)
                     f.close()
                     csock.close()
                 except Exception as e:
-                    print("Error", e)
+                    print("Error", str(e))
                     csock.close()
             else:
                 print(self.web_dir+filename)
