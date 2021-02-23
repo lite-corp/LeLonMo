@@ -12,7 +12,10 @@ class Input:
         with keyboard.Listener(on_press=self._press) as listener:
             listener.join()
         self.flush_input()
-        return "".join(self.text)
+        text = "".join(self.text)
+        self.text = list()
+        self.text_shown = list()
+        return text
     def flush_input(self):
         try:
             import msvcrt
