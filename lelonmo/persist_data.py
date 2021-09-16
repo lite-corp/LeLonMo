@@ -16,7 +16,7 @@ if not os.access(os.path.dirname(save_file), os.W_OK):
     save_file = input("Please enter the location of your save file : ")
 
 default_data = dict(
-    version="00.5.6",
+    version="00.5.8",
     update_url='https://github.com/claj-ndc/LeLonMo/releases/latest',
     online=dict(
         uuid=str(uuid.uuid4()),

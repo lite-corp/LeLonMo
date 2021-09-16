@@ -141,9 +141,9 @@ class WhiteBoard:  # Manages the menu on screen, used to update things unig thre
         self.invert = False
         self.clear()
 
-    def update(self, add=None, updatable=None, updatable_2=None, status=None, invert=None):
+    def update(self, add=None, updatable=None, updatable_2=None, status=None, invert=None, force_refresh=False):
 
-        update_screen = False
+        update_screen = force_refresh
         if updatable is not None and self.updatable != updatable:
             update_screen = True
             self.updatable = updatable
@@ -271,7 +271,7 @@ def main(host="localhost"):
     else:
         wb.update_letter("Start typing your word")
     while not _send_data(input_method(), host).decode("utf-8").startswith("valid%"):
-        wb.update(updatable_2='Your word is not valid', invert=True)
+        wb.update(updatable_2='Your word is not valid', invert=True, force_refresh=True)
     playerboard.enable = False
     wb.clear()
     wb.update("Waiting for other players to finish", status=yellow("Waiting ..."))
