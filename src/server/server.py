@@ -3,11 +3,12 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from security_tools import secure_path
+from game.chat import Chat
 from settings import DefaultProvider
 from mime import mime_content_type
 
 settings = None
-
+chat = None
 
 class LLM_Server(BaseHTTPRequestHandler):
     def _send_headers(self, code = 200, mime = "text/plain", lenght = 0, cookies = None):
@@ -55,13 +56,22 @@ class LLM_Server(BaseHTTPRequestHandler):
         self.serve_file()
         
 
+    def do_POST(self):
+        global chat
+        content_len = int(self.headers.get('Content-Length'))
+        post_data = self.rfile.read(content_len).decode("utf-8")
+        
+        if self.path == "/chat":
+            chat.handle_requests(post_data)
+
 
 
 def main():
-    global settings
+    global settings, chat
     
     # Load settings
     settings = DefaultProvider()
+    chat = Chat()
 
 
     web_server = HTTPServer(settings.get_address(), LLM_Server)
