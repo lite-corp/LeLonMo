@@ -1,6 +1,3 @@
-from email import message
-
-
 class Chat:
     def __init__(self) -> None:
         self.userlist = dict()
