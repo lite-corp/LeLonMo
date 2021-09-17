@@ -13,21 +13,20 @@
 header {
     font-family: "varela", sans-serif;
     background-color: var(--backgroun-header);
-    border-width: 2px;
+    border-bottom-width: 2px;
     border-color: var(--border-color);
     border-bottom-style: solid;
     position: sticky;
-    padding: 0.9em;
 }
 
 #home_btn {
-    font-size: 3em;
     cursor: pointer;
-    padding: 0.3em;
-    padding-right: 0.5em;
+    padding: 1em;
+    padding-right: 1.5em;
     border-width: 2px;
     border-color: var(--border-color);
     border-right-style: solid;
+    content: url("../assets/pictures/Logo_64x64.png");
 }
 
 /* Body css */
