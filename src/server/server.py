@@ -1,7 +1,9 @@
+from http import cookies
 import os
 import json
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import uuid
 
 from security_tools import secure_path
 from game.chat import Chat
@@ -32,7 +34,11 @@ class LLM_Server(BaseHTTPRequestHandler):
 
     def serve_file(self, cookies = None):
         global settings
-
+        
+        if self.path == '/':
+            self.path = '/html/index.html'
+            self.serve_file(cookies)
+            return
         self.path = secure_path(self.path)
         if os.path.exists(settings["web_path"] + self.path):
             if os.path.isdir(settings["web_path"] + self.path):
