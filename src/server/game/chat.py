@@ -58,7 +58,7 @@ class Chat:
         except:
             import traceback
             traceback.print_exc()
-            return {'success' : False}
+            return {'success' : False, 'message' : 'server_error', 'detail' : traceback.format_exc()}
 
 
     
