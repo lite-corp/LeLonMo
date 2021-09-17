@@ -2,8 +2,8 @@
     --backgound-main: #0d1117;
     --backgroun-header: #161b22;
     --border-color: #30363d;
-    --main-color: #169490;
-    --main-color-hover: #22b9b4;
+    --button-color: #151c25;
+    --button-color-hover: #2b3747;
     --secondary-color: #bbbbbb;
 
 }
@@ -52,8 +52,9 @@ body {
 }
 
 #button div{
-    background-color: var(--main-color);
-    color: var(--backgound-main);
+    background-color: var(--button-color);
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
     width: 7em;
     height: 2em;
     margin-left: auto;
@@ -63,15 +64,13 @@ body {
     font-family: "varela", sans-serif;
     text-align: center;
     border-radius: 1em;
+    border-style: solid;
+    border-width: 1px;
     transition: all 0.5s 
 }
 #button div:hover{
-    background-color: var(--main-color-hover);
-    color: #151515;
+    box-shadow: inset 7em 0 0 0 var(--button-color-hover);
     cursor: pointer;
-    width: 8em;
-    border-radius: 1em 0 1em 0;
-
 }
 
 #droite {
