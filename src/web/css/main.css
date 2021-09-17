@@ -5,7 +5,10 @@
     --button-color: #151c25;
     --button-color-hover: #2b3747;
     --secondary-color: #bbbbbb;
+}
 
+html{
+    scroll-behavior: smooth; 
 }
 
 /* Header css */
@@ -16,7 +19,8 @@ header {
     border-bottom-width: 2px;
     border-color: var(--border-color);
     border-bottom-style: solid;
-    position: sticky;
+    height: 6em;
+    margin-bottom: 3em;
 }
 
 #home_btn {
@@ -32,7 +36,7 @@ header {
 /* Body css */
 
 body {
-    font-family: "gluten", sans-serif;
+    font-family: "varela", sans-serif;
     background-color: var(--backgound-main);
     color: var(--secondary-color);
     margin: 0px;
@@ -78,6 +82,19 @@ body {
     width: 29%;
     text-align: center;
     height: 50em;
+    border-style: solid;
     border-radius: 1em;
-    background-color:#566573;
-} 
+    border-color: var(--border-color);
+    border-width: 1px;
+}
+
+.box_title{
+    background-color: var(--backgroun-header);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--border-color);
+    border-radius: 0.6em 0.6em 0 0;
+    padding: 0.5em;
+    font-size: 1.5em;
+
+}
