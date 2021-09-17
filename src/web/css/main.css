@@ -1,7 +1,36 @@
+/* Header css */
+
+header {
+    font-family: "varela", sans-serif;
+    background-color: #161b22;
+    border-width: 2px;
+    border-color: #30363d;
+    border-bottom-style: solid;
+    position: sticky;
+    padding: 0.9em;
+}
+
+#home_btn {
+    font-size: 3em;
+    cursor: pointer;
+    padding: 0.3em;
+    padding-right: 0.5em;
+    border-width: 2px;
+    border-color: #30363d;
+    border-right-style: solid;
+}
+
+/* Body css */
+
 body {
     font-family: "gluten", sans-serif;
     background-color: #0d1117;
     color: #BBBBBB;
+    margin: 0px;
+}
+
+#main_box {
+    margin: 10px;
 }
 
 .button div{
