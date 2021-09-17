@@ -22,7 +22,15 @@ class LLM_Server(BaseHTTPRequestHandler):
 
         self.end_headers()
     
-    def serve_file(self):
+    def client_cookies(self):
+        cookies = SimpleCookie(self.headers.get('Cookie'))
+        if 'private_uuid' in cookies:
+            return
+        cookies['private_uuid'] = uuid.uuid4()
+        return cookies
+
+
+    def serve_file(self, cookies = None):
         global settings
 
         self.path = secure_path(self.path)
@@ -40,7 +48,7 @@ class LLM_Server(BaseHTTPRequestHandler):
                         code = 200,
                         mime=mime,
                         lenght=len(file_content),
-                        cookies=None
+                        cookies=cookies
                     )
                     self.wfile.write(file_content)
         else:
@@ -54,7 +62,8 @@ class LLM_Server(BaseHTTPRequestHandler):
         self.wfile.write(b'Could not find file at ' + self.path.encode("UTF-8"))
 
     def do_GET(self):
-        self.serve_file()
+        cookies = self.client_cookies()
+        self.serve_file(cookies)
         
 
     def do_POST(self):
