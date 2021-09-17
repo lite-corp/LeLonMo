@@ -7,11 +7,13 @@ import uuid
 
 from security_tools import secure_path
 from game.chat import Chat
+from game.llm import LeLonMo
 from settings import DefaultProvider
 from mime import mime_content_type
 
 settings = None
 chat = None
+game = None
 
 class LLM_Server(BaseHTTPRequestHandler):
     def _send_headers(self, code = 200, mime = "text/plain", lenght = 0, cookies = None):
@@ -73,9 +75,16 @@ class LLM_Server(BaseHTTPRequestHandler):
         
 
     def do_POST(self):
-        global chat
+        global chat, game
         content_len = int(self.headers.get('Content-Length'))
-        post_data = json.reads(self.rfile.read(content_len).decode("utf-8"))
+        try:
+            post_data = json.reads(self.rfile.read(content_len).decode("utf-8"))
+        except:
+            import traceback
+            answer = json.dumps({'success' : False, 'message' : 'data_format', 'detail' : traceback.format_exc()}).encode('utf-8')
+            self._send_header(502, 'text/json', len(answer))
+            self.wfile.write(answer)
+            return
         cookies = SimpleCookie(self.headers.get('Cookie'))
         private_uuid = cookies["private_uuid"].value
         
@@ -83,15 +92,22 @@ class LLM_Server(BaseHTTPRequestHandler):
         if self.path == "/chat":
             answer = chat.handle_requests(post_data, private_uuid)
             answer = json.dumps(answer).encode("utf-8")
+        if self.path == "/llm":
+            answer = game.handle_requests(post_data, private_uuid)
+            answer = json.dumps(answer).encode("utf-8")
+
+        self._send_headers(200, 'text/json', len(answer))
+        self.wfile.write(answer)
 
 
 
 def main():
-    global settings, chat
+    global settings, chat, game
     
     # Load settings
     settings = DefaultProvider()
     chat = Chat()
+    game = LeLonMo()
 
 
     web_server = HTTPServer(settings.get_address(), LLM_Server)
