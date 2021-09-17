@@ -1,4 +1,5 @@
 import os
+import json
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -59,10 +60,12 @@ class LLM_Server(BaseHTTPRequestHandler):
     def do_POST(self):
         global chat
         content_len = int(self.headers.get('Content-Length'))
-        post_data = self.rfile.read(content_len).decode("utf-8")
+        post_data = json.reads(self.rfile.read(content_len).decode("utf-8"))
         
+        answer = None
         if self.path == "/chat":
-            chat.handle_requests(post_data)
+            answer = chat.handle_requests(post_data)
+            answer = json.dumps(answer).encode("utf-8")
 
 
 

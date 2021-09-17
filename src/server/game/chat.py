@@ -1,3 +1,4 @@
+import uuid
 class Chat:
     def __init__(self) -> None:
         self.userlist = dict()
@@ -15,9 +16,11 @@ class Chat:
         del self.userlist[private_uuid]
     
     def get_messages(self, private_uuid):
-        return self.messagelist[
+        messages = self.messagelist[
             self.userlist[private_uuid]['last_read']:
         ]
+        self.userlist[private_uuid]['last_read'] = len(self.messagelist)-1
+        return messages
     
     def send_message(self, private_uuid, message):
         self.messagelist.append(
@@ -27,9 +30,36 @@ class Chat:
                 'uuid' : self.userlist[private_uuid]['pub_uuid']
             }
         )
+    def get_users(self):
+        users = list()
+        for user in self.userlist:
+            users.append({
+                'uuid' : self.userlist[user]('pub_uuid'),
+                'username' : self.userlist[user]['username']
+            })
+        return users
 
-    def handle_requests(self, data):
-        pass
+    def handle_requests(self, data, private_uuid):
+        try:
+            if data['action'] == 'get_msg':
+                return {
+                    'success' : True,
+                    'messages' : self.get_messages(private_uuid)
+                }
+            elif data['action'] == 'join':
+                self.add_user(private_uuid, str(uuid.uuid4())[:8], data['name'])
+                return {
+                    'success' : True, 
+                    'pub_uuid' : self.userlist[private_uuid]['pub_uuid']
+                    }
+            elif data['action'] == 'send_msg':
+                self.send_message(private_uuid, data['content'])
+                return {'success' : True}
+        except:
+            import traceback
+            traceback.print_exc()
+            return {'success' : False}
+
 
     
 
