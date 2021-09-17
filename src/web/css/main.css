@@ -1,18 +1,29 @@
-body {font-family: "gluten", sans-serif}
+body {
+    font-family: "gluten", sans-serif;
+    background-color: #303030;
+    color: #BBBBBB;
+}
 
-#menu{
-    background-color: #24C4BF;
-    width: 10em;
-    height: 3em;
+.button div{
+    background-color: #169490;
+    color: #202020;
+    width: 7em;
+    height: 2em;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 2em;
+    font-size: 2em;
+    font-family: "varela", sans-serif;
     text-align: center;
     border-radius: 1em;
-    transition: all 0.5s }
+    transition: all 0.5s 
+}
 
-#menu div:hover{
-    background-color: #66EAE6;
+.button div:hover{
+    background-color: #22b9b4;
+    color: #151515;
     cursor: pointer;
-    width: 10em;
-    height: 4em;
-    border-radius: 1em;
-    font-size: 2em;
-    }
+    width: 8em;
+    border-radius: 1em 0em 1em 0em;
+
+}
