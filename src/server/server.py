@@ -61,10 +61,12 @@ class LLM_Server(BaseHTTPRequestHandler):
         global chat
         content_len = int(self.headers.get('Content-Length'))
         post_data = json.reads(self.rfile.read(content_len).decode("utf-8"))
+        cookies = SimpleCookie(self.headers.get('Cookie'))
+        private_uuid = cookies["private_uuid"].value
         
         answer = None
         if self.path == "/chat":
-            answer = chat.handle_requests(post_data)
+            answer = chat.handle_requests(post_data, private_uuid)
             answer = json.dumps(answer).encode("utf-8")
 
 
