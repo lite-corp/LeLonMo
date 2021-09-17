@@ -42,7 +42,16 @@ body {
     margin: 10px;
 }
 
-.button div{
+#gauche {
+    float: left;
+    width: 70% ;
+    text-align: center;
+    height: 50em;
+    border-radius: 1em;
+    background-color: #566573 ;
+}
+
+#button div{
     background-color: var(--main-color);
     color: var(--backgound-main);
     width: 7em;
@@ -56,8 +65,7 @@ body {
     border-radius: 1em;
     transition: all 0.5s 
 }
-
-.button div:hover{
+#button div:hover{
     background-color: var(--main-color-hover);
     color: #151515;
     cursor: pointer;
@@ -65,3 +73,12 @@ body {
     border-radius: 1em 0 1em 0;
 
 }
+
+#droite {
+    float: right;
+    width: 29%;
+    text-align: center;
+    height: 50em;
+    border-radius: 1em;
+    background-color:#566573;
+} 
