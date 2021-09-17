@@ -1,1 +1,18 @@
 body {font-family: "gluten", sans-serif}
+
+#menu{
+    background-color: #24C4BF;
+    width: 10em;
+    height: 3em;
+    text-align: center;
+    border-radius: 1em;
+    transition: all 0.5s }
+
+#menu div:hover{
+    background-color: #66EAE6;
+    cursor: pointer;
+    width: 10em;
+    height: 4em;
+    border-radius: 1em;
+    font-size: 2em;
+    }
