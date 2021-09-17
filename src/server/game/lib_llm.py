@@ -13,14 +13,12 @@ def generate_letters(n):
     global word_dict
     settings = DefaultProvider()
 
-    word_dict = [w.replace('\n', '') for w in open(settings['word_dict'], 'r').readlines()]
+    word_dict = [w.replace('\n', '') for w in open(settings['dict_path'], 'r').readlines()]
 
     
     valid = False
     while not valid:
         shuffle_word = word_dict[randint(1, len(word_dict)-1)].replace('\n', '')
-        if settings["debug"]["DEBUG_WORDS"]:
-            print(shuffle_word)
         if len(list(set(list(shuffle_word)))) > n:
             valid = False
             pass

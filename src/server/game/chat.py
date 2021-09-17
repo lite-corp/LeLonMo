@@ -39,7 +39,7 @@ class Chat:
             })
         return users
 
-    def handle_requests(self, data, private_uuid):
+    def handle_requests(self, private_uuid, data):
         try:
             if data['action'] == 'get_msg':
                 return {
@@ -55,6 +55,10 @@ class Chat:
             elif data['action'] == 'send_msg':
                 self.send_message(private_uuid, data['content'])
                 return {'success' : True}
+        except KeyError as e:
+            field = str(e).replace("KeyError: '", "").replace("'", '')
+            print(f'[E] Missing required field : ' + field)
+            return {'success' : False, 'message' : 'missing_field', 'detail' : 'Missing field ' + field }
         except:
             import traceback
             traceback.print_exc()

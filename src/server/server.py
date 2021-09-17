@@ -78,11 +78,11 @@ class LLM_Server(BaseHTTPRequestHandler):
         global chat, game
         content_len = int(self.headers.get('Content-Length'))
         try:
-            post_data = json.reads(self.rfile.read(content_len).decode("utf-8"))
+            post_data = json.loads(self.rfile.read(content_len).decode("utf-8"))
         except:
             import traceback
             answer = json.dumps({'success' : False, 'message' : 'data_format', 'detail' : traceback.format_exc()}).encode('utf-8')
-            self._send_header(502, 'text/json', len(answer))
+            self._send_headers(502, 'text/json', len(answer))
             self.wfile.write(answer)
             return
         cookies = SimpleCookie(self.headers.get('Cookie'))
@@ -90,12 +90,16 @@ class LLM_Server(BaseHTTPRequestHandler):
         
         answer = None
         if self.path == "/chat":
-            answer = chat.handle_requests(post_data, private_uuid)
+            answer = chat.handle_requests(private_uuid, post_data)
             answer = json.dumps(answer).encode("utf-8")
-        if self.path == "/llm":
-            answer = game.handle_requests(post_data, private_uuid)
+        elif self.path == "/llm":
+            answer = game.handle_requests(private_uuid, post_data)
             answer = json.dumps(answer).encode("utf-8")
-
+        else:
+            answer = json.dumps(dict(
+                success=False,
+                message='invalid_request'
+            )).encode('utf-8')
         self._send_headers(200, 'text/json', len(answer))
         self.wfile.write(answer)
 

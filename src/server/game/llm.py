@@ -21,6 +21,7 @@ class LeLonMo:
         self.admin_uuid = str()
         self.letters = list()
         self.players = dict()
+        self.settings = DefaultProvider()
 
     def add_user(self, private_uuid: str, username: str)->dict:
         if self.status == 0:
@@ -78,6 +79,8 @@ class LeLonMo:
             return self.status == 3
         if action == 'start_game':
             return self.status == 1
+        print('Unknown action :', action)
+        return False
     
     def handle_requests(self, private_uuid: str, data: dict)->dict:
         
@@ -125,8 +128,12 @@ class LeLonMo:
                     return {'success' : True}
                 else:
                     return {'success' : False, 'message' : 'not_admin'}
-
             
+        except KeyError as e:
+            field = str(e).replace("KeyError: '", "").replace("'", '')
+            print(f'[E] Missing required field : ' + field)
+            return {'success' : False, 'message' : 'missing_field', 'detail' : 'Missing field ' + field }
+
         except:
             import traceback
             traceback.print_exc()
