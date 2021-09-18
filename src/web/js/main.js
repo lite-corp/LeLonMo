@@ -27,7 +27,7 @@ function join_game() {
             "username": document.getElementById("username_input").value
         }, join_response)
     } else {
-        document.getElementById("error-message-join").textContent = "Enter your name";
+        document.getElementById("error-message-join").textContent = "Enter your username";
         document.getElementById("error-message-join").style.display = 'block';
     };
 }

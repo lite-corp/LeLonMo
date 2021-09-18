@@ -5,6 +5,7 @@
     --button-color: #151c25;
     --button-color-hover: #2b3747;
     --secondary-color: #bbbbbb;
+    --error-color: #e03939;
 }
 
 html {
@@ -97,10 +98,7 @@ body {
 }
 
 #error-message-join {
-    background-color: red;
-    color: white;
-    border-radius: 0.5em;
-    padding-left: 1em;
+    color: var(--error-color);
     display: none;
 }
 
