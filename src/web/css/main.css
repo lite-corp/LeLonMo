@@ -12,6 +12,10 @@ html {
     scroll-behavior: smooth;
 }
 
+a {
+    text-decoration: none;
+}
+
 
 /* Header css */
 
@@ -35,6 +39,14 @@ header {
     content: url("../assets/pictures/Logo_64x64.png");
 }
 
+.header_menu {
+    color: var(--secondary-color);
+    font-size: 2em;
+}
+
+.header_menu:hover {
+    cursor: pointer;
+}
 
 /* Body css */
 
