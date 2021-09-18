@@ -76,6 +76,8 @@ body {
 
 #join-box input:focus {
     border-color: var(--secondary-color);
+    outline-color: transparent;
+    outline-style: none;
 }
 
 .button {
