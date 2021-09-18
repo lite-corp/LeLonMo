@@ -48,15 +48,11 @@ class Chat:
                     'success' : True,
                     'messages' : self.get_messages(private_uuid)
                 }
-            elif data['action'] == 'join':
-                self.add_user(private_uuid, str(uuid.uuid4())[:8], data['name'])
-                return {
-                    'success' : True, 
-                    'pub_uuid' : self.userlist[private_uuid]['pub_uuid']
-                    }
             elif data['action'] == 'send_msg':
                 self.send_message(private_uuid, data['content'])
                 return {'success' : True}
+            else:
+                raise ValueError("Wrong action")
         except KeyError as e:
             field = str(e).replace("KeyError: '", "").replace("'", '')
             print(f'[E] Missing required field : ' + field)

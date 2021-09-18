@@ -1,15 +1,21 @@
+from os import putenv
 import time
 import uuid
 
 import game.lib_llm
 
 from settings import DefaultProvider
+from game.chat import Chat
 
 def getTime():
     return round(time.time())
 
 class LeLonMo:
     def __init__(self) -> None:
+        self.chat = Chat()
+        self.initialize_game()
+    
+    def initialize_game(self):
         '''
         self.status : 
             0 : Waiting for admin
@@ -40,13 +46,16 @@ class LeLonMo:
                 'latest_word' : '',
                 'latest_points' : ''
             }
+            self.chat.add_user(private_uuid, self.players[private_uuid]['public_uuid'], username)
             print(f"[I] Added user {username}")
             return self.players[private_uuid]
     def kick_user(self, private_uuid: str)->None:
         self.players[private_uuid]['kicked'] = True
+        self.chat.remove_user(private_uuid)
     
     def delete_user(self, private_uuid: str)->None:
         del self.players[private_uuid]
+        self.chat.remove_user(private_uuid)
     
     def is_admin(self, private_uuid: str)->bool:
         return private_uuid == self.admin_uuid

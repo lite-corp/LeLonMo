@@ -12,7 +12,6 @@ from settings import DefaultProvider
 from mime import mime_content_type
 
 settings = None
-chat = None
 game = None
 
 class LLM_Server(BaseHTTPRequestHandler):
@@ -75,7 +74,7 @@ class LLM_Server(BaseHTTPRequestHandler):
         
 
     def do_POST(self):
-        global chat, game
+        global game
         content_len = int(self.headers.get('Content-Length'))
         try:
             post_data = json.loads(self.rfile.read(content_len).decode("utf-8"))
@@ -90,7 +89,7 @@ class LLM_Server(BaseHTTPRequestHandler):
         
         answer = None
         if self.path == "/chat":
-            answer = chat.handle_requests(private_uuid, post_data)
+            answer = game.chat.handle_requests(private_uuid, post_data)
             answer = json.dumps(answer).encode("utf-8")
         elif self.path == "/llm":
             answer = game.handle_requests(private_uuid, post_data)
@@ -106,11 +105,10 @@ class LLM_Server(BaseHTTPRequestHandler):
 
 
 def main():
-    global settings, chat, game
+    global settings, game
     
     # Load settings
     settings = DefaultProvider()
-    chat = Chat()
     game = LeLonMo()
 
 
