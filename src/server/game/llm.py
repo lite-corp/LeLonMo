@@ -40,6 +40,7 @@ class LeLonMo:
                 'latest_word' : '',
                 'latest_points' : ''
             }
+            print(f"[I] Added user {username}")
             return self.players[private_uuid]
     def kick_user(self, private_uuid: str)->None:
         self.players[private_uuid]['kicked'] = True
@@ -107,6 +108,7 @@ class LeLonMo:
             if data['action'] == 'start_game':
                 self.letters = game.lib_llm.generate_letters(self.settings['letter_number'])
                 self.satus = 2
+                print("[I] Game started")
                 return {'success' : True}
             if data['action'] == 'submit_word':
                 if not game.lib_llm.check_list(data['word'], self.letters):
@@ -119,7 +121,7 @@ class LeLonMo:
                         'success' : True,
                         'valid' : False
                     }
-                
+                print(f"[I] {self.players[private_uuid]['username']} finished.")
                 self.players[private_uuid]['latest_word'] = data['word']
                 self.players[private_uuid]['status'] = 'finished'
             if data['action'] == 'create_game':

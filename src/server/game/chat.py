@@ -4,13 +4,15 @@ class Chat:
         self.userlist = dict()
         self.messagelist = list()
     
-    def add_user(self, private_uuid, public_uuid, name):
+    def add_user(self, private_uuid, public_uuid, username):
         self.userlist[private_uuid] = {
             'priv_uuid' : private_uuid,
             'pub_uuid' : public_uuid,
-            'username' : name,
+            'username' : username,
             'last_read' : 0
         }
+        print(f"[I] Added user {username}")
+
     
     def remove_user(self, private_uuid):
         del self.userlist[private_uuid]

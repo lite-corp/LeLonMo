@@ -21,9 +21,10 @@
   <div class="box", id="join-box">
     <div class="box_title">Join a game</div>
     <div class="box_container">
-      <input type="text" placeholder="Username" />
+      <input type="text" placeholder="Username" id="username_input"/>
+      <p id="error-message-join">Error while joining</p>
       <div class="button">
-      <a onclick="">Join</a>
+        <a onclick="join_game()">Join</a>
       </div>
     </div>
   </div>
@@ -36,6 +37,7 @@
       <div class="box_title">Chat</div>
     </div>
   </div>
+    <script src="../js/main.js"></script>
 </body>
 
 </html>
