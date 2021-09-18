@@ -94,6 +94,14 @@ body {
     cursor: pointer;
 }
 
+#error-message-join {
+    background-color: red;
+    color: white;
+    border-radius: 0.5em;
+    padding-left: 1em;
+    display: none;
+}
+
 #droite {
     flex-grow: 3;
     text-align: center;
