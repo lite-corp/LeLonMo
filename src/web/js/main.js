@@ -29,6 +29,7 @@ function join_game() {
     } else {
         document.getElementById("error-message-join").textContent = "Enter your username";
         document.getElementById("error-message-join").style.display = 'block';
+        document.getElementById("username_input").style.borderColor = "#e03939"
     };
 }
 
