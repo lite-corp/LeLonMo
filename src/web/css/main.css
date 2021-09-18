@@ -71,6 +71,7 @@ body {
     font-size: 1em;
     border-color: var(--border-color);
     border-radius: 1em;
+    transition: all 0.5s;
 }
 
 .button {
