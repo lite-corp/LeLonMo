@@ -132,6 +132,17 @@ body {
     display: none;
 }
 
+#players {
+    flex-grow: 3;
+    text-align: center;
+    height: 50em;
+    border-style: solid;
+    border-radius: 1em;
+    border-color: var(--border-color);
+    border-width: 1px;
+    margin-right: 1em;
+}
+
 #droite {
     flex-grow: 3;
     text-align: center;
