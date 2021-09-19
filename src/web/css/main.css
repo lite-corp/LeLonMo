@@ -1,4 +1,14 @@
 :root {
+    --backgound-main: #f1f1f1;
+    --backgroun-header: #ff975f;
+    --border-color: #484848;
+    --button-color: #c5c5c5;
+    --button-color-hover: #bbbbbb;
+    --secondary-color: #292929;
+    --error-color: #e03939;
+}
+
+:root {
     --backgound-main: #0d1117;
     --backgroun-header: #161b22;
     --border-color: #30363d;
@@ -53,6 +63,7 @@ header {
     cursor: pointer;
 }
 
+
 /* Body css */
 
 body {
@@ -63,7 +74,7 @@ body {
 }
 
 #main_box {
-    margin: 5%;
+    margin: 0 5% 0 5%;
     display: flex;
 }
 
@@ -126,6 +137,17 @@ body {
     display: none;
 }
 
+#players {
+    flex-grow: 3;
+    text-align: center;
+    height: 50em;
+    border-style: solid;
+    border-radius: 1em;
+    border-color: var(--border-color);
+    border-width: 1px;
+    margin-right: 1em;
+}
+
 #droite {
     flex-grow: 3;
     text-align: center;
@@ -168,6 +190,6 @@ body {
     font-size: 1.5em;
 }
 
-.box_container{
+.box_container {
     padding: 1em;
 }

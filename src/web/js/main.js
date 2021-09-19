@@ -47,15 +47,24 @@ function join_response(status, data) {
 }
 
 window.onload = function() {
+    console.log("Checking player in game ... ");
     send_data('/llm', {
-
-    })
+            'action': 'update'
+        },
+        function(status, data) {
+            if (status == 200 && data["success"]) {
+                if (data['in_game']) {
+                    console.log("Player is already in the game.");
+                    join_response(200, { 'kicked': false });
+                }
+            }
+        });
 }
 
 // Press enter to trigger button in text field
 var input = document.getElementById("username_input");
 input.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    document.getElementById("join_btn").click();
-  }
+    if (event.keyCode === 13) {
+        document.getElementById("join_btn").click();
+    }
 });

@@ -111,7 +111,8 @@ class LeLonMo:
                     'users' : self.get_users(),
                     'server_status' : self.status,
                     'letters' : self.letters,
-                    'admin' : private_uuid == self.admin_uuid
+                    'admin' : private_uuid == self.admin_uuid,
+                    'in_game': private_uuid in self.players
                 }
             
             if data['action'] == 'start_game':
