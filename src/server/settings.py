@@ -2,7 +2,7 @@
 from typing import Any, Tuple
 
 
-class DefaultProvider:
+class DefaultSettingsProvider:
     def __init__(self) -> None:
         if not self.load():
             raise RuntimeError('Could not load configuration')
@@ -28,3 +28,5 @@ class DefaultProvider:
         )
     def get_port(self) -> int:
         return self.settings['server_port']
+
+DefaultProvider = DefaultSettingsProvider
