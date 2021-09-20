@@ -1,14 +1,4 @@
-:root {
-    --backgound-main: #f1f1f1;
-    --backgroun-header: #ff975f;
-    --border-color: #484848;
-    --button-color: #c5c5c5;
-    --button-color-hover: #bbbbbb;
-    --secondary-color: #292929;
-    --error-color: #e03939;
-}
-
-:root {
+:root, :root.dark {
     --backgound-main: #0d1117;
     --backgroun-header: #161b22;
     --border-color: #30363d;
@@ -16,6 +6,17 @@
     --button-color-hover: #2b3747;
     --secondary-color: #bbbbbb;
     --error-color: #e03939;
+    --theme: url("../assets/pictures/theme_dark.png");
+}
+:root.light {
+    --backgound-main: #f1f1f1;
+    --backgroun-header: #ff975f;
+    --border-color: #484848;
+    --button-color: #c5c5c5;
+    --button-color-hover: #bbbbbb;
+    --secondary-color: #292929;
+    --error-color: #e03939;
+    --theme: url("../assets/pictures/theme_light.png");
 }
 
 html {
@@ -74,6 +75,36 @@ header {
     padding-left: 7%;
 }
 
+.theme_btn {
+    height: 3em;
+    width: 3em;
+    margin-left: auto;
+    padding-right: 1em;
+    content: var(--theme);
+}
+
+.theme_btn:hover {
+    height: 3em;
+    width: 3em;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.light .theme_btn.light {
+    display: none;
+}
+
+.light .theme_btn.dark {
+    display: block;
+}
+
+.dark .theme_btn.dark {
+    display: none;
+}
+  
+.dark .theme_btn.light {
+    display: block;
+}
 
 /* Body css */
 
