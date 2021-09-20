@@ -37,6 +37,8 @@ header {
     border-bottom-style: solid;
     height: 6em;
     margin-bottom: 3em;
+    align-items: center;
+    display: flex;
 }
 
 #home_btn {
@@ -148,10 +150,12 @@ body {
     margin-right: 1em;
 }
 
+
 /* Chat */
 
 #chat {
     flex-grow: 3;
+    max-width: 30%;
     text-align: center;
     height: 50em;
     border-style: solid;
@@ -160,7 +164,7 @@ body {
     border-width: 1px;
 }
 
-.message{
+.message {
     font-size: 1em;
     padding-left: 1em;
     padding-right: 1em;
@@ -172,6 +176,7 @@ body {
     padding-right: 0.5em;
     font-weight: bold;
 }
+
 
 /* Main game */
 
