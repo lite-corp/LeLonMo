@@ -148,7 +148,9 @@ body {
     margin-right: 1em;
 }
 
-#droite {
+/* Chat */
+
+#chat {
     flex-grow: 3;
     text-align: center;
     height: 50em;
@@ -158,7 +160,22 @@ body {
     border-width: 1px;
 }
 
-#gauche {
+.message{
+    font-size: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    margin-bottom: 0.5em;
+    text-align: left;
+}
+
+.message span {
+    padding-right: 0.5em;
+    font-weight: bold;
+}
+
+/* Main game */
+
+#game_panel {
     flex-grow: 7;
     text-align: center;
     height: 50em;
