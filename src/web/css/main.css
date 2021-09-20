@@ -41,17 +41,20 @@ header {
 
 #home_btn {
     cursor: pointer;
-    padding: 1em;
-    padding-right: 1.5em;
+    padding: 2em;
+    padding-right: 4em;
     border-width: 2px;
     border-color: var(--border-color);
     border-right-style: solid;
-    content: url("../assets/pictures/Logo_64x64.png");
+    background-image: url("../assets/pictures/Logo_64x64.png");
+    background-repeat: no-repeat;
+    background-size: 4em;
 }
 
 .header_menu {
     color: var(--secondary-color);
     font-size: 2em;
+    padding-top: 1em;
     padding-right: 5%;
     padding-left: 5%;
     border-right-style: solid;
