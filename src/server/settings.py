@@ -13,7 +13,8 @@ class DefaultSettingsProvider:
             'server_address' : '127.0.0.1',
             'web_path' : 'src/web',
             'letter_number' : 7,
-            'dict_path' : 'src/dict/fr.txt'
+            'dict_path' : 'src/dict/fr.txt',
+            'time_inactive' : 3
         }
         return True # return False if something wen wrong when loading the config
     
