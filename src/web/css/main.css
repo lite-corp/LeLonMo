@@ -291,5 +291,39 @@ body {
 
 .rule {
     text-align: left;
-    margin-bottom: 3em;
+    margin-bottom: 2em;
+    display: inline;
+    pointer-events: auto;
+    cursor: pointer;
 }
+body:not(.mobile) .rule:hover + .hover-image {
+    display: flex;
+    pointer-events: none;
+  }
+.hover-image {
+    display: none;
+  }
+   
+.hover-image {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Change width and height to scale images */
+    width: 10em;
+    height: 10em;
+  }
+  
+.hover-image img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+
+  }
+  
