@@ -167,6 +167,16 @@ body {
     border-radius: 1em;
     border-color: var(--border-color);
     border-width: 1px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat_messages {
+    flex-grow: 1;
+}
+
+.chat_bottom {
+    padding: 0.5em;
 }
 
 .message {
