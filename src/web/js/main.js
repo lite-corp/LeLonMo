@@ -47,6 +47,9 @@ function join_response(status, data) {
 }
 
 window.onload = function() {
+    if (window.location.pathname == '/') {
+        window.location.replace("/html/index.html");
+    }
     console.log("Checking player in game ... ");
     send_data('/llm', {
             'action': 'update'
