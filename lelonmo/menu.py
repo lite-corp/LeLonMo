@@ -26,7 +26,7 @@ def main():
             settings_menu.main, bye]
     
     menu = SelectionMenu(
-        select, f"{blue('L')}{yellow('e')}{blue('L')}{magenta('o')}{cyan('n')}{green('M')}{magenta('o')} {red(f'v{version}')}",
+        select, f"{blue('L')}{yellow('e')}{blue('L')}{magenta('o')}{cyan('n')}{green('M')}{magenta('o')} {red(f'v{version}')} Legacy",
         subtitle="Le jeu du long mot",
         prologue_text="Choisisser votre mode de jeu :",
         show_exit_option=False,
