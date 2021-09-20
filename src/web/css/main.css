@@ -43,14 +43,15 @@ header {
 
 #home_btn {
     cursor: pointer;
-    padding: 2em;
-    padding-right: 4em;
+    padding: 3em;
+    padding-right: 3.5em;
     border-width: 2px;
     border-color: var(--border-color);
     border-right-style: solid;
     background-image: url("../assets/pictures/Logo_64x64.png");
     background-repeat: no-repeat;
     background-size: 4em;
+    background-position: center;
 }
 
 .header_menu {
@@ -64,10 +65,13 @@ header {
     display: flex;
     align-items: center;
     height: 100%;
+    transition: all 0.5s;
 }
 
 .header_menu:hover {
     cursor: pointer;
+    padding-right: 7%;
+    padding-left: 7%;
 }
 
 
@@ -247,10 +251,14 @@ body {
     transition: all 2s;
 }
 
-.box_text:hover {
-    
-    margin-left: 3em;
-    margin-right: 1em;
-    font-size: 2em; 
 
+/* RULES.HTML */
+
+#rule_main_box {
+    margin: 0 10%;
+}
+
+.rule {
+    text-align: left;
+    margin-bottom: 3em;
 }
