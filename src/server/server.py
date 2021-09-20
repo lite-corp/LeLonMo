@@ -6,7 +6,6 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import uuid
 
 from security_tools import secure_path
-from game.chat import Chat
 from game.llm import LeLonMo
 from settings import DefaultProvider
 from mime import mime_content_type
