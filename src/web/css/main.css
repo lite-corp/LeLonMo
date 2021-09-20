@@ -241,3 +241,16 @@ body {
 .box_container {
     padding: 1em;
 }
+.box_text {
+    font-size: 1em;
+    padding: 1em;
+    transition: all 2s;
+}
+
+.box_text:hover {
+    
+    margin-left: 3em;
+    margin-right: 1em;
+    font-size: 2em; 
+
+}
