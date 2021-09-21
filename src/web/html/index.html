@@ -19,8 +19,8 @@
         <a class="header_menu" href="">Game</a>
         <a class="header_menu" href="rules.html">Rules</a>
         <a class="header_menu" href="about.html">About</a>
-        <a class="theme_btn light" onclick="setTheme('light')"></a>
-        <a class="theme_btn dark" onclick="setTheme('dark')"></a>
+        <a class="theme_btn light" onclick="setTheme('light')" tabindex="0"></a>
+        <a class="theme_btn dark" onclick="setTheme('dark')" tabindex="0"></a>
     </header>
 
     <div class="box" id="join-box">
@@ -46,10 +46,12 @@
         <div id="chat">
             <div class="box_title">Chat</div>
             <div class="chat_messages">
-                <p class="message"><span>Luc :</span>Ca va ?</p>
-                <p class="message"><span>arossfleder :</span>Yep. J'écris un message super long pour qu'il passe sur plusieurs lignes. Mais malheuresement ca réduit les autres box. ALEXIS FIX THIS !</p>
+                <p class="messages"><span>Luc :</span>Ca va ?</p>
+                <p class="messages"><span>arossfleder :</span>Yep. J'écris un message super long pour qu'il passe sur plusieurs lignes. Mais malheuresement ca réduit les autres box. ALEXIS FIX THIS !</p>
             </div>
-            <div class="chat_bottom">You cannot send messages for now</div>
+            <div id="chat_bottom">
+                <input type="text" placeholder="Send a message" id="message" />
+            </div>
         </div>
     </div>
     <script src="../js/main.js"></script>

@@ -71,3 +71,10 @@ input.addEventListener("keyup", function(event) {
         document.getElementById("join_btn").click();
     }
 });
+
+var input = document.getElementById("message");
+input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        document.getElementById("message").value = "";
+    }
+});
