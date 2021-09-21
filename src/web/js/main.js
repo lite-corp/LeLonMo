@@ -71,7 +71,3 @@ input.addEventListener("keyup", function(event) {
         document.getElementById("join_btn").click();
     }
 });
-
-// Toggle Dark/Light Mode
-
-const setTheme = theme => document.documentElement.className = theme;
