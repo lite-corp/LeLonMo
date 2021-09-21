@@ -9,11 +9,11 @@
     --theme: url("../assets/pictures/theme_dark.png");
 }
 :root.light {
-    --backgound-main: #f1f1f1;
-    --backgroun-header: #ff975f;
-    --border-color: #484848;
-    --button-color: #c5c5c5;
-    --button-color-hover: #bbbbbb;
+    --backgound-main: #ffffff;
+    --backgroun-header: #f6f8fa;
+    --border-color: #d0d7de;
+    --button-color: #dddddd;
+    --button-color-hover: #cccccc;
     --secondary-color: #292929;
     --error-color: #e03939;
     --theme: url("../assets/pictures/theme_light.png");
