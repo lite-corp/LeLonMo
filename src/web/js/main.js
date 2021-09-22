@@ -1,4 +1,8 @@
-data_me = {}
+var data_me = {}
+
+var player_list = document.getElementById("player_list");
+var msg_template = ""
+var player_template = ""
 
 window.getCookie = function(name) {
     var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -46,10 +50,26 @@ function join_response(status, data) {
     }
 }
 
+function update_callback(status, data) {
+    if (status == 200 && data["success"]) {
+        player_list.innerHTML = "";
+        data["users"].forEach(function(item, index) {
+            player_list.innerHTML += player_template.replace(
+                "{name}",
+                item['username']
+            ).replace("{points}", item['points']);
+        })
+    }
+}
+
 window.onload = function() {
     if (window.location.pathname == '/') {
         window.location.replace("/html/index.html");
     }
+
+    fetch("templates/message.html").then((r) => { r.text().then((d) => { msg_template = d }) })
+    fetch("templates/player.html").then((r) => { r.text().then((d) => { player_template = d }) })
+
     console.log("Checking player in game ... ");
     send_data('/llm', {
             'action': 'update'
@@ -62,6 +82,9 @@ window.onload = function() {
                 }
             }
         });
+    setInterval(() => {
+        send_data('/llm', { 'action': 'update' }, update_callback);
+    }, 500);
 }
 
 // Press enter to trigger button in text field

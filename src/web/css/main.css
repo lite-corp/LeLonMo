@@ -183,6 +183,7 @@ body {
     display: none;
 }
 
+
 /* Players */
 
 #players {
@@ -198,11 +199,18 @@ body {
 
 .player {
     padding: 1em;
-    border-bottom-style: solid;
+    border-style: solid;
     border-width: 1px;
     border-color: var(--border-color);
-    margin-top: 0;
-    margin-bottom: 0;
+    margin: 1em 0.2em;
+    border-radius: 1em;
+}
+
+.points {
+    width: 100%;
+    display: block;
+    text-align: left;
+    margin-left: 2em;
 }
 
 
