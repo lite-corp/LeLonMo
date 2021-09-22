@@ -84,8 +84,10 @@ class LLM_Server(BaseHTTPRequestHandler):
             self.wfile.write(answer)
             return
         cookies = SimpleCookie(self.headers.get('Cookie'))
-        private_uuid = cookies["private_uuid"].value
-        
+        try:
+            private_uuid = cookies["private_uuid"].value
+        except KeyError:
+            private_uuid = '\0'
         answer = None
         if self.path == "/chat":
             answer = game.chat.handle_requests(private_uuid, post_data)
