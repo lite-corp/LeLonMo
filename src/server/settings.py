@@ -10,7 +10,7 @@ class DefaultSettingsProvider:
     def load(self):
         self.settings = {
             'server_port' : 8080,
-            'server_address' : '127.0.0.1',
+            'server_address' : '0.0.0.0',
             'web_path' : 'src/web',
             'letter_number' : 7,
             'dict_path' : 'src/dict/fr.txt',
