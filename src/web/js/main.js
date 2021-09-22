@@ -87,6 +87,14 @@ window.onload = function() {
     }, 500);
 }
 
+function addLetter(letter) {
+    if(letter === 'reset'){
+        document.getElementById("word").textContent = ''
+    }else{
+    document.getElementById("word").textContent = document.getElementById("word").textContent + letter
+    }
+}
+
 // Press enter to trigger button in text field
 var input = document.getElementById("username_input");
 input.addEventListener("keyup", function(event) {
