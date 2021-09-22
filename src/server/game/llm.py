@@ -102,10 +102,14 @@ class LeLonMo:
                 return self.add_user(private_uuid, data['username'])
 
             if data['action'] == 'update':
-                self.players[private_uuid]['last_update'] = getTime()
-                if self.status == 2:
-                    if not self.players[private_uuid]['latest_word']:
-                        self.players[private_uuid]['status'] = 'playing'
+                try:
+                    self.players[private_uuid]['last_update'] = getTime()
+                    if self.status == 2:
+                        if not self.players[private_uuid]['latest_word']:
+                            self.players[private_uuid]['status'] = 'playing'
+                except KeyError:
+                    pass
+                
                 return {
                     'success' : True,
                     'users' : self.get_users(),
