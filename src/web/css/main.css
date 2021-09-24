@@ -1,4 +1,5 @@
-:root, :root.dark {
+:root,
+ :root.dark {
     --backgound-main: #0d1117;
     --backgroun-header: #161b22;
     --border-color: #30363d;
@@ -11,6 +12,7 @@
     --focus-color: #888888;
     --theme: url("../assets/pictures/theme_dark.png");
 }
+
 :root.light {
     --backgound-main: #ffffff;
     --backgroun-header: #f6f8fa;
@@ -25,8 +27,23 @@
     --theme: url("../assets/pictures/theme_light.png");
 }
 
+#loading {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    background-color: #191f26;
+    background-image: url("/assets/pictures/loading.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 html {
     scroll-behavior: smooth;
+    overflow: hidden;
 }
 
 a {
@@ -47,7 +64,7 @@ header {
     border-bottom-width: 2px;
     border-color: var(--border-color);
     border-bottom-style: solid;
-    height: 6em;
+    height: 10vh;
     margin-bottom: 3em;
     align-items: center;
     display: flex;
@@ -116,6 +133,7 @@ header {
 .dark .theme_btn.light {
     display: block;
 }
+
 
 /* Body css */
 
@@ -193,8 +211,9 @@ body {
 
 #players {
     flex-grow: 3;
+    width: 10%;
     text-align: center;
-    height: 30em;
+    height: 75vh;
     border-style: solid;
     border-radius: 1em;
     border-color: var(--border-color);
@@ -221,9 +240,9 @@ body {
 
 #chat {
     flex-grow: 3;
-    max-width: 30%;
+    width: 10%;
     text-align: center;
-    height: 30em;
+    height: 75vh;
     border-style: solid;
     border-radius: 1em;
     border-color: var(--border-color);
@@ -237,8 +256,7 @@ body {
     font-size: 0.8em;
 }
 
-
-#chat_bottom input{
+#chat_bottom input {
     color: var(--secondary-color);
     background-color: var(--backgound-main);
     width: 90%;
@@ -252,7 +270,7 @@ body {
     transition: all 0.5s;
 }
 
-#chat_bottom input:focus{
+#chat_bottom input:focus {
     border-color: var(--focus-color);
 }
 
@@ -277,7 +295,7 @@ body {
     padding: 1em;
     flex-grow: 5;
     text-align: center;
-    height: 15em;
+    height: 75vh;
     margin-right: 2em;
     display: flex;
     flex-direction: column;
@@ -295,6 +313,7 @@ body {
     font-weight: bold;
     margin-bottom: 2em;
 }
+
 
 /*#game_panel input{
     color: var(--secondary-color);
@@ -318,7 +337,7 @@ body {
     margin-bottom: 0;
 }
 
-#random_letters span{
+#random_letters span {
     line-height: 4em;
     margin: 0.5em;
     font-size: 1em;
@@ -331,7 +350,7 @@ body {
     transition: all 0.5s;
 }
 
-#random_letters span:hover{
+#random_letters span:hover {
     background-color: var(--button-color-hover);
     border-color: var(--focus-color);
     cursor: pointer;
@@ -350,12 +369,12 @@ body {
     transition: all 0.5s;
 }
 
-#reset_word:hover{
+#reset_word:hover {
     border-color: var(--error-color);
     cursor: pointer;
 }
 
-#word_btn{
+#word_btn {
     font-size: 1.2em;
     line-height: 1em;
     padding: 1em;
@@ -369,12 +388,12 @@ body {
     color: var(--tertiary-color);
 }
 
-#word_btn:hover{
+#word_btn:hover {
     box-shadow: inset 0 3em 0 0 var(--valid-color);
     cursor: pointer;
 }
 
-#word_btn span{
+#word_btn span {
     color: var(--secondary-color);
 }
 
@@ -413,6 +432,7 @@ body {
 .box_container {
     padding: 1em;
 }
+
 .box_text {
     font-size: 1em;
     padding: 1em;
@@ -433,14 +453,16 @@ body {
     pointer-events: auto;
     cursor: pointer;
 }
-body:not(.mobile) .rule:hover + .hover-image {
+
+body:not(.mobile) .rule:hover+.hover-image {
     display: flex;
     pointer-events: none;
-  }
+}
+
 .hover-image {
     display: none;
-  }
-   
+}
+
 .hover-image {
     position: fixed;
     top: 50%;
@@ -454,13 +476,11 @@ body:not(.mobile) .rule:hover + .hover-image {
     /* Change width and height to scale images */
     width: 10em;
     height: 10em;
-  }
-  
+}
+
 .hover-image img {
     max-width: 100% !important;
     max-height: 100% !important;
     width: auto !important;
     height: auto !important;
-
-  }
-  
+}
