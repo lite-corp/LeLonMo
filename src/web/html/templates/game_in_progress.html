@@ -1,0 +1,16 @@
+<div id="panel_ingame">
+    <p id="order">Composez un mot avec les lettres suivantes :</p>
+    <p id="random_letters">
+        <span id="letter_1" onclick="addLetter(document.getElementById('letter_1').textContent)">{l}</span>
+        <span id="letter_2" onclick="addLetter(document.getElementById('letter_2').textContent)">{l}</span>
+        <span id="letter_3" onclick="addLetter(document.getElementById('letter_3').textContent)">{l}</span>
+        <span id="letter_4" onclick="addLetter(document.getElementById('letter_4').textContent)">{l}</span>
+        <span id="letter_5" onclick="addLetter(document.getElementById('letter_5').textContent)">{l}</span>
+        <span id="letter_6" onclick="addLetter(document.getElementById('letter_6').textContent)">{l}</span>
+        <span id="letter_7" onclick="addLetter(document.getElementById('letter_7').textContent)">{l}</span>
+    </p>
+    <span id="reset_word" onclick="addLetter('reset')">Reset</span>
+</div>
+<div id="word_btn" onclick="submitWord()">
+    Your word : <span id="word"></span>
+</div>

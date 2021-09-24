@@ -109,14 +109,22 @@ class LeLonMo:
                             self.players[private_uuid]['status'] = 'playing'
                 except KeyError:
                     pass
-                
+                if self.status == 2:
+                    game_finished = True
+                    for player in self.players:
+                        if player['status'] != 'finished' and not player['kicked']:
+                            game_finished = False
+                    if game_finished:
+                        for player in self.players:
+                            player['player_status'] = 'game_ended'
                 return {
                     'success' : True,
                     'users' : self.get_users(),
                     'server_status' : self.status,
                     'letters' : self.letters,
                     'admin' : private_uuid == self.admin_uuid,
-                    'in_game': private_uuid in self.players
+                    'in_game' : private_uuid in self.players,
+                    'player_status' : 'not_in_game' if private_uuid not in self.players else self.players[private_uuid]['status']
                 }
             
             if data['action'] == 'start_game':

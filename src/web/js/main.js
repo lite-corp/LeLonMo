@@ -53,59 +53,64 @@ function join_response(status, data) {
 function update_callback(status, data) {
     if (status == 200 && data["success"]) {
         player_list.innerHTML = "";
-        data["users"].forEach(function(item, index) {
+        data["users"].forEach(function(item, i) {
             player_list.innerHTML += player_template.replace(
                 "{name}",
                 item['username']
             ).replace("{points}", item['points']);
         })
+        update_game_panel(data["player_status"], data["admin"]);
     }
 }
 
-window.onload = function() {
+
+function onReady(callback) {
+    var intervalId = window.setInterval(function() {
+        if (document.getElementsByTagName('body')[0] !== undefined) {
+            window.clearInterval(intervalId);
+            callback.call(this);
+        }
+    }, 1000);
+}
+
+function setVisible(selector, visible) {
+    document.querySelector(selector).style.display = visible ? 'block' : 'none';
+}
+
+
+function addLetter(letter) {
+    if (letter === 'reset') {
+        document.getElementById("word").textContent = ''
+    } else {
+        document.getElementById("word").textContent = document.getElementById("word").textContent + letter
+    }
+}
+
+
+
+function main() {
     if (window.location.pathname == '/') {
         window.location.replace("/html/index.html");
     }
 
-    fetch("templates/message.html").then((r) => { r.text().then((d) => { msg_template = d }) })
-    fetch("templates/player.html").then((r) => { r.text().then((d) => { player_template = d }) })
+    loaditems();
+    // Press enter to trigger button in text field
+    var input = document.getElementById("username_input");
+    input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            document.getElementById("join_btn").click();
+        }
+    });
 
-    console.log("Checking player in game ... ");
-    send_data('/llm', {
-            'action': 'update'
-        },
-        function(status, data) {
-            if (status == 200 && data["success"]) {
-                if (data['in_game']) {
-                    console.log("Player is already in the game.");
-                    join_response(200, { 'kicked': false });
-                }
-            }
-        });
-    setInterval(() => {
-        send_data('/llm', { 'action': 'update' }, update_callback);
-    }, 500);
+    var input = document.getElementById("message");
+    input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            document.getElementById("message").value = "";
+        }
+    });
+    onReady(function() {
+        setVisible('.page', true);
+        setVisible('#loading', false);
+    });
 }
-
-function addLetter(letter) {
-    if(letter === 'reset'){
-        document.getElementById("word").textContent = ''
-    }else{
-    document.getElementById("word").textContent = document.getElementById("word").textContent + letter
-    }
-}
-
-// Press enter to trigger button in text field
-var input = document.getElementById("username_input");
-input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-        document.getElementById("join_btn").click();
-    }
-});
-
-var input = document.getElementById("message");
-input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-        document.getElementById("message").value = "";
-    }
-});
+main();
