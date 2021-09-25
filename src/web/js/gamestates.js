@@ -1,6 +1,16 @@
 var msg_template;
 var player_template;
 var game_in_progress;
+var game_end_results_admin;
+var game_end_results;
+var game_not_started_admin;
+var game_not_started;
+var game_waiting_for_others;
+var game_waiting_for_others_admin;
+var default_game_panel;
+
+var locked_game_state = False;
+var last_game_state = '';
 
 function loaditems() {
 
@@ -40,36 +50,49 @@ function setGameContent(content) {
 }
 
 function update_game_panel(player_status, admin) {
-    switch (player_status) {
-        case "wait_for_start":
-            if (admin) {
-                setGameContent(game_not_started_admin);
-            } else {
-                setGameContent(game_not_started);
-            }
-            break;
-        case "playing":
-            setGameContent(game_in_progress);
-            break;
-        case "finished":
-            if (admin) {
-                setGameContent(game_waiting_for_others);
-            } else {
-                setGameContent(game_waiting_for_others_admin);
-            }
-            break;
-        case "game_ended":
-            if (admin) {
-                setGameContent(game_end_results_admin);
-            } else {
-                setGameContent(game_end_results);
-            }
-            break;
-        case "not_in_game":
-            setGameContent(default_game_panel);
-            break;
-        default:
-            setGameContent("ERROR : State is " + player_status)
-            break;
+    if (last_game_state !== player_status && !locked_game_state) {
+        last_game_state = player_status;
+        console.log("Changing game state to " + player_status);
+        switch (player_status) {
+            case "wait_for_start":
+                if (admin) {
+                    setGameContent(game_not_started_admin);
+                } else {
+                    setGameContent(game_not_started);
+                }
+                break;
+            case "playing":
+                setGameContent(game_in_progress);
+                break;
+            case "finished":
+                if (admin) {
+                    setGameContent(game_waiting_for_others);
+                } else {
+                    setGameContent(game_waiting_for_others_admin);
+                }
+                break;
+            case "game_ended":
+                if (admin) {
+                    setGameContent(game_end_results_admin);
+                } else {
+                    setGameContent(game_end_results);
+                }
+                break;
+            case "not_in_game":
+                setGameContent(default_game_panel);
+                break;
+            default:
+                setGameContent("ERROR : State is " + player_status)
+                break;
+        }
+    }
+}
+
+function toggleGameLocked() {
+    locked_game_state = !locked_game_state;
+    if (locked_game_state) {
+        console.log("Game state locked");
+    } else {
+        console.log("Game state unlocked");
     }
 }
