@@ -1,4 +1,5 @@
 var chat_messages = [];
+var messages = document.getElementById('chat_messages');
 
 function setupChat() {
     var input = document.getElementById("message");
@@ -14,14 +15,16 @@ function setupChat() {
 }
 
 function sendMessage(message) {
-    send_data(
-        "/chat", {
-            'action': 'send_msg',
-            'content': message
-        },
-        (a, b) => {}
-    )
-    send_data("/chat", { "action": "get_msg" }, messages_update_callback);
+    if(message !== ""){
+        send_data(
+            "/chat", {
+                'action': 'send_msg',
+                'content': message
+            },
+            (a, b) => {}
+        )
+        send_data("/chat", { "action": "get_msg" }, messages_update_callback);
+    }
 }
 
 function messages_update_callback(status, data) {
@@ -38,6 +41,7 @@ function messages_update_callback(status, data) {
 }
 
 function update_messages_display() {
+    shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
     messages_list = document.getElementById("chat_messages");
     messages_list.innerHTML = "";
     chat_messages.forEach(message => {
@@ -46,5 +50,12 @@ function update_messages_display() {
             message['username']
         ).replace("{text}", message['text']);
     });
+    if (shouldScroll) {
+        scrollToBottom();
+      }
 
 }
+
+function scrollToBottom() {
+    messages.scrollTop = messages.scrollHeight;
+  }
