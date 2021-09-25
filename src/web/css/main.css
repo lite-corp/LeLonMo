@@ -256,6 +256,12 @@ body {
     flex-grow: 1;
     font-size: 0.8em;
     overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE */
+}
+
+#chat_messages::-webkit-scrollbar { /* Chrome, Opera, Safari */
+    display: none;
 }
 
 #chat_bottom input {
