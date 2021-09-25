@@ -64,7 +64,7 @@ header {
     border-bottom-width: 2px;
     border-color: var(--border-color);
     border-bottom-style: solid;
-    height: 10vh;
+    height: 6em;
     margin-bottom: 3em;
     align-items: center;
     display: flex;
@@ -356,7 +356,7 @@ body {
     cursor: pointer;
 }
 
-#reset_word {
+.reset_btn {
     line-height: 4em;
     margin: 0.5em;
     font-size: 1em;
@@ -369,12 +369,12 @@ body {
     transition: all 0.5s;
 }
 
-#reset_word:hover {
+.reset_btn:hover {
     border-color: var(--error-color);
     cursor: pointer;
 }
 
-#word_btn {
+.validation_btn {
     font-size: 1.2em;
     line-height: 1em;
     padding: 1em;
@@ -388,12 +388,12 @@ body {
     color: var(--tertiary-color);
 }
 
-#word_btn:hover {
+.validation_btn:hover {
     box-shadow: inset 0 3em 0 0 var(--valid-color);
     cursor: pointer;
 }
 
-#word_btn span {
+.word_btn span {
     color: var(--secondary-color);
 }
 
