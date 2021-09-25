@@ -9,7 +9,7 @@ var game_waiting_for_others;
 var game_waiting_for_others_admin;
 var default_game_panel;
 
-var locked_game_state = False;
+var locked_game_state = false;
 var last_game_state = '';
 
 function loaditems() {
@@ -53,7 +53,7 @@ function update_game_panel(player_status, admin) {
     if (last_game_state !== player_status && !locked_game_state) {
         last_game_state = player_status;
         console.log("Changing game state to " + player_status);
-        switch (player_status) {
+        switch (last_game_state) {
             case "wait_for_start":
                 if (admin) {
                     setGameContent(game_not_started_admin);
@@ -95,4 +95,31 @@ function toggleGameLocked() {
     } else {
         console.log("Game state unlocked");
     }
+}
+
+function forceGameChange(admin = false) {
+    var game_state = ''
+    switch (last_game_state) {
+        case "wait_for_start":
+            game_state = 'playing';
+            break;
+        case "playing":
+            game_state = "finished";
+            break;
+        case "finished":
+            game_state = "game_ended";
+            break;
+        case "game_ended":
+            game_state = "not_in_game";
+            break;
+        case "not_in_game":
+            game_state = "wait_for_start";
+            break;
+        default:
+            game_state = "wait_for_start";
+            break;
+    }
+    locked_game_state = false;
+    update_game_panel(game_state, admin);
+    locked_game_state = true;
 }
