@@ -393,7 +393,7 @@ body {
     cursor: pointer;
 }
 
-.word_btn span {
+.validation_btn span {
     color: var(--secondary-color);
 }
 
