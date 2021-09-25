@@ -19,19 +19,20 @@ class Chat:
     
     def get_messages(self, private_uuid):
         messages = self.messagelist[
-            self.userlist[private_uuid]['last_read']:
+            self.userlist[private_uuid]['last_read']:len(self.messagelist)
         ]
-        self.userlist[private_uuid]['last_read'] = len(self.messagelist)-1
+        self.userlist[private_uuid]['last_read'] = len(self.messagelist)
         return messages
     
     def send_message(self, private_uuid, message):
         self.messagelist.append(
             {
                 'text' : message,
-                'username' : self.userlist[private_uuid]['name'],
+                'username' : self.userlist[private_uuid]['username'],
                 'uuid' : self.userlist[private_uuid]['pub_uuid']
             }
         )
+        print(f'[I] <{self.userlist[private_uuid]["username"]}> {message}')
     def get_users(self):
         users = list()
         for user in self.userlist:

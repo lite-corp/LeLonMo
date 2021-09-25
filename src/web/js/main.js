@@ -102,12 +102,8 @@ function main() {
         }
     });
 
-    var input = document.getElementById("message");
-    input.addEventListener("keyup", function(event) {
-        if (event.keyCode === 13) {
-            document.getElementById("message").value = "";
-        }
-    });
+    setupChat();
+
     onReady(function() {
         setVisible('.page', true);
         setVisible('#loading', false);

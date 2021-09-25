@@ -241,6 +241,7 @@ body {
 #chat {
     flex-grow: 3;
     min-width: 10%;
+    width: 10%;
     text-align: center;
     height: 75vh;
     border-style: solid;
@@ -251,9 +252,10 @@ body {
     flex-direction: column;
 }
 
-.chat_messages {
+#chat_messages {
     flex-grow: 1;
     font-size: 0.8em;
+    overflow-y: scroll;
 }
 
 #chat_bottom input {
