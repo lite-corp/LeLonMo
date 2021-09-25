@@ -211,7 +211,7 @@ body {
 
 #players {
     flex-grow: 3;
-    width: 10%;
+    min-width: 10%;
     text-align: center;
     height: 75vh;
     border-style: solid;
@@ -240,7 +240,7 @@ body {
 
 #chat {
     flex-grow: 3;
-    width: 10%;
+    min-width: 10%;
     text-align: center;
     height: 75vh;
     border-style: solid;
