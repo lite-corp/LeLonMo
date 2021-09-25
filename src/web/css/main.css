@@ -300,6 +300,7 @@ body {
     display: flex;
     flex-direction: column;
     vertical-align: middle;
+    max-width: 40%;
 }
 
 #panel_ingame {
