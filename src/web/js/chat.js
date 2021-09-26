@@ -14,8 +14,12 @@ function setupChat() {
     }, 1000);
 }
 
+const scrollToBottom = (node) => {
+    node.scrollTop = node.scrollHeight;
+}
+
 function sendMessage(message) {
-    if(message !== ""){
+    if (message !== "") {
         send_data(
             "/chat", {
                 'action': 'send_msg',
@@ -42,20 +46,12 @@ function messages_update_callback(status, data) {
 
 function update_messages_display() {
     shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
-    messages_list = document.getElementById("chat_messages");
-    messages_list.innerHTML = "";
+    messages.innerHTML = "";
     chat_messages.forEach(message => {
-        messages_list.innerHTML += msg_template.replace(
+        messages.innerHTML += msg_template.replace(
             "{username}",
             message['username']
         ).replace("{text}", message['text']);
     });
-    if (shouldScroll) {
-        scrollToBottom();
-      }
-
+    scrollToBottom(messages);
 }
-
-function scrollToBottom() {
-    messages.scrollTop = messages.scrollHeight;
-  }
