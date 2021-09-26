@@ -53,5 +53,7 @@ function update_messages_display() {
             message['username']
         ).replace("{text}", message['text']);
     });
-    scrollToBottom(messages);
+    if (shouldScroll) {
+        scrollToBottom(messages);
+    }
 }
