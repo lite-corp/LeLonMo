@@ -87,6 +87,9 @@ function addLetter(letter) {
 }
 
 
+function submitWord(){
+    word.document.getElementById('word').value
+}
 
 function main() {
     if (window.location.pathname == '/') {

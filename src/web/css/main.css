@@ -299,7 +299,7 @@ body {
 /* Main game */
 
 #game_panel {
-    margin-top: 5em;
+    margin-top: 2em;
     padding: 1em;
     flex-grow: 5;
     text-align: center;
