@@ -29,12 +29,13 @@ class Chat:
             self.userlist[private_uuid]['last_read'] = len(self.messagelist)
             return messages
     
-    def send_message(self, private_uuid: str, message):
+    def send_message(self, private_uuid: str, message: str):
         if message.startswith('[html]'):
             message = message[6:]
         else:
             message = html.escape(message)
-        
+        if message.isspace():
+            return
         self.messagelist.append(
             {
                 'text' : message,
