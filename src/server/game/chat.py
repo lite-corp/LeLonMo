@@ -1,9 +1,12 @@
+import html
+
+
 class Chat:
     def __init__(self) -> None:
         self.userlist = dict()
         self.messagelist = list()
     
-    def add_user(self, private_uuid, public_uuid, username):
+    def add_user(self, private_uuid: str, public_uuid, username):
         self.userlist[private_uuid] = {
             'priv_uuid' : private_uuid,
             'pub_uuid' : public_uuid,
@@ -14,11 +17,11 @@ class Chat:
         self.send_message(private_uuid, 'joined the game')
 
     
-    def remove_user(self, private_uuid):
+    def remove_user(self, private_uuid: str):
         self.send_message(private_uuid, 'left the game')
         del self.userlist[private_uuid]
     
-    def get_messages(self, private_uuid):
+    def get_messages(self, private_uuid: str):
         if private_uuid in self.userlist:
             messages = self.messagelist[
                 self.userlist[private_uuid]['last_read']:len(self.messagelist)
@@ -26,7 +29,12 @@ class Chat:
             self.userlist[private_uuid]['last_read'] = len(self.messagelist)
             return messages
     
-    def send_message(self, private_uuid, message):
+    def send_message(self, private_uuid: str, message):
+        if message.startswith('[html]'):
+            message = message[6:]
+        else:
+            message = html.escape(message)
+        
         self.messagelist.append(
             {
                 'text' : message,
@@ -34,7 +42,7 @@ class Chat:
                 'uuid' : self.userlist[private_uuid]['pub_uuid']
             }
         )
-        print(f'[I] <{self.userlist[private_uuid]["username"]}> {message}')
+        print(html.unescape(f'[I] <{self.userlist[private_uuid]["username"]}> {message}'))
     def get_users(self):
         users = list()
         for user in self.userlist:
@@ -44,7 +52,7 @@ class Chat:
             })
         return users
 
-    def handle_requests(self, private_uuid, data):
+    def handle_requests(self, private_uuid: str, data):
         try:
             if data['action'] == 'get_msg':
                 return {
