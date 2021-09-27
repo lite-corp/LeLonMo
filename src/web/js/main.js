@@ -88,7 +88,7 @@ function addLetter(letter) {
 
 
 function submitWord(){
-    word.document.getElementById('word').value
+    word = document.getElementById('word').value
 }
 
 function main() {
