@@ -1,5 +1,6 @@
 import time
 import uuid
+import html
 
 import game.lib_llm
 
@@ -34,6 +35,7 @@ class LeLonMo:
             self.status = 1
             return self.add_user(private_uuid, username)
         elif self.status == 1:
+            username = html.escape(username)
             self.players[private_uuid] = {
                 'private_uuid' : private_uuid,
                 'public_uuid' : str(uuid.uuid4())[:8],

@@ -1,4 +1,3 @@
-import uuid
 class Chat:
     def __init__(self) -> None:
         self.userlist = dict()
