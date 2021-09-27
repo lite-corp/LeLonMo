@@ -11,6 +11,7 @@ var default_game_panel;
 
 var locked_game_state = false;
 var last_game_state = '';
+var last_admin_state = '';
 
 function loaditems() {
 
@@ -41,7 +42,7 @@ function loaditems() {
         });
     setInterval(() => {
         send_data('/llm', { 'action': 'update' }, update_callback);
-    }, 500);
+    }, 1000);
 }
 
 function setGameContent(content) {
@@ -50,8 +51,9 @@ function setGameContent(content) {
 }
 
 function update_game_panel(player_status, admin) {
-    if (last_game_state !== player_status && !locked_game_state) {
+    if (last_game_state !== player_status && !locked_game_state && last_admin_state !== admin) {
         last_game_state = player_status;
+        last_admin_state = admin;
         console.log("Changing game state to " + player_status);
         switch (last_game_state) {
             case "wait_for_start":

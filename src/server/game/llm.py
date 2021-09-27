@@ -1,4 +1,3 @@
-from os import putenv
 import time
 import uuid
 
@@ -54,8 +53,14 @@ class LeLonMo:
         self.chat.remove_user(private_uuid)
     
     def delete_user(self, private_uuid: str)->None:
-        del self.players[private_uuid]
+        print('[I] Removed player', self.players[private_uuid]['username'])
+        if self.is_admin(private_uuid):
+            if len(self.players) == 0:
+                self.initialize_game()
+            else:
+                self.admin_uuid = list(self.players.keys())[0]
         self.chat.remove_user(private_uuid)
+        del self.players[private_uuid]
     
     def is_admin(self, private_uuid: str)->bool:
         return private_uuid == self.admin_uuid
@@ -77,7 +82,13 @@ class LeLonMo:
                 })
         return player_list
         
-
+    def check_timeouts(self):
+        remove_players = list()
+        for p in self.players:
+            if self.players[p]["last_update"] + self.settings['time_inactive'] < getTime():
+                remove_players.append(p)
+        for p in remove_players:
+            self.delete_user(p)
     def validate_request(self, action : str)->bool:
         if action == 'join':
             return self.status == 0 or self.status == 1
@@ -117,6 +128,7 @@ class LeLonMo:
                     if game_finished:
                         for player in self.players:
                             player['player_status'] = 'game_ended'
+                self.check_timeouts()
                 return {
                     'success' : True,
                     'users' : self.get_users(),

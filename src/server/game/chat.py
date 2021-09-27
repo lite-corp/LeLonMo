@@ -12,17 +12,20 @@ class Chat:
             'last_read' : 0
         }
         print(f"[I] Added user {username}")
+        self.send_message(private_uuid, 'joined the game')
 
     
     def remove_user(self, private_uuid):
+        self.send_message(private_uuid, 'left the game')
         del self.userlist[private_uuid]
     
     def get_messages(self, private_uuid):
-        messages = self.messagelist[
-            self.userlist[private_uuid]['last_read']:len(self.messagelist)
-        ]
-        self.userlist[private_uuid]['last_read'] = len(self.messagelist)
-        return messages
+        if private_uuid in self.userlist:
+            messages = self.messagelist[
+                self.userlist[private_uuid]['last_read']:len(self.messagelist)
+            ]
+            self.userlist[private_uuid]['last_read'] = len(self.messagelist)
+            return messages
     
     def send_message(self, private_uuid, message):
         self.messagelist.append(
