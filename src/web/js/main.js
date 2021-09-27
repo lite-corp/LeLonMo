@@ -4,9 +4,10 @@ var player_list = document.getElementById("player_list");
 var msg_template = ""
 var player_template = ""
 
-window.getCookie = function(name) {
+window.getCookie = function(name, default_value = null) {
     var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     if (match) return match[2];
+    return default_value;
 }
 
 function send_data(page, data, callback) {
@@ -87,7 +88,7 @@ function addLetter(letter) {
 }
 
 
-function submitWord(){
+function submitWord() {
     word = document.getElementById('word').value
 }
 
