@@ -1,8 +1,17 @@
 function addLetter(letter) {
+    if (document.getElementById("validation_btn").classList.contains('bad')) {
+        document.getElementById("word").textContent = ''
+        document.getElementById("validation_btn").classList.remove('bad')
+    }
     if (letter === 'reset') {
         document.getElementById("word").textContent = ''
+        document.getElementById("validation_btn").classList.remove('bad')
     } else {
-        document.getElementById("word").textContent = document.getElementById("word").textContent + letter
+        if (document.getElementById("word").textContent === '') {
+            document.getElementById("word").textContent = letter.toUpperCase()
+        } else {
+            document.getElementById("word").textContent = document.getElementById("word").textContent + letter
+        }
     }
 }
 
