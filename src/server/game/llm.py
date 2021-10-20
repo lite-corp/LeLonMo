@@ -125,11 +125,11 @@ class LeLonMo:
                 if self.status == 2:
                     game_finished = True
                     for player in self.players:
-                        if player['status'] != 'finished' and not player['kicked']:
+                        if self.players[player]['status'] != 'finished' and not self.players[player]['kicked']:
                             game_finished = False
                     if game_finished:
                         for player in self.players:
-                            player['player_status'] = 'game_ended'
+                            self.players[player]['player_status'] = 'game_ended'
                 self.check_timeouts()
                 return {
                     'success' : True,
@@ -142,11 +142,15 @@ class LeLonMo:
                 }
             
             if data['action'] == 'start_game':
-                self.letters = game.lib_llm.generate_letters(self.settings['letter_number'])
-                self.satus = 2
-                print("[I] Game started")
-                return {'success' : True}
+                if self.status == 1:
+                    self.letters = game.lib_llm.generate_letters(self.settings['letter_number'])
+                    self.status = 2
+                    print("[I] Game started")
+                    return {'success' : True}
+                else:
+                    return {'success' : False, 'message' : 'game already started'}
             if data['action'] == 'submit_word':
+                print(data)
                 if not game.lib_llm.check_list(data['word'], self.letters):
                     return {
                         'success' : True,
@@ -168,6 +172,7 @@ class LeLonMo:
                     return {'success' : False, 'message' : 'not_admin'}
             
         except KeyError as e:
+            raise
             field = str(e).replace("KeyError: '", "").replace("'", '')
             print(f'[E] Missing required field : ' + field)
             return {'success' : False, 'message' : 'missing_field', 'detail' : 'Missing field ' + field }

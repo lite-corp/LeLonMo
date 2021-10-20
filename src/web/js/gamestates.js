@@ -45,13 +45,18 @@ function loaditems() {
     }, 1000);
 }
 
-function setGameContent(content) {
+function setGameContent(content, replaces = {}) {
+    for (var key in replaces) {
+        if (replaces.hasOwnProperty(key)) {
+            content = content.replace('{' + key + '}', replaces[key]);
+        }
+    }
     game_panel = document.getElementById("game_panel");
     game_panel.innerHTML = content;
 }
 
-function update_game_panel(player_status, admin) {
-    if (last_game_state !== player_status && !locked_game_state && last_admin_state !== admin) {
+function update_game_panel(player_status, admin, data) {
+    if ((last_game_state !== player_status || last_admin_state !== admin) && !locked_game_state) {
         last_game_state = player_status;
         last_admin_state = admin;
         console.log("Changing game state to " + player_status);
@@ -64,7 +69,11 @@ function update_game_panel(player_status, admin) {
                 }
                 break;
             case "playing":
-                setGameContent(game_in_progress);
+                var letters_dict = {};
+                for (var i = 0; i < 7; i++) {
+                    letters_dict[String(i + 1)] = data['letters'][i];
+                }
+                setGameContent(game_in_progress, letters_dict);
                 break;
             case "finished":
                 if (admin) {
@@ -84,7 +93,7 @@ function update_game_panel(player_status, admin) {
                 setGameContent(default_game_panel);
                 break;
             default:
-                setGameContent("ERROR : State is " + player_status)
+                setGameContent("ERROR : State is " + player_status);
                 break;
         }
     }

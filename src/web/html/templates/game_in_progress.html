@@ -2,17 +2,17 @@
 <div id="panel_ingame">
     <p id="order">Composez un mot avec les lettres suivantes :</p>
     <p id="random_letters">
-        <span id="letter_1" onclick="addLetter(document.getElementById('letter_1').textContent)">{l}</span>
-        <span id="letter_2" onclick="addLetter(document.getElementById('letter_2').textContent)">{l}</span>
-        <span id="letter_3" onclick="addLetter(document.getElementById('letter_3').textContent)">{l}</span>
-        <span id="letter_4" onclick="addLetter(document.getElementById('letter_4').textContent)">{l}</span>
-        <span id="letter_5" onclick="addLetter(document.getElementById('letter_5').textContent)">{l}</span>
-        <span id="letter_6" onclick="addLetter(document.getElementById('letter_6').textContent)">{l}</span>
-        <span id="letter_7" onclick="addLetter(document.getElementById('letter_7').textContent)">{l}</span>
+        <span class="game_letter" id="letter_1" onclick="addLetter(document.getElementById('letter_1').textContent)">{1}</span>
+        <span class="game_letter" id="letter_2" onclick="addLetter(document.getElementById('letter_2').textContent)">{2}</span>
+        <span class="game_letter" id="letter_3" onclick="addLetter(document.getElementById('letter_3').textContent)">{3}</span>
+        <span class="game_letter" id="letter_4" onclick="addLetter(document.getElementById('letter_4').textContent)">{4}</span>
+        <span class="game_letter" id="letter_5" onclick="addLetter(document.getElementById('letter_5').textContent)">{5}</span>
+        <span class="game_letter" id="letter_6" onclick="addLetter(document.getElementById('letter_6').textContent)">{6}</span>
+        <span class="game_letter" id="letter_7" onclick="addLetter(document.getElementById('letter_7').textContent)">{7}</span>
     </p>
     <span class="reset_btn" onclick="addLetter('reset')">Reset</span>
     <p></p>
-    <div class="validation_btn" onclick="submitWord()">
+    <div id="validation_btn" class="validation_btn" onclick="submitWord()">
         Your word : <span id="word"></span>
     </div>
 </div>

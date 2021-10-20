@@ -33,6 +33,8 @@ function sendMessage(message) {
 
 function messages_update_callback(status, data) {
     if (status == 200 && data["success"]) {
+        if (data.messages == null)
+            return;
         size = chat_messages.length;
         data.messages.forEach(message => {
             chat_messages.push(message);

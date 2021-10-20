@@ -256,11 +256,14 @@ body {
     flex-grow: 1;
     font-size: 0.8em;
     overflow-y: scroll;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE */
 }
 
-#chat_messages::-webkit-scrollbar { /* Chrome, Opera, Safari */
+#chat_messages::-webkit-scrollbar {
+    /* Chrome, Opera, Safari */
     display: none;
 }
 
@@ -404,6 +407,14 @@ body {
 
 .validation_btn span {
     color: var(--secondary-color);
+}
+
+.validation_btn.bad {
+    border: 1px solid var(--error-color);
+}
+
+.validation_btn.bad span {
+    color: var(--error-color);
 }
 
 .box {

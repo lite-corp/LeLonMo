@@ -60,7 +60,7 @@ function update_callback(status, data) {
                 item['username']
             ).replace("{points}", item['points']);
         })
-        update_game_panel(data["player_status"], data["admin"]);
+        update_game_panel(data["player_status"], data["admin"], data);
     }
 }
 
@@ -78,19 +78,6 @@ function setVisible(selector, visible) {
     document.querySelector(selector).style.display = visible ? 'block' : 'none';
 }
 
-
-function addLetter(letter) {
-    if (letter === 'reset') {
-        document.getElementById("word").textContent = ''
-    } else {
-        document.getElementById("word").textContent = document.getElementById("word").textContent + letter
-    }
-}
-
-
-function submitWord() {
-    word = document.getElementById('word').value
-}
 
 function main() {
     if (window.location.pathname == '/') {
