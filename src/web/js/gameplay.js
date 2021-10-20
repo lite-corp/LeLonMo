@@ -8,10 +8,10 @@ function addLetter(letter) {
 
 
 function submitWord() {
-    console.log(document.getElementById('word').innerText);
+    console.log(document.getElementById('word').textContent);
     send_data('/llm', {
         'action': 'submit_word',
-        'word': document.getElementById('word').innerText
+        'word': document.getElementById('word').textContent
     }, (r, data) => {
         console.log(data);
         if (r == 200 && data['success']) {
