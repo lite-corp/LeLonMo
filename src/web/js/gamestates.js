@@ -57,10 +57,8 @@ function setGameContent(content, replaces = {}) {
 
 function update_game_panel(player_status, admin, data) {
     if ((last_game_state !== player_status || last_admin_state !== admin) && !locked_game_state) {
-        last_game_state = player_status;
-        last_admin_state = admin;
         console.log("Changing game state to " + player_status);
-        switch (last_game_state) {
+        switch (player_status) {
             case "wait_for_start":
                 if (admin) {
                     setGameContent(game_not_started_admin);
@@ -90,12 +88,18 @@ function update_game_panel(player_status, admin, data) {
                 }
                 break;
             case "not_in_game":
-                setGameContent(default_game_panel);
+                if (last_game_state === '') {
+                    setGameContent(default_game_panel)
+                } else {
+                    window.location = window.location;
+                }
                 break;
             default:
                 setGameContent("ERROR : State is " + player_status);
                 break;
         }
+        last_game_state = player_status;
+        last_admin_state = admin;
     }
 }
 
