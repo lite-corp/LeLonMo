@@ -77,9 +77,9 @@ function update_game_panel(player_status, admin, data) {
                 break;
             case "finished":
                 if (admin) {
-                    setGameContent(game_waiting_for_others);
-                } else {
                     setGameContent(game_waiting_for_others_admin);
+                } else {
+                    setGameContent(game_waiting_for_others);
                 }
                 break;
             case "game_ended":
