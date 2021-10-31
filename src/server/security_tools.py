@@ -5,5 +5,5 @@ def secure_path(path):
 
     # Prevent accessing python source code
     path = path.replace(".py", "")
-    
+
     return path
