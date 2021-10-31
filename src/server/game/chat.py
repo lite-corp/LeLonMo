@@ -6,15 +6,19 @@ class Chat:
         self.userlist = dict()
         self.messagelist = list()
 
-    def add_user(self, private_uuid: str, public_uuid, username):
-        self.userlist[private_uuid] = {
-            "priv_uuid": private_uuid,
-            "pub_uuid": public_uuid,
-            "username": username,
-            "last_read": 0,
-        }
-        print(f"[I] Added user {username}")
-        self.send_message(private_uuid, "joined the game")
+    def add_user(self, private_uuid: str, public_uuid: str, username: str, log: bool=True):
+        if private_uuid not in self.userlist:
+            self.userlist[private_uuid] = {
+                "priv_uuid": private_uuid,
+                "pub_uuid": public_uuid,
+                "username": username,
+                "last_read": 0,
+            }
+            if log:
+                print(f"[I] Added user {username}")
+                self.send_message(private_uuid, "joined the game")
+        else:
+            self.userlist[private_uuid]["username"] = username
 
     def remove_user(self, private_uuid: str):
         self.send_message(private_uuid, "left the game")

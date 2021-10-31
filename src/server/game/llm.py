@@ -17,7 +17,7 @@ class LeLonMo:
         self.chat = Chat()
         self.initialize_game()
 
-    def initialize_game(self):
+    def initialize_game(self, admin_uuid: str = '', players: dict = {}):
         """
         self.status :
             0 : Waiting for admin
@@ -26,12 +26,15 @@ class LeLonMo:
             3 : Waiting for admin to restart (game finished)
         """
         self.status = 0
-        self.admin_uuid = str()
+        self.admin_uuid = admin_uuid
         self.letters = list()
         self.players = dict()
         self.settings = DefaultProvider()
+        for p in players:
+            self.add_user(players[p]["private_uuid"], players[p]["username"], False)
+        print("Game initialized")
 
-    def add_user(self, private_uuid: str, username: str) -> dict:
+    def add_user(self, private_uuid: str, username: str, log_in_chat: bool = True) -> dict:
         if self.status == 0:
             self.admin_uuid = private_uuid
             self.status = 1
@@ -50,9 +53,8 @@ class LeLonMo:
                 "latest_points": "",
             }
             self.chat.add_user(
-                private_uuid, self.players[private_uuid]["public_uuid"], username
+                private_uuid, self.players[private_uuid]["public_uuid"], username, log_in_chat
             )
-            print(f"[I] Added user {username}")
             return self.players[private_uuid]
 
     def kick_user(self, private_uuid: str) -> None:
@@ -135,8 +137,9 @@ class LeLonMo:
                 ):
                     game_finished = False
             if game_finished:
+                self.status = 3
                 for player in self.players:
-                    self.players[player]["player_status"] = "game_ended"
+                    self.players[player]["status"] = "game_ended"
         self.check_timeouts()
         return {
             "success": True,
@@ -192,7 +195,7 @@ class LeLonMo:
                 return {"success": True, "valid": True}
             if data["action"] == "create_game":
                 if private_uuid == self.admin_uuid:
-                    self.__init__()
+                    self.initialize_game(self.admin_uuid, self.players)
                     return {"success": True}
                 else:
                     return {

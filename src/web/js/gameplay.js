@@ -31,6 +31,12 @@ function submitWord() {
 
 function start_game() {
     send_data("/llm", { 'action': 'start_game' }, (a, b) => {
-        update_game_panel('playing', last_admin_state, {})
+        send_data('/llm', { 'action': 'update' }, update_callback)
+    })
+}
+
+function restart_game() {
+    send_data("/llm", { 'action': 'create_game' }, (a, b) => {
+        send_data('/llm', { 'action': 'update' }, update_callback)
     })
 }
