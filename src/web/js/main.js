@@ -61,6 +61,9 @@ function update_callback(status, data) {
             ).replace("{points}", item['points']);
         })
         update_game_panel(data["player_status"], data["admin"], data);
+        if (data["should_update_messages"]) {
+            send_data("/chat", { "action": "get_msg" }, messages_update_callback)
+        }
     }
 }
 

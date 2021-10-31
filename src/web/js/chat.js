@@ -9,9 +9,6 @@ function setupChat() {
             document.getElementById("message").value = "";
         }
     });
-    setInterval(() => {
-        send_data("/chat", { "action": "get_msg" }, messages_update_callback);
-    }, 1000);
 }
 
 const scrollToBottom = (node) => {

@@ -148,13 +148,17 @@ class LeLonMo:
             "player_status": "not_in_game"
             if private_uuid not in self.players
             else self.players[private_uuid]["status"],
+            "should_update_messages": self.chat.has_unread(private_uuid),
         }
 
     def handle_requests(self, private_uuid: str, data: dict) -> dict:
 
         try:
             if not self.validate_request(data["action"]):
-                return {"success": False, "message": "invalid_request"}
+                return {
+                    "success": False,
+                    "message": "invalid_request",
+                }
 
             if data["action"] == "join":
                 return self.add_user(private_uuid, data["username"])
@@ -171,7 +175,10 @@ class LeLonMo:
                     print("[I] Game started")
                     return {"success": True}
                 else:
-                    return {"success": False, "message": "game already started"}
+                    return {
+                        "success": False,
+                        "message": "game already started",
+                    }
 
             if data["action"] == "submit_word":
                 print(data)
@@ -188,7 +195,10 @@ class LeLonMo:
                     self.__init__()
                     return {"success": True}
                 else:
-                    return {"success": False, "message": "not_admin"}
+                    return {
+                        "success": False,
+                        "message": "not_admin",
+                    }
 
         except KeyError as e:
             raise

@@ -28,6 +28,11 @@ class Chat:
             self.userlist[private_uuid]["last_read"] = len(self.messagelist)
             return messages
 
+    def has_unread(self, private_uuid: str):
+        if private_uuid in self.userlist:
+            return self.userlist[private_uuid]["last_read"] != len(self.messagelist)
+        return False
+
     def send_message(self, private_uuid: str, message: str):
         if message.startswith("[html]"):
             message = message[6:]
