@@ -36,7 +36,7 @@ function loaditems() {
             if (status == 200 && data["success"]) {
                 if (data['in_game']) {
                     console.log("Player is already in the game.");
-                    join_response(200, { 'kicked': false });
+                    document.getElementById("join-box").style.display = 'none';
                 }
             }
         });
