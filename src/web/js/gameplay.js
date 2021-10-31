@@ -32,5 +32,7 @@ function submitWord() {
 }
 
 function start_game() {
-    send_data("/llm", { 'action': 'start_game' }, (a, b) => { console.log(b) })
+    send_data("/llm", { 'action': 'start_game' }, (a, b) => {
+        update_game_panel('playing', last_admin_state, {})
+    })
 }
