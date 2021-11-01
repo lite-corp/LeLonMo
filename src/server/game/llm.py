@@ -25,13 +25,14 @@ class LeLonMo:
             2 : Game started
             3 : Waiting for admin to restart (game finished)
         """
-        self.status = 0
+        self.status = 1 if admin_uuid else 0
         self.admin_uuid = admin_uuid
         self.letters = list()
-        self.players = dict()
         self.settings = DefaultProvider()
         for p in players:
-            self.add_user(players[p]["private_uuid"], players[p]["username"], False)
+            players[p]["latest_word"] = ""
+            players[p]["status"] = "wait_for_start"
+        self.players = players
         print("Game initialized")
 
     def add_user(self, private_uuid: str, username: str, log_in_chat: bool = True) -> dict:
@@ -121,6 +122,23 @@ class LeLonMo:
         print("Unknown action :", action)
         return False
 
+    def give_points(self):
+        """
+        With 5 players:
+            1st gets 4 points
+            2nd and 3rd are equal and get 3 points
+            4th gets 1 points
+            5th gets 0 point
+        """
+        wordlen_player = [(len(p["latest_word"]), p["private_uuid"]) for p in self.players.values() if not p["kicked"]]
+        wordlen_player.sort()
+        
+        scores = list()
+        for s, u in wordlen_player:
+            scores.append(s)
+            self.players[u]["latest_points"] = scores.index(s)
+            self.players[u]["points"] = self.players[u]["points"] + self.players[u]["latest_points"]
+
     def handle_updates(self, private_uuid: str, data: dict) -> dict:
         try:
             self.players[private_uuid]["last_update"] = getTime()
@@ -141,6 +159,7 @@ class LeLonMo:
                 self.status = 3
                 for player in self.players:
                     self.players[player]["status"] = "game_ended"
+                self.give_points()
         self.check_timeouts()
         return {
             "success": True,

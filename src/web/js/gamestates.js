@@ -142,7 +142,7 @@ function forceGameChange(admin = false) {
 
 function populate_leaderboard(data) {
     var sb_body = document.getElementById("results_table").getElementsByTagName("tbody")[0];
-    let users = data.users.sort((a, b) => (a.latest_points > b.latest_points ? 1 : -1));
+    let users = data.users.sort((a, b) => (a.latest_points > b.latest_points ? -1 : 1));
     for (var user in users) {
         var row = document.createElement("tr");
         row.innerHTML += `<td>${users[user].username}</td>`;
