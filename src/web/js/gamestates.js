@@ -86,6 +86,7 @@ function update_game_panel(player_status, admin, data) {
                 } else {
                     setGameContent(game_end_results);
                 }
+                populate_leaderboard(data);
                 break;
             case "not_in_game":
                 if (last_game_state === '') {
@@ -137,4 +138,16 @@ function forceGameChange(admin = false) {
     locked_game_state = false;
     update_game_panel(game_state, admin);
     locked_game_state = true;
+}
+
+function populate_leaderboard(data) {
+    var sb_body = document.getElementById("results_table").getElementsByTagName("tbody")[0];
+    let users = data.users.sort((a, b) => (a.latest_points > b.latest_points ? 1 : -1));
+    for (var user in users) {
+        var row = document.createElement("tr");
+        row.innerHTML += `<td>${users[user].username}</td>`;
+        row.innerHTML += `<td>${users[user].latest_word}</td>`;
+        row.innerHTML += `<td>${users[user].points} (+${users[user].latest_points})</td>`;
+        sb_body.appendChild(row);
+    }
 }

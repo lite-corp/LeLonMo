@@ -50,7 +50,7 @@ class LeLonMo:
                 "kicked": False,
                 "points": 0,
                 "latest_word": "",
-                "latest_points": "",
+                "latest_points": 0,
             }
             self.chat.add_user(
                 private_uuid, self.players[private_uuid]["public_uuid"], username, log_in_chat
@@ -87,6 +87,7 @@ class LeLonMo:
                         "username": self.players[k]["username"],
                         "status": self.players[k]["status"],
                         "points": self.players[k]["points"],
+                        "latest_points": self.players[k]["latest_points"],
                         "latest_word": self.players[k]["latest_word"]
                         if self.status == 3
                         else None,
