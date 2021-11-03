@@ -136,7 +136,10 @@ class LeLonMo:
         scores = list()
         for s, u in wordlen_player:
             scores.append(s)
-            self.players[u]["latest_points"] = scores.index(s)
+        scores.reverse()
+
+        for s, u in wordlen_player:
+            self.players[u]["latest_points"] = len(scores) - scores.index(s) - 1
             self.players[u]["points"] = self.players[u]["points"] + self.players[u]["latest_points"]
 
     def handle_updates(self, private_uuid: str, data: dict) -> dict:
