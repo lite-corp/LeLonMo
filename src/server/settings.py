@@ -28,6 +28,6 @@ class DefaultProvider(SettingsProvider):
             "web_path": "src/web",
             "letter_number": 7,
             "dict_path": "src/dict/fr.txt",
-            "time_inactive": 5,
+            "time_inactive": 3,
         }
         return True  # return False if something wen wrong when loading the config
