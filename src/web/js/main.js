@@ -31,16 +31,22 @@ function join_game() {
                 "action": "join",
                 "username": document.getElementById("username_input").value
             },
-            (status, data) => {
-                if (status == 200 && !data["kicked"]) {
-                    document.getElementById("join-box").style.display = 'none';
-                } else if (status == 200 && !data["kicked"]) {
-                    document.getElementById("error-message-join").textContent = "You cannot join this game";
-                    document.getElementById("error-message-join").style.display = 'block';
+            (status, player_data) => {
+                if (player_data.success) {
+                    if (player_data.kicked) {
+                        document.getElementById("error-message-join").textContent = "You cannot join this game";
+                        document.getElementById("error-message-join").style.display = 'block';
+                    } else {
+                        document.getElementById("join-box").style.display = 'none';
+                    }
                 } else {
-                    console.log(data)
-                    document.getElementById("error-message-join").textContent = "Unknown error";
-                    document.getElementById("error-message-join").style.display = 'block';
+                    if (player_data.message == "game_already_started") {
+                        document.getElementById("error-message-join").textContent = "This game already started";
+                        document.getElementById("error-message-join").style.display = 'block';
+                    } else {
+                        document.getElementById("error-message-join").textContent = `Something unexpected happened : ${player_data.message}`;
+                        document.getElementById("error-message-join").style.display = 'block';
+                    }
                 }
             }
         )

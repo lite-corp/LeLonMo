@@ -39,8 +39,8 @@ class LeLonMo:
         if self.status == 0:
             self.admin_uuid = private_uuid
             self.status = 1
-            return self.add_user(private_uuid, username)
-        elif self.status == 1:
+            return self.add_user(private_uuid, username) # Add the admin
+        elif self.status in [1, 3]:
             username = html.escape(username)
             self.players[private_uuid] = {
                 "private_uuid": private_uuid,
@@ -48,7 +48,7 @@ class LeLonMo:
                 "username": username,
                 "status": "wait_for_start",
                 "last_update": getTime(),
-                "kicked": False,
+                "kicked": ((private_uuid in self.players) and self.players[private_uuid]['kicked']),
                 "points": 0,
                 "latest_word": "",
                 "latest_points": 0,
@@ -56,7 +56,10 @@ class LeLonMo:
             self.chat.add_user(
                 private_uuid, self.players[private_uuid]["public_uuid"], username, log_in_chat
             )
-            return self.players[private_uuid]
+            return {
+                "success": True, # Easily tell JS that everything is ok 
+                **self.players[private_uuid] 
+            }
 
     def kick_user(self, private_uuid: str) -> None:
         self.players[private_uuid]["kicked"] = True
@@ -110,17 +113,17 @@ class LeLonMo:
 
     def validate_request(self, action: str) -> bool:
         if action == "join":
-            return self.status == 0 or self.status == 1
+            return self.status in [0, 1, 3], "game_already_started"
         if action == "submit_word":
-            return self.status == 2
+            return self.status == 2, "cannot_submit_word"
         if action == "update":
-            return True
+            return True, "FATAL_ERROR"
         if action == "create_game":
-            return self.status == 3
+            return self.status == 3, "client_out_of_sync"
         if action == "start_game":
-            return self.status == 1
+            return self.status == 1, "client_out_of_sync"
         print("Unknown action :", action)
-        return False
+        return False, "unknown_action"
 
     def give_points(self):
         """
@@ -180,11 +183,17 @@ class LeLonMo:
     def handle_requests(self, private_uuid: str, data: dict) -> dict:
 
         try:
-            if not self.validate_request(data["action"]):
-                return {
-                    "success": False,
-                    "message": "invalid_request",
-                }
+            if not (d:=self.validate_request(data["action"]))[0]:
+                if d == False:
+                    return {
+                        "success": False,
+                        "message": "invalid_request",
+                    }
+                elif isinstance(d, tuple):
+                    return {
+                        "success": False,
+                        "message": d[1],
+                    }
 
             if data["action"] == "join":
                 return self.add_user(private_uuid, data["username"])
