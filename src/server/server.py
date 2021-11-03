@@ -3,6 +3,7 @@ import os
 import json
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from socketserver import ThreadingMixIn
 import uuid
 
 from security_tools import secure_path
@@ -103,6 +104,8 @@ class LLM_Server(BaseHTTPRequestHandler):
         self._send_headers(200, "text/json", len(answer))
         self.wfile.write(answer)
 
+class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
+    pass
 
 def main():
     global settings, game
@@ -111,7 +114,7 @@ def main():
     settings = DefaultProvider()
     game = LeLonMo()
 
-    web_server = HTTPServer(settings.get_address(), LLM_Server)
+    web_server = ThreadingHTTPServer(settings.get_address(), LLM_Server)
     print(f"Server started http://{settings['server_address']}:{settings.get_port()}")
 
     try:
