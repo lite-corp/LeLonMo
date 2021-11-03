@@ -8,6 +8,7 @@ import uuid
 
 from security_tools import secure_path
 from game.llm import LeLonMo
+from game.lib_llm import load_dictionnary
 from settings import DefaultProvider
 from mime import mime_content_type
 
@@ -113,6 +114,8 @@ def main():
     # Load settings
     settings = DefaultProvider()
     game = LeLonMo()
+
+    load_dictionnary()
 
     web_server = ThreadingHTTPServer(settings.get_address(), LLM_Server)
     print(f"Server started http://{settings['server_address']}:{settings.get_port()}")

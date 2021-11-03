@@ -1,9 +1,18 @@
-from random import randint
+from random import choice, randint
 import unicodedata
 
 from settings import DefaultProvider
 
 word_dict = []
+
+def load_dictionnary():
+    global word_dict
+
+    settings = DefaultProvider()
+
+    f = open(settings["dict_path"], "r")
+    word_dict = set(f.readlines())
+    f.close()
 
 
 def remove_accents(input_str):
@@ -13,15 +22,10 @@ def remove_accents(input_str):
 
 def generate_letters(n):
     global word_dict
-    settings = DefaultProvider()
-
-    word_dict = [
-        w.replace("\n", "") for w in open(settings["dict_path"], "r").readlines()
-    ]
 
     valid = False
     while not valid:
-        shuffle_word = word_dict[randint(1, len(word_dict) - 1)].replace("\n", "")
+        shuffle_word = choice(list(word_dict)).replace("\n", "")
         if len(list(set(list(shuffle_word)))) > n:
             valid = False
             pass
@@ -31,6 +35,7 @@ def generate_letters(n):
             r = list(set(list(shuffle_word)))
             while len(r) < n:
                 r.append(chr(randint(ord("a"), ord("z"))))
+            return r
 
 
 def check_dict(word, language="fr"):
