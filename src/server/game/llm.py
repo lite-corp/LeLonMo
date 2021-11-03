@@ -118,10 +118,12 @@ class LeLonMo:
             return self.status == 2, "cannot_submit_word"
         if action == "update":
             return True, "FATAL_ERROR"
+        if action == "reset_game":
+            return self.status in [2, 3], "game_not_started"
         if action == "create_game":
             return self.status == 3, "client_out_of_sync"
         if action == "start_game":
-            return self.status == 1, "client_out_of_sync"
+            return self.status in [1, 3], "client_out_of_sync"
         print("Unknown action :", action)
         return False, "unknown_action"
 
@@ -202,18 +204,13 @@ class LeLonMo:
                 return self.handle_updates(private_uuid, data)
 
             if data["action"] == "start_game":
-                if self.status == 1:
+                if private_uuid == self.admin_uuid:
                     self.letters = game.lib_llm.generate_letters(
                         self.settings["letter_number"]
                     )
                     self.status = 2
                     print("[I] Game started")
                     return {"success": True}
-                else:
-                    return {
-                        "success": False,
-                        "message": "game already started",
-                    }
 
             if data["action"] == "submit_word":
                 print(data)
@@ -226,6 +223,15 @@ class LeLonMo:
                 self.players[private_uuid]["status"] = "finished"
                 return {"success": True, "valid": True}
             if data["action"] == "create_game":
+                if private_uuid == self.admin_uuid:
+                    self.initialize_game(self.admin_uuid, self.players)
+                    return {"success": True}
+                else:
+                    return {
+                        "success": False,
+                        "message": "not_admin",
+                    }
+            if data["action"]=="reset_game":
                 if private_uuid == self.admin_uuid:
                     self.initialize_game(self.admin_uuid, self.players)
                     return {"success": True}

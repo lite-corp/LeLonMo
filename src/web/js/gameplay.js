@@ -40,3 +40,13 @@ function restart_game() {
         send_data('/llm', { 'action': 'update' }, update_callback)
     })
 }
+
+function force_end_round(state, el) {
+    if (state == 0) {
+        el.innerText = "This is going to end the current round, click again to confirm.";
+        el.onclick = function() { force_end_round(1, el); };
+    } else if (state == 1) {
+        el.innerText = "Reset in progress ...";
+        send_data("/llm", { 'action': 'reset_game' }, () => {});
+    }
+}
