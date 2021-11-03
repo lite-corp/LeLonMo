@@ -1,13 +1,13 @@
 var msg_template;
 var player_template;
-var game_in_progress = "Loading ...";
-var game_end_results_admin = "Loading ...";
-var game_end_results = "Loading ...";
-var game_not_started_admin = "Loading ...";
-var game_not_started = "Loading ...";
-var game_waiting_for_others = "Loading ...";
-var game_waiting_for_others_admin = "Loading ...";
-var default_game_panel = "Loading ...";
+var game_in_progress = null;
+var game_end_results_admin = null;
+var game_end_results = null;
+var game_not_started_admin = null;
+var game_not_started = null;
+var game_waiting_for_others = null;
+var game_waiting_for_others_admin = null;
+var default_game_panel = null;
 
 var locked_game_state = false;
 var last_game_state = '';
@@ -52,18 +52,24 @@ function setGameContent(content, replaces = {}) {
         }
     }
     game_panel = document.getElementById("game_panel");
-    game_panel.innerHTML = content;
+    if (content != null) {
+        game_panel.innerHTML = content;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function update_game_panel(player_status, admin, data) {
+    var content_change_result = false;
     if ((last_game_state !== player_status || last_admin_state !== admin) && !locked_game_state) {
         console.log("Changing game state to " + player_status);
         switch (player_status) {
             case "wait_for_start":
                 if (admin) {
-                    setGameContent(game_not_started_admin);
+                    content_change_result = setGameContent(game_not_started_admin);
                 } else {
-                    setGameContent(game_not_started);
+                    content_change_result = setGameContent(game_not_started);
                 }
                 break;
             case "playing":
@@ -71,35 +77,36 @@ function update_game_panel(player_status, admin, data) {
                 for (var i = 0; i < 7; i++) {
                     letters_dict[String(i + 1)] = data['letters'][i];
                 }
-                setGameContent(game_in_progress, letters_dict);
+                content_change_result = setGameContent(game_in_progress, letters_dict);
                 break;
             case "finished":
                 if (admin) {
-                    setGameContent(game_waiting_for_others_admin);
+                    content_change_result = setGameContent(game_waiting_for_others_admin);
                 } else {
-                    setGameContent(game_waiting_for_others);
+                    content_change_result = setGameContent(game_waiting_for_others);
                 }
                 break;
             case "game_ended":
                 if (admin) {
-                    setGameContent(game_end_results_admin);
+                    content_change_result = setGameContent(game_end_results_admin);
                 } else {
-                    setGameContent(game_end_results);
+                    content_change_result = setGameContent(game_end_results);
                 }
                 populate_leaderboard(data);
                 break;
             case "not_in_game":
                 if (last_game_state === '') {
-                    setGameContent(default_game_panel)
+                    content_change_result = setGameContent(default_game_panel)
                 } else {
-                    window.location = window.location;
+                    window.location = window.location; // Reload page on server restart
                 }
                 break;
             default:
-                setGameContent("ERROR : State is " + player_status);
+                content_change_result = setGameContent("ERROR : State is " + player_status);
                 break;
         }
-        last_game_state = player_status;
+        if (content_change_result)
+            last_game_state = player_status;
         last_admin_state = admin;
     }
 }
