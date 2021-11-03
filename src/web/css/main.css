@@ -423,6 +423,18 @@ body {
     cursor: pointer;
 }
 
+.results_btn{
+    margin-top: 1.5em;
+}
+
+#results_table thead{
+    height: 2em;
+}
+
+#results_table tr{
+    height: 1.5em;
+}
+
 .box {
     text-align: center;
     border-style: solid;
