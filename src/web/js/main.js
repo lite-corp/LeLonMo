@@ -73,16 +73,6 @@ function update_callback(status, data) {
     }
 }
 
-
-function onReady(callback) {
-    var intervalId = window.setInterval(function() {
-        if (document.getElementsByTagName('body')[0] !== undefined) {
-            window.clearInterval(intervalId);
-            callback.call(this);
-        }
-    }, 1000);
-}
-
 function setVisible(selector, visible) {
     document.querySelector(selector).style.display = visible ? 'block' : 'none';
 }
@@ -104,9 +94,9 @@ function main() {
 
     setupChat();
 
-    onReady(function() {
+    window.onload = function() {
         setVisible('.page', true);
         setVisible('#loading', false);
-    });
+    };
 }
 main();
