@@ -1,13 +1,13 @@
 var msg_template;
 var player_template;
-var game_in_progress;
-var game_end_results_admin;
-var game_end_results;
-var game_not_started_admin;
-var game_not_started;
-var game_waiting_for_others;
-var game_waiting_for_others_admin;
-var default_game_panel;
+var game_in_progress = "Loading ...";
+var game_end_results_admin = "Loading ...";
+var game_end_results = "Loading ...";
+var game_not_started_admin = "Loading ...";
+var game_not_started = "Loading ...";
+var game_waiting_for_others = "Loading ...";
+var game_waiting_for_others_admin = "Loading ...";
+var default_game_panel = "Loading ...";
 
 var locked_game_state = false;
 var last_game_state = '';
