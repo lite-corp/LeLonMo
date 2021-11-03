@@ -213,7 +213,6 @@ class LeLonMo:
                     return {"success": True}
 
             if data["action"] == "submit_word":
-                print(data)
                 if not game.lib_llm.check_list(data["word"], self.letters):
                     return {"success": True, "valid": False}
                 if not game.lib_llm.check_dict(data["word"]):
