@@ -3,10 +3,10 @@ from typing import Any, Tuple
 
 class SettingsProvider:
     def __init__(self) -> None:
-        if not self._load():
+        if not self.load():
             raise RuntimeError("Could not load configuration")
 
-    def _load(self):
+    def load(self):
         return False
 
     def __getitem__(self, key: str) -> Any:
@@ -21,7 +21,7 @@ class SettingsProvider:
 
 
 class DefaultProvider(SettingsProvider):
-    def _load(self):
+    def load(self):
         self.settings = {
             "server_port": 8080,
             "server_address": "0.0.0.0",
