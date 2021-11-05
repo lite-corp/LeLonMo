@@ -1,16 +1,16 @@
 # LeLonMo 2.0
 [![Python 3.6](https://img.shields.io/badge/Works_with_python-v3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
 ## Rules
-This is a multiplayer game where you have to find the largest word possible with the given letters (7 of them).
+This is a multiplayer game where you have to find the largest possible word with the given letters (7 of them).
 
-You can use the same letter multiple times. 
+You can use the same letter several times. 
 
 ## Playing
 Open your browser and enter the ip of the server you want to play on. Make sure to connect on the port 8080, by adding :8080 to the ip address.
 
 For example if you want to play on the server with the ip 192.168.1.16, you have to go to http://192.168.1.16:8080/
 
-You will have to choose a username, which will be visible for other players. The first person to join gains control over the server, and is the one who decides when the game starts and end.
+You will have to choose a username, which will be visible to other players. The first person to join gains control over the server, and is the one who decides when the game starts and end.
 
 Note that visiting other pages (even the Rules or About pages) might disconnect you from the server.
 
