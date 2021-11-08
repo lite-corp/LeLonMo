@@ -253,8 +253,14 @@ class LeLonMo:
                     }
             if data["action"]=="kick_player":
                 if private_uuid == self.admin_uuid:
-                    self.kick_user(game.lib_llm.pub_to_private_uuid(data["public_uuid"], self.players))
-                    return {"success": True}
+                    if game.lib_llm.pub_to_private_uuid(data["public_uuid"], self.players) == self.admin_uuid:
+                        return {
+                            "success": False,
+                            "message": "kick_admin"
+                        }
+                    else:
+                        self.kick_user(game.lib_llm.pub_to_private_uuid(data["public_uuid"], self.players))
+                        return {"success": True}
                 else:
                     return {
                         "success": False,
