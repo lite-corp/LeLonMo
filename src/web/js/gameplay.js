@@ -1,4 +1,4 @@
-function addLetter(letter) {
+function add_letter(letter) {
     if (document.getElementById("validation_btn").classList.contains('bad')) {
         document.getElementById("word").textContent = ''
         document.getElementById("validation_btn").classList.remove('bad')
@@ -16,7 +16,7 @@ function addLetter(letter) {
 }
 
 
-function submitWord() {
+function submit_word() {
     send_data('/llm', {
         'action': 'submit_word',
         'word': document.getElementById('word').textContent
