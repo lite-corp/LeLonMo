@@ -29,5 +29,6 @@ class DefaultProvider(SettingsProvider):
             "letter_number": 7,
             "dict_path": "src/dict/fr.txt",
             "time_inactive": 3,
+            "log_requests": False,
         }
         return True  # return False if something wen wrong when loading the config

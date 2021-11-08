@@ -104,9 +104,11 @@ class LLM_Server(BaseHTTPRequestHandler):
             )
         self._send_headers(200, "text/json", len(answer))
         self.wfile.write(answer)
+    
 
-class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
-    pass
+    def log_request(self, code = '-', size = '-') -> None:
+        if settings["log_requests"]:
+            super().log_request(code=code, size=size)
 
 def main():
     global settings, game
