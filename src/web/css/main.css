@@ -221,15 +221,17 @@ body {
     margin-right: 2em;
 }
 
-#player_list {
-    display: flex;
-}
-
 .player {
-    padding: 1em;
+    display: flex;
     border-bottom-style: solid;
     border-width: 2px;
     border-color: var(--border-color);
+    width: 100%;
+}
+
+.player_name {
+    padding: 1em;
+    text-align: center;
     width: 100%;
 }
 
