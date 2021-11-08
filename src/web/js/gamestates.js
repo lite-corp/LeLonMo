@@ -1,5 +1,7 @@
 var msg_template;
-var player_template;
+var player_template = null;
+var player_template_admin = null;
+var player_template_normal = null;
 var game_in_progress = null;
 var game_end_results_admin = null;
 var game_end_results = null;
@@ -18,7 +20,14 @@ function loaditems() {
     console.log("Loading game content ... ");
 
     fetch("templates/message.html").then((r) => { r.text().then((d) => { msg_template = d }) });
-    fetch("templates/player.html").then((r) => { r.text().then((d) => { player_template = d }) });
+    fetch("templates/player.html").then((r) => {
+        r.text().then((d) => {
+            player_template = d;
+            player_template_normal = d;
+        })
+    });
+    fetch("templates/player_admin.html").then((r) => { r.text().then((d) => { player_template_admin = d }) });
+
     fetch("templates/game_in_progress.html").then((r) => { r.text().then((d) => { game_in_progress = d }) });
     fetch("templates/game_end_results_admin.html").then((r) => { r.text().then((d) => { game_end_results_admin = d }) });
     fetch("templates/game_end_results.html").then((r) => { r.text().then((d) => { game_end_results = d }) });
@@ -62,6 +71,13 @@ function setGameContent(content, replaces = {}) {
 
 function update_game_panel(player_status, admin, data) {
     var content_change_result = false;
+    if (last_admin_state !== admin) {
+        if (admin) {
+            player_template = player_template_admin;
+        } else {
+            player_template = player_template_normal;
+        }
+    }
     if ((last_game_state !== player_status || last_admin_state !== admin) && !locked_game_state) {
         console.log("Changing game state to " + player_status);
         switch (player_status) {
