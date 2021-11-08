@@ -15,9 +15,11 @@ def getTime():
 class LeLonMo:
     def __init__(self) -> None:
         self.chat = Chat()
+        self.players = {}
+        self.admin_uuid = ''
         self.initialize_game()
 
-    def initialize_game(self, admin_uuid: str = '', players: dict = {}):
+    def initialize_game(self):
         """
         self.status :
             0 : Waiting for admin
@@ -25,14 +27,14 @@ class LeLonMo:
             2 : Game started
             3 : Waiting for admin to restart (game finished)
         """
-        self.status = 1 if admin_uuid else 0
-        self.admin_uuid = admin_uuid
+        if self.admin_uuid and self.players[self.admin_uuid]["kicked"]:
+            self.admin_uuid = ''
+        self.status = 1 if self.admin_uuid else 0
         self.letters = list()
         self.settings = DefaultProvider()
-        for p in players:
-            players[p]["latest_word"] = ""
-            players[p]["status"] = "wait_for_start"
-        self.players = players
+        for p in self.players:
+            self.players[p]["latest_word"] = ""
+            self.players[p]["status"] = "wait_for_start"
         print("Game initialized")
 
     def add_user(self, private_uuid: str, username: str, log_in_chat: bool = True) -> dict:
@@ -63,12 +65,16 @@ class LeLonMo:
 
     def kick_user(self, private_uuid: str) -> None:
         self.players[private_uuid]["kicked"] = True
+        self.players[private_uuid]["status"] = "kicked"
+        
+
         self.chat.remove_user(private_uuid)
 
     def delete_user(self, private_uuid: str) -> None:
         print("[I] Removed player", self.players[private_uuid]["username"])
         if self.is_admin(private_uuid):
             if len(self.players) == 0:
+                self.admin_uuid=''
                 self.initialize_game()
             else:
                 self.admin_uuid = list(self.players.keys())[0]
@@ -125,6 +131,8 @@ class LeLonMo:
             return self.status == 3, "client_out_of_sync"
         if action == "start_game":
             return self.status in [1, 3], "client_out_of_sync"
+        if action == "kick_player":
+            return True, "FATAL_ERROR"
         print("Unknown action :", action)
         return False, "unknown_action"
 
@@ -169,6 +177,9 @@ class LeLonMo:
                 for player in self.players:
                     self.players[player]["status"] = "game_ended"
                 self.give_points()
+        for player in self.players:
+            if self.players[player]['kicked']:
+                self.status = "kicked"
         self.check_timeouts()
         return {
             "success": True,
@@ -224,7 +235,7 @@ class LeLonMo:
                 return {"success": True, "valid": True}
             if data["action"] == "create_game":
                 if private_uuid == self.admin_uuid:
-                    self.initialize_game(self.admin_uuid, self.players)
+                    self.initialize_game()
                     return {"success": True}
                 else:
                     return {
@@ -233,7 +244,16 @@ class LeLonMo:
                     }
             if data["action"]=="reset_game":
                 if private_uuid == self.admin_uuid:
-                    self.initialize_game(self.admin_uuid, self.players)
+                    self.initialize_game()
+                    return {"success": True}
+                else:
+                    return {
+                        "success": False,
+                        "message": "not_admin",
+                    }
+            if data["action"]=="kick_player":
+                if private_uuid == self.admin_uuid:
+                    self.kick_user(game.lib_llm.pub_to_private_uuid(data["public_uuid"], self.players))
                     return {"success": True}
                 else:
                     return {

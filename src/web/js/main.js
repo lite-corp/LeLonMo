@@ -60,11 +60,14 @@ function join_game() {
 function update_callback(status, data) {
     if (status == 200 && data["success"]) {
         player_list.innerHTML = "";
-        data["users"].forEach(function(item, i) {
+        data["users"].forEach(function(player, i) {
             player_list.innerHTML += player_template.replace(
-                "{name}",
-                item['username']
-            ).replace("{points}", item['points']);
+                "{name}", player['username']
+            ).replace(
+                "{points}", player['points']
+            ).replace(
+                "{public_uuid}", player["public_uuid"]
+            );
         })
         update_game_panel(data["player_status"], data["admin"], data);
         if (data["should_update_messages"]) {
@@ -99,4 +102,11 @@ function main() {
         setVisible('#loading', false);
     };
 }
+
+function kick_player(public_uuid) {
+    send_data("/llm", { 'action': 'kick_player', 'public_uuid': public_uuid }, (a, b) => {
+        send_data('/llm', { 'action': 'update' }, update_callback)
+    })
+}
+
 main();

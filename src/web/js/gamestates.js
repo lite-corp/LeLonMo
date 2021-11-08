@@ -9,6 +9,7 @@ var game_not_started_admin = null;
 var game_not_started = null;
 var game_waiting_for_others = null;
 var game_waiting_for_others_admin = null;
+var game_kicked = null;
 var default_game_panel = null;
 
 var locked_game_state = false;
@@ -35,7 +36,9 @@ function loaditems() {
     fetch("templates/game_not_started.html").then((r) => { r.text().then((d) => { game_not_started = d }) });
     fetch("templates/game_waiting_for_others.html").then((r) => { r.text().then((d) => { game_waiting_for_others = d }) });
     fetch("templates/game_waiting_for_others_admin.html").then((r) => { r.text().then((d) => { game_waiting_for_others_admin = d }) });
+    fetch("templates/game_kicked.html").then((r) => { r.text().then((d) => { game_kicked = d }) });
     fetch("templates/default_game_panel.html").then((r) => { r.text().then((d) => { default_game_panel = d }) });
+
 
     console.log("Checking player in game ... ");
     send_data('/llm', {
@@ -112,10 +115,13 @@ function update_game_panel(player_status, admin, data) {
                 break;
             case "not_in_game":
                 if (last_game_state === '') {
-                    content_change_result = setGameContent(default_game_panel)
+                    content_change_result = setGameContent(default_game_panel);
                 } else {
                     window.location = window.location; // Reload page on server restart
                 }
+                break;
+            case "kicked":
+                content_change_result = setGameContent(game_kicked);
                 break;
             default:
                 content_change_result = setGameContent("ERROR : State is " + player_status);
