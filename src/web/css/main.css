@@ -221,7 +221,7 @@ body {
     margin-right: 2em;
 }
 
-#player_list{
+#player_list {
     display: flex;
 }
 
@@ -240,7 +240,7 @@ body {
     margin-left: 2em;
 }
 
-.kick_btn{
+.kick_btn {
     width: 6px;
     background-color: var(--error-color);
     border-width: 0px;
@@ -251,9 +251,10 @@ body {
     border-color: var(--border-color);
 }
 
-.kick_btn:hover{
+.kick_btn:hover {
     cursor: pointer;
 }
+
 
 /* Chat */
 
@@ -442,7 +443,7 @@ body {
     cursor: pointer;
 }
 
-#force_end_btn{
+#force_end_btn {
     margin-top: 2em;
     margin-left: auto;
     margin-right: auto;
@@ -458,15 +459,15 @@ body {
     cursor: pointer;
 }
 
-.results_btn{
+.results_btn {
     margin-top: 1.5em;
 }
 
-#results_table thead{
+#results_table thead {
     height: 2em;
 }
 
-#results_table tr{
+#results_table tr {
     height: 1.5em;
 }
 
