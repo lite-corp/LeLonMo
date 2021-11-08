@@ -1,16 +1,15 @@
-from http import cookies
-import os
 import json
-from http.cookies import SimpleCookie
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from socketserver import ThreadingMixIn
+import os
 import uuid
+from http.cookies import SimpleCookie
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from socketserver import ThreadingMixIn
 
-from security_tools import secure_path
-from game.llm import LeLonMo
 from game.lib_llm import load_dictionnary
-from settings import DefaultProvider
+from game.llm import LeLonMo
 from mime import mime_content_type
+from server_tools import file_postprocess, secure_path
+from settings import DefaultProvider
 
 settings = None
 game = None
@@ -53,6 +52,7 @@ class LLM_Server(BaseHTTPRequestHandler):
                 mime = mime_content_type(self.path)
                 with open(settings["web_path"] + self.path, "rb") as f:
                     file_content = f.read()
+                    file_content = file_postprocess(file_content, mime)
                     self._send_headers(
                         code=200, mime=mime, lenght=len(file_content), cookies=cookies
                     )
