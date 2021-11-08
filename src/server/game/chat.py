@@ -71,8 +71,11 @@ class Chat:
             if data["action"] == "get_msg":
                 return {"success": True, "messages": self.get_messages(private_uuid)}
             elif data["action"] == "send_msg":
-                self.send_message(private_uuid, data["content"])
-                return {"success": True}
+                try:
+                    self.send_message(private_uuid, data["content"])
+                    return {"success": True}
+                except KeyError:
+                    print("[W] An unregistered player tried to send a message")
             else:
                 raise ValueError("Wrong action")
         except KeyError as e:
