@@ -10,7 +10,7 @@ def load_dictionnary():
 
     settings = DefaultProvider()
 
-    f = open(settings["dict_path"], "r")
+    f = open(settings.dict_path, "r")
     word_dict = set(f.readlines())
     f.close()
 

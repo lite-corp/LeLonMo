@@ -11,6 +11,9 @@ class SettingsProvider:
 
     def __getitem__(self, key: str) -> Any:
         return self.settings[key]
+    
+    def __getattr__(self, name: str) -> Any:
+        return self.settings[name]
 
     # Server-related things
     def get_address(self) -> Tuple[str, int]:

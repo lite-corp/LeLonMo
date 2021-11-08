@@ -42,15 +42,15 @@ class LLM_Server(BaseHTTPRequestHandler):
             self.serve_file(cookies)
             return
         self.path = secure_path(self.path)
-        if os.path.exists(settings["web_path"] + self.path):
-            if os.path.isdir(settings["web_path"] + self.path):
+        if os.path.exists(settings.web_path + self.path):
+            if os.path.isdir(settings.web_path + self.path):
                 self.path = self.path + "index.html"
                 self.serve_file()
             else:
                 # File exists
 
                 mime = mime_content_type(self.path)
-                with open(settings["web_path"] + self.path, "rb") as f:
+                with open(settings.web_path + self.path, "rb") as f:
                     file_content = f.read()
                     file_content = file_postprocess(file_content, mime)
                     self._send_headers(
@@ -107,7 +107,7 @@ class LLM_Server(BaseHTTPRequestHandler):
     
 
     def log_request(self, code = '-', size = '-') -> None:
-        if settings["log_requests"]:
+        if settings.log_requests:
             super().log_request(code=code, size=size)
 
 def main():
@@ -120,7 +120,7 @@ def main():
     load_dictionnary()
 
     web_server = ThreadingHTTPServer(settings.get_address(), LLM_Server)
-    print(f"Server started http://{settings['server_address']}:{settings.get_port()}")
+    print(f"Server started http://{settings.server_address}:{settings.get_port()}")
 
     try:
         web_server.serve_forever()

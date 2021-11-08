@@ -104,7 +104,7 @@ class LeLonMo:
         remove_players = list()
         for p in self.players:
             if (
-                self.players[p]["last_update"] + self.settings["time_inactive"]
+                self.players[p]["last_update"] + self.settings.time_inactive
                 < getTime()
             ):
                 remove_players.append(p)
@@ -206,7 +206,7 @@ class LeLonMo:
             if data["action"] == "start_game":
                 if private_uuid == self.admin_uuid:
                     self.letters = game.lib_llm.generate_letters(
-                        self.settings["letter_number"]
+                        self.settings.letter_number
                     )
                     self.status = 2
                     print("[I] Game started")
