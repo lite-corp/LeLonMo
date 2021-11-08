@@ -72,6 +72,7 @@ class LeLonMo:
                 self.initialize_game()
             else:
                 self.admin_uuid = list(self.players.keys())[0]
+                print(f'[I] The admin is now {self.players[self.admin_uuid]["username"]}')
         self.chat.remove_user(private_uuid)
         del self.players[private_uuid]
 
