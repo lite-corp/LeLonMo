@@ -258,7 +258,7 @@ body {
     margin-left: 2em;
 }
 
-.kick_btn {
+.ban_btn {
     width: 6px;
     background-color: var(--error-color);
     border-width: 0px;
@@ -269,7 +269,7 @@ body {
     border-color: var(--border-color);
 }
 
-.kick_btn:hover {
+.ban_btn:hover {
     cursor: pointer;
 }
 

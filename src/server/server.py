@@ -66,7 +66,10 @@ class LLM_Server(BaseHTTPRequestHandler):
 
     def do_GET(self):
         cookies = self.client_cookies()
-        self.serve_file(cookies)
+        try:
+            self.serve_file(cookies)
+        except BrokenPipeError:
+            print('[W] A file could not get delivered properly')
 
     def do_POST(self):
         global game

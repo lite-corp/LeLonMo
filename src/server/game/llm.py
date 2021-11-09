@@ -27,7 +27,7 @@ class LeLonMo:
             2 : Game started
             3 : Waiting for admin to restart (game finished)
         """
-        if self.admin_uuid and self.players[self.admin_uuid]["kicked"]:
+        if self.admin_uuid and self.players[self.admin_uuid]["banned"]:
             self.admin_uuid = ''
         self.status = 1 if self.admin_uuid else 0
         self.letters = list()
@@ -50,7 +50,7 @@ class LeLonMo:
                 "username": username,
                 "status": "wait_for_start",
                 "last_update": getTime(),
-                "kicked": ((private_uuid in self.players) and self.players[private_uuid]['kicked']),
+                "banned": ((private_uuid in self.players) and self.players[private_uuid]['banned']),
                 "points": 0,
                 "latest_word": "",
                 "latest_points": 0,
@@ -63,9 +63,9 @@ class LeLonMo:
                 **self.players[private_uuid] 
             }
 
-    def kick_user(self, private_uuid: str) -> None:
-        self.players[private_uuid]["kicked"] = True
-        self.players[private_uuid]["status"] = "kicked"
+    def ban_user(self, private_uuid: str) -> None:
+        self.players[private_uuid]["banned"] = True
+        self.players[private_uuid]["status"] = "banned"
         
 
         self.chat.remove_user(private_uuid)
@@ -85,13 +85,13 @@ class LeLonMo:
     def is_admin(self, private_uuid: str) -> bool:
         return private_uuid == self.admin_uuid
 
-    def is_kicked(self, private_uuid: str) -> bool:
-        return self.players[private_uuid]["kicked"]
+    def is_banned(self, private_uuid: str) -> bool:
+        return self.players[private_uuid]["banned"]
 
     def get_users(self) -> list:
         player_list = list()
         for k in self.players:
-            if not self.players[k]["kicked"]:
+            if not self.players[k]["banned"]:
                 player_list.append(
                     {
                         "public_uuid": self.players[k]["public_uuid"],
@@ -112,7 +112,7 @@ class LeLonMo:
         for p in self.players:
             if (
                 self.players[p]["last_update"] + self.settings.time_inactive
-                < getTime()
+                < getTime() and not self.players[p]["banned"]
             ):
                 remove_players.append(p)
         for p in remove_players:
@@ -131,7 +131,7 @@ class LeLonMo:
             return self.status == 3, "client_out_of_sync"
         if action == "start_game":
             return self.status in [1, 3], "client_out_of_sync"
-        if action == "kick_player":
+        if action == "ban_player":
             return True, "FATAL_ERROR"
         print("Unknown action :", action)
         return False, "unknown_action"
@@ -144,7 +144,7 @@ class LeLonMo:
             4th gets 1 points
             5th gets 0 point
         """
-        wordlen_player = [(len(p["latest_word"]), p["private_uuid"]) for p in self.players.values() if not p["kicked"]]
+        wordlen_player = [(len(p["latest_word"]), p["private_uuid"]) for p in self.players.values() if not p["banned"]]
         wordlen_player.sort()
         
         scores = list()
@@ -169,7 +169,7 @@ class LeLonMo:
             for player in self.players:
                 if (
                     self.players[player]["status"] != "finished"
-                    and not self.players[player]["kicked"]
+                    and not self.players[player]["banned"]
                 ):
                     game_finished = False
             if game_finished:
@@ -178,8 +178,8 @@ class LeLonMo:
                     self.players[player]["status"] = "game_ended"
                 self.give_points()
         for player in self.players:
-            if self.players[player]['kicked']:
-                self.status = "kicked"
+            if self.players[player]['banned']:
+                self.players[player]["status"] = "banned"
         self.check_timeouts()
         return {
             "success": True,
@@ -251,15 +251,15 @@ class LeLonMo:
                         "success": False,
                         "message": "not_admin",
                     }
-            if data["action"]=="kick_player":
+            if data["action"]=="ban_player":
                 if private_uuid == self.admin_uuid:
                     if game.lib_llm.pub_to_private_uuid(data["public_uuid"], self.players) == self.admin_uuid:
                         return {
                             "success": False,
-                            "message": "kick_admin"
+                            "message": "ban_admin"
                         }
                     else:
-                        self.kick_user(game.lib_llm.pub_to_private_uuid(data["public_uuid"], self.players))
+                        self.ban_user(game.lib_llm.pub_to_private_uuid(data["public_uuid"], self.players))
                         return {"success": True}
                 else:
                     return {
