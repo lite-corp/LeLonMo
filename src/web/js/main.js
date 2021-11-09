@@ -33,7 +33,7 @@ function join_game() {
             },
             (status, player_data) => {
                 if (player_data.success) {
-                    if (player_data.kicked) {
+                    if (player_data.banned) {
                         document.getElementById("error-message-join").textContent = "You cannot join this game";
                         document.getElementById("error-message-join").style.display = 'block';
                     } else {
@@ -103,8 +103,8 @@ function main() {
     };
 }
 
-function kick_player(public_uuid) {
-    send_data("/llm", { 'action': 'kick_player', 'public_uuid': public_uuid }, (a, b) => {
+function ban_player(public_uuid) {
+    send_data("/llm", { 'action': 'ban_player', 'public_uuid': public_uuid }, (a, b) => {
         send_data('/llm', { 'action': 'update' }, update_callback)
     })
 }
