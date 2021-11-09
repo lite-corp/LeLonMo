@@ -112,7 +112,7 @@ class LeLonMo:
         for p in self.players:
             if (
                 self.players[p]["last_update"] + self.settings.time_inactive
-                < getTime()
+                < getTime() and not self.players[p]["kicked"]
             ):
                 remove_players.append(p)
         for p in remove_players:
@@ -179,7 +179,7 @@ class LeLonMo:
                 self.give_points()
         for player in self.players:
             if self.players[player]['kicked']:
-                self.status = "kicked"
+                self.players[player]["status"] = "kicked"
         self.check_timeouts()
         return {
             "success": True,
