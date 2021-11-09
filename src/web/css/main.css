@@ -177,6 +177,22 @@ body {
     border-color: var(--focus-color);
 }
 
+#notif{
+    display: none;
+    position: absolute;
+    left: -200px;
+    top: 7em;
+    padding: 1em;
+    border-style: solid;
+    border-left-style: none;
+    border-width: 2px;
+    border-color: var(--border-color);
+    background-color: var(--backgroun-header);
+    border-radius: 0px 10px 10px 0px;
+    transition: 0.5s;
+    z-index: 10;
+}
+
 .button {
     background-color: var(--button-color);
     color: var(--secondary-color);
