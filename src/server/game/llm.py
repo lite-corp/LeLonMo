@@ -73,7 +73,7 @@ class LeLonMo:
     def delete_user(self, private_uuid: str) -> None:
         print("[I] Removed player", self.players[private_uuid]["username"])
         if self.is_admin(private_uuid):
-            if len(self.players) == 0:
+            if len(self.players) == 1:
                 self.admin_uuid=''
                 self.initialize_game()
             else:
