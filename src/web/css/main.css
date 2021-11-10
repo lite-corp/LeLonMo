@@ -264,7 +264,6 @@ body {
     border-width: 0px;
     border-left-width: 1px;
     border-right-width: 1px;
-    border-bottom-width: 2px;
     border-style: solid;
     border-color: var(--border-color);
 }
