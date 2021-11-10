@@ -1,16 +1,20 @@
 function add_letter(letter) {
-    if (document.getElementById("validation_btn").classList.contains('bad')) {
-        document.getElementById("word").textContent = ''
-        document.getElementById("validation_btn").classList.remove('bad')
+    if(letter === 'Backspace'){
+        document.getElementById("word").innerText = document.getElementById("word").innerText.slice(0, -1);
+        document.getElementById("validation_btn").classList.remove('bad');
+        return;
+    } else if (document.getElementById("validation_btn").classList.contains('bad')) {
+        document.getElementById("word").textContent = '';
+        document.getElementById("validation_btn").classList.remove('bad');
     }
     if (letter === 'reset') {
-        document.getElementById("word").textContent = ''
-        document.getElementById("validation_btn").classList.remove('bad')
+        document.getElementById("word").textContent = '';
+        document.getElementById("validation_btn").classList.remove('bad');
     } else {
         if (document.getElementById("word").textContent === '') {
-            document.getElementById("word").textContent = letter.toUpperCase()
+            document.getElementById("word").textContent = letter.toUpperCase();
         } else {
-            document.getElementById("word").textContent = document.getElementById("word").textContent + letter
+            document.getElementById("word").textContent = document.getElementById("word").textContent + letter;
         }
     }
 }

@@ -91,7 +91,42 @@ function main() {
     var input = document.getElementById("username_input");
     input.addEventListener("keyup", function(event) {
         if (event.key === 'Enter') {
-            document.getElementById("join_btn").click();
+            if (document.getElementById("join-box").style.display != 'none') {
+                document.getElementById("join_btn").click();
+            }
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (!document.getElementById("game_panel").contains(document.getElementById("panel_ingame"))){
+            return;
+        }
+        if(event.key === document.getElementById("lt1").innerText.toLowerCase()){
+            add_letter(event.key);
+        }
+        if(event.key === document.getElementById("lt2").innerText.toLowerCase()){
+            add_letter(event.key);
+        }
+        if(event.key === document.getElementById("lt3").innerText.toLowerCase()){
+            add_letter(event.key);
+        }
+        if(event.key === document.getElementById("lt4").innerText.toLowerCase()){
+            add_letter(event.key);
+        }
+        if(event.key === document.getElementById("lt5").innerText.toLowerCase()){
+            add_letter(event.key);
+        }
+        if(event.key === document.getElementById("lt6").innerText.toLowerCase()){
+            add_letter(event.key);
+        }
+        if(event.key === document.getElementById("lt7").innerText.toLowerCase()){
+            add_letter(event.key);
+        }
+        if(event.key === 'Backspace'){
+            add_letter('Backspace');
+        }
+        if(event.key === 'Enter'){
+            document.getElementById("validation_btn").click()
         }
     });
 
