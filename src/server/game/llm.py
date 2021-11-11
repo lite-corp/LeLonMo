@@ -5,7 +5,7 @@ import html
 import game.lib_llm
 
 from settings import DefaultProvider
-from game.chat import Chat
+from .chat import Chat
 
 
 def getTime():
