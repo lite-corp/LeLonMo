@@ -48,16 +48,10 @@ def check_dict(word):
 
     word = remove_accents(word.lower())
     try:
-        if word not in word_dict[word[0]]:
-            print(word, word[0])
-            return False
-        else:
-            return True
+        return word in word_dict[word[0]]
     except KeyError:
-        print("KeyError", word, word[0])
         return False
     except IndexError:
-        print("IndexError")
         return False
 
 def check_list(word, letters):
