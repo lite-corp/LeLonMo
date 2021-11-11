@@ -77,10 +77,13 @@ class LeLonMo:
                 self.admin_uuid=''
                 self.initialize_game()
             else:
+                try:
+                    self.chat.remove_user(private_uuid)
+                except KeyError:
+                    pass
                 del self.players[private_uuid]
                 self.admin_uuid = list(self.players.keys())[0]
                 print(f'[I] The admin is now {self.players[self.admin_uuid]["username"]}')
-        self.chat.remove_user(private_uuid)
 
     def is_admin(self, private_uuid: str) -> bool:
         return private_uuid == self.admin_uuid
