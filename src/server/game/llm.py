@@ -13,10 +13,11 @@ def getTime():
 
 
 class LeLonMo:
-    def __init__(self) -> None:
+    def __init__(self, settings) -> None:
         self.chat = Chat()
         self.players = {}
         self.admin_uuid = ''
+        self.settings = settings
         self.initialize_game()
 
     def initialize_game(self):
@@ -31,7 +32,6 @@ class LeLonMo:
             self.admin_uuid = ''
         self.status = 1 if self.admin_uuid else 0
         self.letters = list()
-        self.settings = DefaultProvider()
         for p in self.players:
             self.players[p]["latest_word"] = ""
             self.players[p]["status"] = "wait_for_start"
