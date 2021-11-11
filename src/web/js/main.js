@@ -101,6 +101,9 @@ function main() {
         if (!document.getElementById("game_panel").contains(document.getElementById("panel_ingame"))){
             return;
         }
+        if (document.querySelector("#message") === document.activeElement){
+            return;
+        }
         if(event.key === document.getElementById("lt1").innerText.toLowerCase()){
             add_letter(event.key);
         }
