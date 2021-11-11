@@ -23,7 +23,7 @@ function add_letter(letter) {
 function submit_word() {
     send_data('/llm', {
         'action': 'submit_word',
-        'word': document.getElementById('word').textContent
+        'word': document.getElementById('word').textContent.toLowerCase()
     }, (r, data) => {
         if (r == 200 && data['success']) {
             if (!data['valid']) {
