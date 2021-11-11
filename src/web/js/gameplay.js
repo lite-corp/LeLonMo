@@ -1,5 +1,5 @@
 function add_letter(letter) {
-    if(letter === 'Backspace'){
+    if (letter === 'Backspace') {
         document.getElementById("word").innerText = document.getElementById("word").innerText.slice(0, -1);
         document.getElementById("validation_btn").classList.remove('bad');
         return;
@@ -28,6 +28,8 @@ function submit_word() {
         if (r == 200 && data['success']) {
             if (!data['valid']) {
                 document.getElementById("validation_btn").classList.add('bad')
+            } else {
+                send_data('/llm', { 'action': 'update' }, update_callback);
             }
         }
     })
