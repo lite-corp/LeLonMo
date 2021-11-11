@@ -3,7 +3,7 @@ import os
 import uuid
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from socketserver import ThreadingMixIn
+from socketserver import BaseRequestHandler, ThreadingMixIn
 
 from game.lib_llm import load_dictionnary
 from game.llm import LeLonMo
@@ -35,22 +35,20 @@ class LLM_Server(BaseHTTPRequestHandler):
         return cookies
 
     def serve_file(self, cookies=None):
-        global settings
-
         if self.path == "/":
             self.path = "/html/index.html"
             self.serve_file(cookies)
             return
         self.path = secure_path(self.path)
-        if os.path.exists(settings.web_path + self.path):
-            if os.path.isdir(settings.web_path + self.path):
+        if os.path.exists(self.server.settings.web_path + self.path):
+            if os.path.isdir(self.server.settings.web_path + self.path):
                 self.path = self.path + "index.html"
                 self.serve_file()
             else:
                 # File exists
 
                 mime = mime_content_type(self.path)
-                with open(settings.web_path + self.path, "rb") as f:
+                with open(self.server.settings.web_path + self.path, "rb") as f:
                     file_content = f.read()
                     file_content = file_postprocess(file_content, mime)
                     self._send_headers(
@@ -72,7 +70,6 @@ class LLM_Server(BaseHTTPRequestHandler):
             print('[W] A file could not get delivered properly')
 
     def do_POST(self):
-        global game
         content_len = int(self.headers.get("Content-Length"))
         try:
             post_data = json.loads(self.rfile.read(content_len).decode("utf-8"))
@@ -96,10 +93,10 @@ class LLM_Server(BaseHTTPRequestHandler):
             private_uuid = "\0"
         answer = None
         if self.path == "/chat":
-            answer = game.chat.handle_requests(private_uuid, post_data)
+            answer = self.server.game.chat.handle_requests(private_uuid, post_data)
             answer = json.dumps(answer).encode("utf-8")
         elif self.path == "/llm":
-            answer = game.handle_requests(private_uuid, post_data)
+            answer = self.server.game.handle_requests(private_uuid, post_data)
             answer = json.dumps(answer).encode("utf-8")
         else:
             answer = json.dumps(dict(success=False, message="invalid_request")).encode(
@@ -110,19 +107,23 @@ class LLM_Server(BaseHTTPRequestHandler):
     
 
     def log_request(self, code = '-', size = '-') -> None:
-        if settings.log_requests:
+        if self.server.settings.log_requests:
             super().log_request(code=code, size=size)
 
-def main():
-    global settings, game
+class GameServerHTTP(ThreadingHTTPServer):
+    def __init__(self, server_address, RequestHandlerClass, game_settings, game_class, bind_and_activate=True) -> None:
+        self.game = game_class
+        self.settings = game_settings
+        super().__init__(server_address, RequestHandlerClass, bind_and_activate)
 
+def main():
     # Load settings
     settings = DefaultProvider()
-    game = LeLonMo()
+    game = LeLonMo(settings)
 
     load_dictionnary()
 
-    web_server = ThreadingHTTPServer(settings.get_address(), LLM_Server)
+    web_server = GameServerHTTP(settings.get_address(), LLM_Server, settings, game)
     print(f"Server started http://{settings.server_address}:{settings.get_port()}")
 
     try:

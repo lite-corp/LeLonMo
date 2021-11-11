@@ -13,7 +13,7 @@
     --theme: url("../assets/pictures/theme_dark.png");
 }
 
-:root.light {
+ :root.light {
     --backgound-main: #ffffff;
     --backgroun-header: #f6f8fa;
     --border-color: #d0d7de;
@@ -53,6 +53,11 @@ a {
 input {
     outline-color: transparent;
     outline-style: none;
+}
+
+#page {
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -177,11 +182,12 @@ body {
     border-color: var(--focus-color);
 }
 
-#notif{
-    display: none;
+.notif {
+    display: block;
     position: absolute;
-    left: -200px;
-    top: 7em;
+    left: 0;
+    transform: translate(-100%, 0%);
+    top: 6.5em;
     padding: 1em;
     border-style: solid;
     border-left-style: none;
@@ -189,8 +195,25 @@ body {
     border-color: var(--border-color);
     background-color: var(--backgroun-header);
     border-radius: 0px 10px 10px 0px;
-    transition: 0.5s;
+    transition: transform 0.5s ease-in;
+    min-width: 1em;
     z-index: 10;
+    box-shadow: 3px 3px 5px black;
+}
+
+.active.notif {
+    transform: translate(0%, 0%);
+}
+
+.blink {
+    animation: blinking_border 0.25s ease-in-out;
+    animation-iteration-count: 10;
+}
+
+@keyframes blinking_border {
+    50% {
+        border-color: var(--error-color);
+    }
 }
 
 .button {

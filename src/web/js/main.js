@@ -98,7 +98,7 @@ function main() {
     });
 
     document.addEventListener('keydown', function(event) {
-        if (!document.getElementById("game_panel").contains(document.getElementById("panel_ingame"))){
+        if (!document.getElementById("game_panel").contains(document.getElementById("panel_ingame"))) {
             return;
         }
         if (document.querySelector("#message") === document.activeElement){
@@ -107,28 +107,28 @@ function main() {
         if(event.key === document.getElementById("lt1").innerText.toLowerCase()){
             add_letter(event.key);
         }
-        if(event.key === document.getElementById("lt2").innerText.toLowerCase()){
+        if (event.key === document.getElementById("lt2").innerText.toLowerCase()) {
             add_letter(event.key);
         }
-        if(event.key === document.getElementById("lt3").innerText.toLowerCase()){
+        if (event.key === document.getElementById("lt3").innerText.toLowerCase()) {
             add_letter(event.key);
         }
-        if(event.key === document.getElementById("lt4").innerText.toLowerCase()){
+        if (event.key === document.getElementById("lt4").innerText.toLowerCase()) {
             add_letter(event.key);
         }
-        if(event.key === document.getElementById("lt5").innerText.toLowerCase()){
+        if (event.key === document.getElementById("lt5").innerText.toLowerCase()) {
             add_letter(event.key);
         }
-        if(event.key === document.getElementById("lt6").innerText.toLowerCase()){
+        if (event.key === document.getElementById("lt6").innerText.toLowerCase()) {
             add_letter(event.key);
         }
-        if(event.key === document.getElementById("lt7").innerText.toLowerCase()){
+        if (event.key === document.getElementById("lt7").innerText.toLowerCase()) {
             add_letter(event.key);
         }
-        if(event.key === 'Backspace'){
+        if (event.key === 'Backspace') {
             add_letter('Backspace');
         }
-        if(event.key === 'Enter'){
+        if (event.key === 'Enter') {
             document.getElementById("validation_btn").click()
         }
     });
@@ -136,7 +136,7 @@ function main() {
     setupChat();
 
     window.onload = function() {
-        setVisible('.page', true);
+        setVisible('#page', true);
         setVisible('#loading', false);
     };
 }
@@ -145,6 +145,27 @@ function ban_player(public_uuid) {
     send_data("/llm", { 'action': 'ban_player', 'public_uuid': public_uuid }, (a, b) => {
         send_data('/llm', { 'action': 'update' }, update_callback)
     })
+}
+
+function toast(text, blink, duration = 5) {
+    var toast_element = document.createElement("div")
+    toast_element.classList.add('notif')
+    toast_element.innerText = text
+    if (blink) {
+        toast_element.classList.add('blink')
+    }
+    page = document.getElementById("page")
+    page.appendChild(toast_element)
+    setTimeout(() => {
+        toast_element.classList.add("active")
+    }, 50);
+    setTimeout(() => {
+        toast_element.classList.toggle("active")
+        setTimeout(() => {
+            page.removeChild(toast_element)
+        }, 2000)
+    }, duration * 1000)
+
 }
 
 main();
