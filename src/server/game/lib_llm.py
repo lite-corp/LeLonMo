@@ -21,7 +21,7 @@ def load_dictionnary():
 
 def remove_accents(input_str):
     nkfd_form = unicodedata.normalize("NFKD", input_str)
-    return u"".join([c for c in nkfd_form if not unicodedata.combining(c)])
+    return "".join([c for c in nkfd_form if not unicodedata.combining(c)]).lower()
 
 
 def generate_letters(n):
@@ -29,7 +29,7 @@ def generate_letters(n):
 
     valid = False
     while not valid:
-        shuffle_word = choice( word_dict[ choice(list(word_dict.keys())) ])
+        shuffle_word = choice( word_dict[ choice(list(word_dict.keys())) ]).lower()
         if len(set(shuffle_word)) > n:
             valid = False
             pass
@@ -39,7 +39,7 @@ def generate_letters(n):
             r = list(set(shuffle_word))
             while len(r) < n:
                 if not (x:=chr(randint(ord("a"), ord("z")))) in set(shuffle_word):
-                    r.append(x)
+                    r.append(x.lower())
             return r
 
 
@@ -49,7 +49,7 @@ def check_dict(word):
     word = remove_accents(word.lower())
     try:
         if word not in word_dict[word[0]]:
-            print(word, word[0], word_dict[word[0]])
+            print(word, word[0])
             return False
         else:
             return True
