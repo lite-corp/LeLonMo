@@ -51,6 +51,8 @@ def check_dict(word):
         return word in word_dict[word[0]]
     except KeyError:
         return False
+    except IndexError:
+        return False
 
 def check_list(word, letters):
     for l in remove_accents(word):
