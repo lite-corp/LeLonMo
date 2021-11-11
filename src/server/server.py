@@ -3,7 +3,6 @@ import os
 import uuid
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from socketserver import BaseRequestHandler, ThreadingMixIn
 
 from game.lib_llm import load_dictionnary
 from game.llm import LeLonMo
