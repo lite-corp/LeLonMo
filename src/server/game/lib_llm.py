@@ -43,12 +43,14 @@ def generate_letters(n):
             return r
 
 
-def check_dict(word, language="fr"):
+def check_dict(word):
     global word_dict
 
     word = remove_accents(word.lower())
-    return word in word_dict[word[0]]
-
+    try:
+        return word in word_dict[word[0]]
+    except KeyError:
+        return False
 
 def check_list(word, letters):
     for l in remove_accents(word):
