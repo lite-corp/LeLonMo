@@ -139,6 +139,11 @@ header {
     display: block;
 }
 
+.link {
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
 
 /* Body css */
 
@@ -152,6 +157,10 @@ body {
 #main_box {
     margin: 0 5% 5% 5%;
     display: flex;
+}
+
+#about_box {
+    margin: 0 5% 5% 5%;
 }
 
 #join-box {
