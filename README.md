@@ -35,3 +35,4 @@ The game will soon include more customizations, but for now you can edit some of
 ## Contributors
  - [@FXCourel](https://github.com/FXCourel)
  - [@MI6-Pikes00](https://github.com/MI6-Pikes00)
+ - [@LiteApplication](https://github.com/LiteApplication)
