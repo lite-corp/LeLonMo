@@ -67,7 +67,7 @@ class LLM_Server(BaseHTTPRequestHandler):
         try:
             self.serve_file(cookies)
         except BrokenPipeError:
-            print('[W] A file could not get delivered properly')
+            print("[W] A file could not get delivered properly")
 
     def do_POST(self):
         content_len = int(self.headers.get("Content-Length"))
@@ -104,17 +104,25 @@ class LLM_Server(BaseHTTPRequestHandler):
             )
         self._send_headers(200, "text/json", len(answer))
         self.wfile.write(answer)
-    
 
-    def log_request(self, code = '-', size = '-') -> None:
+    def log_request(self, code="-", size="-") -> None:
         if self.server.settings.log_requests:
             super().log_request(code=code, size=size)
 
+
 class GameServerHTTP(ThreadingHTTPServer):
-    def __init__(self, server_address, RequestHandlerClass, game_settings, game_class, bind_and_activate=True) -> None:
+    def __init__(
+        self,
+        server_address,
+        RequestHandlerClass,
+        game_settings,
+        game_class,
+        bind_and_activate=True,
+    ) -> None:
         self.game = game_class
         self.settings = game_settings
         super().__init__(server_address, RequestHandlerClass, bind_and_activate)
+
 
 def main(settings_provider):
     # Load settings

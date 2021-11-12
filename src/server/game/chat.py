@@ -6,7 +6,9 @@ class Chat:
         self.userlist = dict()
         self.messagelist = list()
 
-    def add_user(self, private_uuid: str, public_uuid: str, username: str, log: bool=True):
+    def add_user(
+        self, private_uuid: str, public_uuid: str, username: str, log: bool = True
+    ):
         if private_uuid not in self.userlist:
             self.userlist[private_uuid] = {
                 "priv_uuid": private_uuid,

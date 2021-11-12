@@ -1,5 +1,6 @@
 from typing import Any, Tuple
 
+
 class SettingsProvider:
     def __init__(self) -> None:
         if not self.load():
