@@ -1,6 +1,7 @@
 :root.dark {
     --backgound-main: #0d1117;
-    --background-box: #0f141a;
+    --background-box: #161b22;
+    --input-color: #30363d;
     --border-color: #30363d;
     --button-color: #151c25;
     --button-color-hover: #2b3747;
@@ -13,7 +14,6 @@
 
 html {
     scroll-behavior: smooth;
-    overflow: hidden;
 }
 
 body {
@@ -46,7 +46,15 @@ input {
     background-position: center;
 }
 
+#logo {
+    margin-top: 4vh;
+    content: url(../assets/pictures/Logo_128x128.png);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .box {
+    margin-top: 4vh;
     background-color: var(--background-box);
     border-style: solid;
     margin-left: 35%;
@@ -56,13 +64,17 @@ input {
     border-width: 2px;
 }
 
+#login{
+    display: block;
+}
+
+#signin{
+    display: none;
+}
+
 .box_title {
     display: flex;
     background-color: var(--background-box);
-    border-style: solid;
-    border-width: 1px;
-    border-bottom: none;
-    border-color: var(--border-color);
     border-radius: 0.6em 0.6em 0 0;
     font-size: 1.5em;
     overflow: hidden;
@@ -95,23 +107,29 @@ input {
 
 .box_content{
     padding: 1em;
+    padding-left: 1.5em;
 }
 
 .form{
     width: 90%;
+    margin-top: 1em;
 }
 
 .form input {
-    background-color: var(--background-box);
+    background-color: var(--backgound-main);
     font-family: "varela", sans-serif;
     color: var(--secondary-color);
-    width: 90%;
-    margin: auto;
-    margin-top: 0.5em;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     padding-left: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
     font-size: 1em;
-    border-color: var(--border-color);
-    border-radius: 1em;
+    border-style: solid;
+    border-color: var(--input-color);
+    border-radius: 2em;
+    border-width: 1px;
     transition: all 0.5s;
 }
 
@@ -141,4 +159,38 @@ input {
 .button:hover {
     box-shadow: inset 7em 0 0 0 var(--button-color-hover);
     cursor: pointer;
+}
+
+.validation_btn {
+    font-size: 1.2em;
+    width: 50%;
+    height: 1em;
+    padding: 1em;
+    padding-top: 0.9em;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    text-align: center;
+    border-radius: 1.5em;
+    transition: all 0.5s;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--secondary-color);
+    background-color: var(--valid-color);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 var(--valid-color); }
+}
+
+.validation_btn:hover {
+    cursor: pointer;
+}
+
+.validation_btn:focus {
+    animation: pulse 0.5s;
+    box-shadow: 0 0 0 1em #347c3400;
+}
+
+.validation_btn.bad {
+    background-color: var(--error-color);
 }

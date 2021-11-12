@@ -17,22 +17,37 @@
 
         <div id="loading"></div>
         <div id="page">
-            <div id="login-box" class="box">
+            <div id="logo"></div>
+            <div class="box">
                 <div class="box_title">
-                    <span id="title_1">Log In</span>
-                    <span id="title_2">Sign In</span>
+                    <span id="title_1" onclick="setContent('login')">Log In</span>
+                    <span id="title_2" onclick="setContent('signin')">Sign In</span>
                 </div>
 
-                <div class="box_content">
+                <div id="login" class="box_content">
+
                     <div class="form">
-                        <input type="text" placeholder="Username">
+                        <input type="text" placeholder="Username or Email" tabindex="1">
                     </div>
                     <div class="form">
-                        <input type="text" placeholder="Email">
+                        <input type="password" placeholder="Password" tabindex="3">
+                    </div>
+                    <div class="validation_btn" tabindex="4">LOGIN</div>
+
+                </div>
+
+                <div id="signin" class="box_content">
+
+                    <div class="form">
+                        <input type="text" placeholder="Username" tabindex="1">
                     </div>
                     <div class="form">
-                        <input type="password" placeholder="Password">
+                        <input type="text" placeholder="Email" tabindex="2">
                     </div>
+                    <div class="form">
+                        <input type="password" placeholder="Password" tabindex="3">
+                    </div>
+                    <div class="validation_btn" tabindex="4">SIGN IN</div>
 
                 </div>
 
