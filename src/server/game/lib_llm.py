@@ -1,14 +1,11 @@
 from random import choice, randint
 import unicodedata
 
-from settings import DefaultProvider
-
 word_dict = {}
 
-def load_dictionnary():
+def load_dictionnary(settings):
     global word_dict
 
-    settings = DefaultProvider()
 
     f = open(settings.dict_path, "r")
     for i in f.readlines():

@@ -9,6 +9,7 @@ from game.llm import LeLonMo
 from mime import mime_content_type
 from server_tools import file_postprocess, secure_path
 from settings import DefaultProvider
+import account_storage
 
 settings = None
 game = None
@@ -115,15 +116,17 @@ class GameServerHTTP(ThreadingHTTPServer):
         self.settings = game_settings
         super().__init__(server_address, RequestHandlerClass, bind_and_activate)
 
-def main():
+def main(settings_provider):
     # Load settings
-    settings = DefaultProvider()
+    settings = settings_provider()
     game = LeLonMo(settings)
 
-    load_dictionnary()
+    load_dictionnary(settings)
+
+    account_storage.register_storages(settings)
 
     web_server = GameServerHTTP(settings.get_address(), LLM_Server, settings, game)
-    print(f"Server started http://{settings.server_address}:{settings.get_port()}")
+    print(f"[I] Server started http://{settings.server_address}:{settings.get_port()}")
 
     try:
         web_server.serve_forever()
@@ -135,4 +138,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(DefaultProvider)

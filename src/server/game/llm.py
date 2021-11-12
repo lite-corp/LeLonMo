@@ -3,10 +3,7 @@ import uuid
 import html
 
 import game.lib_llm
-
-from settings import DefaultProvider
 from .chat import Chat
-
 
 def getTime():
     return round(time.time())
@@ -35,7 +32,7 @@ class LeLonMo:
         for p in self.players:
             self.players[p]["latest_word"] = ""
             self.players[p]["status"] = "wait_for_start"
-        print("Game initialized")
+        print("[I] Game initialized")
 
     def add_user(self, private_uuid: str, username: str, log_in_chat: bool = True) -> dict:
         if self.status == 0:
@@ -137,7 +134,7 @@ class LeLonMo:
             return self.status in [1, 3], "client_out_of_sync"
         if action == "ban_player":
             return True, "FATAL_ERROR"
-        print("Unknown action :", action)
+        print("[W] Unknown action :", action)
         return False, "unknown_action"
 
     def give_points(self):
