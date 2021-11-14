@@ -1,3 +1,5 @@
+var content;
+
 function setContent(content) {
     console.log('Changing content to', content);
     if (content === 'login' && (document.getElementById('login').style.display === 'none' || document.getElementById('signin').style.display === '')) {
@@ -18,7 +20,9 @@ function setContent(content) {
 
 
 function main() {
-    setContent('login')
+    if (content === '') {
+        setContent('login')
+    }
     window.onload = function() {
         document.getElementById("loading").style.display = 'none';
     };
