@@ -22,7 +22,7 @@ class User:
         self.current_uid = current_uid
 
     def is_valid_token(self, token: str, current_uid) -> bool:
-        h = hashlib.sha1()
+        h = hashlib.sha256()
         h.update(self.username.encode("utf-8"))
         h.update(current_uid.encode("utf-8"))
         h.update(self.passwd_hash.encode("utf-8"))
@@ -41,7 +41,7 @@ class User:
         email: str = "",
         password: str = "",
     ):
-        passwd_hash = hashlib.sha1()
+        passwd_hash = hashlib.sha256()
         passwd_hash.update(password.encode("utf-8"))
         return User(
             User.account_provider.get_uuid(), username, email, passwd_hash.hexdigest()
