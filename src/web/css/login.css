@@ -64,11 +64,11 @@ input {
     border-width: 2px;
 }
 
-#login{
+#login {
     display: block;
 }
 
-#signin{
+#signin {
     display: none;
 }
 
@@ -105,12 +105,12 @@ input {
     border-color: var(--border-color);
 }
 
-.box_content{
+.box_content {
     padding: 1em;
     padding-left: 1.5em;
 }
 
-.form{
+.form {
     width: 90%;
     margin-top: 1em;
 }
@@ -179,14 +179,16 @@ input {
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 var(--valid-color); }
+    0% {
+        box-shadow: 0 0 0 0 var(--valid-color);
+    }
 }
 
 .validation_btn:hover {
     cursor: pointer;
 }
 
-.validation_btn:focus {
+.validation_btn.active {
     animation: pulse 0.5s;
     box-shadow: 0 0 0 1em #347c3400;
 }

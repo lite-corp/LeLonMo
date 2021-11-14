@@ -1,62 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr" class="dark">
 
-    <head>
-        <title>LeLonMo - Game</title>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="../css/login.css">
-        <link rel="stylesheet" href="../css/fonts.css">
-        <link rel="apple-touch-icon" sizes="180x180" href="../assets/pictures/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../assets/pictures/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="../assets/pictures/favicon-16x16.png">
-        <link rel="manifest" href="../assets/pictures/site.webmanifest">
-    
-    </head>
+<head>
+    <title>LeLonMo - Game</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/pictures/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/pictures/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/pictures/favicon-16x16.png">
+    <link rel="manifest" href="../assets/pictures/site.webmanifest">
+    <script src="../js/sha256.min.js"></script>
 
-    <body>
+</head>
 
-        <div id="loading"></div>
-        <div id="page">
-            <div id="logo"></div>
-            <div class="box">
-                <div class="box_title">
-                    <span id="title_1" onclick="setContent('login')">Log In</span>
-                    <span id="title_2" onclick="setContent('signin')">Sign In</span>
+<body>
+
+    <div id="loading"></div>
+    <div id="page">
+        <div id="logo"></div>
+        <div class="box">
+            <div class="box_title">
+                <span id="title_1" onclick="set_content('login')">Log In</span>
+                <span id="title_2" onclick="set_content('signin')">Sign In</span>
+            </div>
+
+            <div id="login" class="box_content">
+
+                <div class="form">
+                    <input type="text" placeholder="Username" tabindex="1" id="login_username">
                 </div>
-
-                <div id="login" class="box_content">
-
-                    <div class="form">
-                        <input type="text" placeholder="Username or Email" tabindex="1">
-                    </div>
-                    <div class="form">
-                        <input type="password" placeholder="Password" tabindex="3">
-                    </div>
-                    <div class="validation_btn" tabindex="4">LOGIN</div>
-
+                <div class="form">
+                    <input type="password" placeholder="Password" tabindex="3" id="login_password">
                 </div>
-
-                <div id="signin" class="box_content">
-
-                    <div class="form">
-                        <input type="text" placeholder="Username" tabindex="1">
-                    </div>
-                    <div class="form">
-                        <input type="text" placeholder="Email" tabindex="2">
-                    </div>
-                    <div class="form">
-                        <input type="password" placeholder="Password" tabindex="3">
-                    </div>
-                    <div class="validation_btn" tabindex="4">SIGN IN</div>
-
-                </div>
+                <div class="validation_btn" tabindex="4" id="login_btn">LOGIN</div>
 
             </div>
+
+            <div id="signin" class="box_content">
+
+                <div class="form">
+                    <input type="text" placeholder="Username" tabindex="1" id="signin_username">
+                </div>
+                <div class="form">
+                    <input type="text" placeholder="Email" tabindex="2" id="signin_email">
+                </div>
+                <div class="form">
+                    <input type="password" placeholder="Password" tabindex="3" id="signin_password">
+                </div>
+                <div class="validation_btn" tabindex="4" id="signin_btn">SIGN IN</div>
+
+            </div>
+
         </div>
+    </div>
 
-        <script src="../js/login.js"></script>
+    <script src="../js/login.js"></script>
 
-    </body>
+</body>
 
 
 </html>

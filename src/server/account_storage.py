@@ -22,7 +22,7 @@ class User:
         self.current_uid = current_uid
 
     def is_valid_token(self, token: str, current_uid) -> bool:
-        h = hashlib.sha1()
+        h = hashlib.sha256()
         h.update(self.username.encode("utf-8"))
         h.update(current_uid.encode("utf-8"))
         h.update(self.passwd_hash.encode("utf-8"))
@@ -41,7 +41,7 @@ class User:
         email: str = "",
         password: str = "",
     ):
-        passwd_hash = hashlib.sha1()
+        passwd_hash = hashlib.sha256()
         passwd_hash.update(password.encode("utf-8"))
         return User(
             User.account_provider.get_uuid(), username, email, passwd_hash.hexdigest()
@@ -53,6 +53,7 @@ class DefaultAccountProvider:
 
     def __init__(self, settings: SettingsProvider):
         self.settings = settings
+        self.initialized = False
         settings.register_account_storage("default", self)
 
     def initialize(self):
@@ -69,6 +70,9 @@ class DefaultAccountProvider:
             },
         }
         User.account_provider = self
+        
+        self.initialized = True
+        print("[I] Successfully initialized DefaultAccountProvider")
 
     def get_uuid(self) -> str:
         """Generates a unique identifier for a new user
@@ -96,8 +100,12 @@ class DefaultAccountProvider:
 
 
 def register_storages(settings):
+    print('[I] Registering account storage providers')
     for c in [
         DefaultAccountProvider,
         # Add storage providers
     ]:
-        c(settings)
+        try:
+            c(settings)
+        except Exception as e:
+            print("[E] Failed to register", c.__name__, ":", type(e).__name__ )

@@ -6,7 +6,6 @@ class SettingsProvider:
         if not self.load():
             raise RuntimeError("Could not load configuration")
         self.account_storage_providers = {}
-        self.storage_initialized = False
 
     def load(self):
         return False
@@ -37,12 +36,11 @@ class SettingsProvider:
             )
             self.settings["account_storage"] = "default"
 
-        if not self.storage_initialized:
+        if not self.account_storage_providers[self.settings["account_storage"]].initialized:
             # Run a function to initialise the storage the first time it is used
             self.account_storage_providers[
                 self.settings["account_storage"]
             ].initialize()
-            self.storage_initialized = True
 
         return self.account_storage_providers[self.settings["account_storage"]]
 
