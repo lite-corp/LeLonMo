@@ -110,20 +110,6 @@ class LLM_Server(BaseHTTPRequestHandler):
             super().log_request(code=code, size=size)
 
 
-class GameServerHTTP(ThreadingHTTPServer):
-    def __init__(
-        self,
-        server_address,
-        RequestHandlerClass,
-        game_settings,
-        game_class,
-        bind_and_activate=True,
-    ) -> None:
-        self.game = game_class
-        self.settings = game_settings
-        super().__init__(server_address, RequestHandlerClass, bind_and_activate)
-
-
 def main(settings_provider):
     # Load settings
     settings = settings_provider()
@@ -133,7 +119,9 @@ def main(settings_provider):
 
     account_storage.register_storages(settings)
 
-    web_server = GameServerHTTP(settings.get_address(), LLM_Server, settings, game)
+    web_server = ThreadingHTTPServer(settings.get_address(), LLM_Server)
+    web_server.settings = settings
+    web_server.game = game
     print(f"[I] Server started http://{settings.server_address}:{settings.get_port()}")
 
     try:
