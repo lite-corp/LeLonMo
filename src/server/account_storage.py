@@ -53,6 +53,7 @@ class DefaultAccountProvider:
 
     def __init__(self, settings: SettingsProvider):
         self.settings = settings
+        self.initialized = False
         settings.register_account_storage("default", self)
 
     def initialize(self):
@@ -69,6 +70,9 @@ class DefaultAccountProvider:
             },
         }
         User.account_provider = self
+        
+        self.initialized = True
+        print("[I] Successfully initialized DefaultAccountProvider")
 
     def get_uuid(self) -> str:
         """Generates a unique identifier for a new user
@@ -96,8 +100,12 @@ class DefaultAccountProvider:
 
 
 def register_storages(settings):
+    print('[I] Registering account storage providers')
     for c in [
         DefaultAccountProvider,
         # Add storage providers
     ]:
-        c(settings)
+        try:
+            c(settings)
+        except Exception as e:
+            print("[E] Failed to register", c.__name__, ":", type(e).__name__ )

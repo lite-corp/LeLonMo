@@ -9,6 +9,7 @@ from game.llm import LeLonMo
 from mime import mime_content_type
 from server_tools import file_postprocess, secure_path
 from settings import DefaultProvider
+from acconts import AccontManager
 import account_storage
 
 settings = None
@@ -98,6 +99,9 @@ class LLM_Server(BaseHTTPRequestHandler):
         elif self.path == "/llm":
             answer = self.server.game.handle_requests(private_uuid, post_data)
             answer = json.dumps(answer).encode("utf-8")
+        elif self.path == "/account":
+            answer = self.server.accounts.handle_requests(private_uuid, post_data)
+            answer = json.dumps(answer).encode("utf-8")
         else:
             answer = json.dumps(dict(success=False, message="invalid_request")).encode(
                 "utf-8"
@@ -111,17 +115,19 @@ class LLM_Server(BaseHTTPRequestHandler):
 
 
 def main(settings_provider):
-    # Load settings
     settings = settings_provider()
-    game = LeLonMo(settings)
-
-    load_dictionnary(settings)
 
     account_storage.register_storages(settings)
 
     web_server = ThreadingHTTPServer(settings.get_address(), LLM_Server)
+
+    # Load settings
     web_server.settings = settings
-    web_server.game = game
+    web_server.game = LeLonMo(settings)
+    web_server.accounts = AccontManager(settings)
+
+    load_dictionnary(settings)
+
     print(f"[I] Server started http://{settings.server_address}:{settings.get_port()}")
 
     try:
@@ -130,7 +136,7 @@ def main(settings_provider):
         pass
 
     web_server.server_close()
-    print("Closed HTTP server. ")
+    print("[I] Closed HTTP server. ")
 
 
 if __name__ == "__main__":
