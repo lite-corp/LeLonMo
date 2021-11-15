@@ -70,7 +70,7 @@ class DefaultAccountProvider:
             },
         }
         User.account_provider = self
-        
+
         self.initialized = True
         print("[I] Successfully initialized DefaultAccountProvider")
 
@@ -100,7 +100,7 @@ class DefaultAccountProvider:
 
 
 def register_storages(settings):
-    print('[I] Registering account storage providers')
+    print("[I] Registering account storage providers")
     for c in [
         DefaultAccountProvider,
         # Add storage providers
@@ -108,4 +108,4 @@ def register_storages(settings):
         try:
             c(settings)
         except Exception as e:
-            print("[E] Failed to register", c.__name__, ":", type(e).__name__ )
+            print("[E] Failed to register", c.__name__, ":", type(e).__name__)
