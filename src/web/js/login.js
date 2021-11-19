@@ -58,8 +58,10 @@ function main() {
                 auth_token = sha256(
                     document.getElementById("login_username").value +
                     getCookie('private_uuid') +
-                    document.getElementById("login_password").value
+                    sha256(document.getElementById("login_password").value) +
+                    getCookie('token_validator')
                 )
+                console.log(getCookie('token_validator'));
                 send_data("/account", {
                     'action': 'login',
                     'username': document.getElementById('login_username').value,

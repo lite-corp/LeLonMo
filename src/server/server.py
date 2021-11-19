@@ -30,9 +30,9 @@ class LLM_Server(BaseHTTPRequestHandler):
 
     def client_cookies(self):
         cookies = SimpleCookie(self.headers.get("Cookie"))
-        if "private_uuid" in cookies:
-            return
-        cookies["private_uuid"] = uuid.uuid4()
+        if "private_uuid" not in cookies:
+            cookies["private_uuid"] = uuid.uuid4()
+        cookies["token_validator"] = self.server.accounts.get_token_validator()
         return cookies
 
     def serve_file(self, cookies=None):

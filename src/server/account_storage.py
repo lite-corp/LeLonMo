@@ -14,18 +14,27 @@ class User:
         email: str = "",
         passwd_hash: str = "",
         current_uid: str = "",
+        token_validator: str = "",
     ):
-        self.uuid = uuid
-        self.username = username
-        self.email = email
-        self.passwd_hash = passwd_hash
-        self.current_uid = current_uid
+        self.uuid: str = uuid
+        self.username: str = username
+        self.email: str = email
+        self.passwd_hash: str = passwd_hash
+        self.current_uid: str = current_uid
+        self.token_validator: str = token_validator
 
-    def is_valid_token(self, token: str, current_uid) -> bool:
+    def set_token_validator(self, validator):
+        self.token_validator = validator
+
+    def set_current_uid(self, uid):
+        self.current_uid = uid
+
+    def is_valid_token(self, token: str) -> bool:
         h = hashlib.sha256()
         h.update(self.username.encode("utf-8"))
-        h.update(current_uid.encode("utf-8"))
+        h.update(self.current_uid.encode("utf-8"))
         h.update(self.passwd_hash.encode("utf-8"))
+        h.update(self.token_validator.encode("utf-8"))
         return token == h.hexdigest()
 
     def __dict__(self) -> dict:
@@ -61,12 +70,12 @@ class DefaultAccountProvider:
             "12345678-1234-1234-1234-1234567890ab": {
                 "username": "johndoe",
                 "email": "john.doe@example.com",
-                "passwd_hash": "7c222fb2927d828af22f592134e8932480637c0d",  # "12345678"
+                "passwd_hash": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",  # "12345678"
             },
             "01234567-0123-0123-0123-01234567890a": {
                 "username": "janedoe",
                 "email": "jane.doe@example.com",
-                "passwd_hash": "9cf95dacd226dcf43da376cdb6cbba7035218921",  # "azerty"
+                "passwd_hash": "f2d81a260dea8a100dd517984e53c56a7523d96942a834b9cdc249bd4e8c7aa9",  # "azerty"
             },
         }
         User.account_provider = self
@@ -97,6 +106,40 @@ class DefaultAccountProvider:
             return True
         else:
             return False
+
+    def get_user(
+        self,
+        username: str = "",
+        uuid: str = "",
+        current_uid: str = "",
+    ) -> User:
+        if uuid:
+            try:
+                return self._data[uuid]
+            except KeyError:
+                return User()
+        elif username:
+            for u in self._data:
+                if self._data[u]["username"] == username:
+                    return User(
+                        uuid=u,
+                        username=username,
+                        email=self._data[u]["email"],
+                        passwd_hash=self._data[u]["passwd_hash"],
+                    )
+            print("[W] Did not find user", username)
+            return User()
+        elif current_uid:
+            raise NotImplementedError()
+        return User()
+
+    def authenticate_user(
+        self, username: str, token: str, validator: str, current_uid: str
+    ):
+        u = self.get_user(username=username)
+        u.set_token_validator(validator)
+        u.set_current_uid(current_uid)
+        return u.is_valid_token(token)
 
 
 def register_storages(settings):
