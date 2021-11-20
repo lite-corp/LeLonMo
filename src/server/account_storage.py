@@ -92,17 +92,26 @@ class DefaultAccountProvider:
         """
         return uuid4()
 
-    def add_user(self, user: User) -> bool:
+    def add_user(self, uuid: str, username: str, email: str, password: str) -> bool:
         """Save a user in the storage
 
         Args:
-            user (User): The user to be saved
+            uuid (str): Unique identifier
+            username (str): unique name
+            email (str): email of the user
+            password (str): password for the user
 
         Returns:
-            bool: Return True if success
+            bool: success
         """
-        if not user.uuid in self._data:
-            self._data[user.uuid] = dict(user)
+
+        if not uuid in self._data:
+            p = hashlib.sha256()
+            p.update(password.encode("utf-8"))
+
+            self._data[uuid] = dict(
+                username=username, email=email, passwd_hash=p.hexdigest()
+            )
             return True
         else:
             return False

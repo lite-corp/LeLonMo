@@ -32,4 +32,15 @@ class AccontManager:
             else:
                 print("[W] Failed to log in user", data["username"])
                 return {"success": False}
+        elif data["action"] == "signin":
+            if self.settings.get_account_provider().add_user(
+                uuid=self.settings.get_account_provider().get_uuid(),
+                username=data["username"],
+                email=data["email"],
+                password=data["password"],
+            ):
+                return {"success": True}
+            else:
+                return {"success": False}
+
         return {"success": False, "message": "not_implemented"}
