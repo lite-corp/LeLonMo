@@ -83,9 +83,9 @@ class DefaultAccountProvider:
         Returns:
             str: generated unique user id
         """
-        return uuid4()
+        return str(uuid4())
 
-    def add_user(self, uuid: str, username: str, email: str, password: str) -> bool:
+    def add_user(self, username: str, email: str, password: str) -> dict:
         """Save a user in the storage
 
         Args:
@@ -95,19 +95,16 @@ class DefaultAccountProvider:
             password (str): password for the user
 
         Returns:
-            bool: success
+            dict: success and message
         """
+        uuid = uuid4()
+        p = hashlib.sha256()
+        p.update(password.encode("utf-8"))
 
-        if not uuid in self._data:
-            p = hashlib.sha256()
-            p.update(password.encode("utf-8"))
-
-            self._data[uuid] = dict(
-                username=username, email=email, passwd_hash=p.hexdigest()
-            )
-            return True
-        else:
-            return False
+        self._data[uuid] = dict(
+            username=username, email=email, passwd_hash=p.hexdigest()
+        )
+        return dict(success=True)
 
     def get_user(
         self,
