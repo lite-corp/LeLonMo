@@ -138,7 +138,7 @@ def main(settings_provider):
     # Load settings
     web_server.settings = settings
     web_server.game = LeLonMo(settings)
-    web_server.accounts = AccontManager(settings)
+    web_server.accounts = AccontManager(settings, web_server.game)
 
     load_dictionnary(settings)
 

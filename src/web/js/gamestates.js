@@ -12,7 +12,6 @@ var game_waiting_for_others_admin = null;
 var game_banned = null;
 var default_game_panel = null;
 
-var locked_game_state = false;
 var last_game_state = '';
 var last_admin_state = '';
 
@@ -39,19 +38,6 @@ function loaditems() {
     fetch("templates/game_banned.html").then((r) => { r.text().then((d) => { game_banned = d }) });
     fetch("templates/default_game_panel.html").then((r) => { r.text().then((d) => { default_game_panel = d }) });
 
-
-    console.log("Checking player in game ... ");
-    send_data('/llm', {
-            'action': 'update'
-        },
-        function(status, data) {
-            if (status == 200 && data["success"]) {
-                if (data['in_game']) {
-                    console.log("Player is already in the game.");
-                    document.getElementById("join-box").style.display = 'none';
-                }
-            }
-        });
     setInterval(() => {
         send_data('/llm', { 'action': 'update' }, update_callback);
     }, 1000);
@@ -81,7 +67,7 @@ function update_game_panel(player_status, admin, data) {
             player_template = player_template_normal;
         }
     }
-    if ((last_game_state !== player_status || last_admin_state !== admin) && !locked_game_state) {
+    if ((last_game_state !== player_status || last_admin_state !== admin)) {
         console.log("Changing game state to " + player_status);
         switch (player_status) {
             case "wait_for_start":
@@ -133,41 +119,6 @@ function update_game_panel(player_status, admin, data) {
     }
 }
 
-function toggleGameLocked() {
-    locked_game_state = !locked_game_state;
-    if (locked_game_state) {
-        console.log("Game state locked");
-    } else {
-        console.log("Game state unlocked");
-    }
-}
-
-function forceGameChange(admin = false) {
-    var game_state = ''
-    switch (last_game_state) {
-        case "wait_for_start":
-            game_state = 'playing';
-            break;
-        case "playing":
-            game_state = "finished";
-            break;
-        case "finished":
-            game_state = "game_ended";
-            break;
-        case "game_ended":
-            game_state = "not_in_game";
-            break;
-        case "not_in_game":
-            game_state = "wait_for_start";
-            break;
-        default:
-            game_state = "wait_for_start";
-            break;
-    }
-    locked_game_state = false;
-    update_game_panel(game_state, admin);
-    locked_game_state = true;
-}
 
 function populate_leaderboard(data) {
     var sb_body = document.getElementById("results_table").getElementsByTagName("tbody")[0];

@@ -25,38 +25,6 @@ function send_data(page, data, callback) {
     xhr.send(data_formated);
 }
 
-function join_game() {
-    if (document.getElementById("username_input").value) {
-        send_data('/llm', {
-                "action": "join",
-                "username": document.getElementById("username_input").value
-            },
-            (status, player_data) => {
-                if (player_data.success) {
-                    if (player_data.banned) {
-                        document.getElementById("error-message-join").textContent = "You cannot join this game";
-                        document.getElementById("error-message-join").style.display = 'block';
-                    } else {
-                        document.getElementById("join-box").style.display = 'none';
-                    }
-                } else {
-                    if (player_data.message == "game_already_started") {
-                        document.getElementById("error-message-join").textContent = "This game already started";
-                        document.getElementById("error-message-join").style.display = 'block';
-                    } else {
-                        document.getElementById("error-message-join").textContent = `Something unexpected happened : ${player_data.message}`;
-                        document.getElementById("error-message-join").style.display = 'block';
-                    }
-                }
-            }
-        )
-    } else {
-        document.getElementById("error-message-join").textContent = "Enter your username";
-        document.getElementById("error-message-join").style.display = 'block';
-        document.getElementById("username_input").style.borderColor = "#e03939"
-    };
-}
-
 function update_callback(status, data) {
     if (status == 200 && data["success"]) {
         player_list.innerHTML = "";
@@ -87,24 +55,15 @@ function main() {
     }
 
     loaditems();
-    // Press enter to trigger button in text field
-    var input = document.getElementById("username_input");
-    input.addEventListener("keyup", function(event) {
-        if (event.key === 'Enter') {
-            if (document.getElementById("join-box").style.display != 'none') {
-                document.getElementById("join_btn").click();
-            }
-        }
-    });
 
     document.addEventListener('keydown', function(event) {
         if (!document.getElementById("game_panel").contains(document.getElementById("panel_ingame"))) {
             return;
         }
-        if (document.querySelector("#message") === document.activeElement){
+        if (document.querySelector("#message") === document.activeElement) {
             return;
         }
-        if(event.key === document.getElementById("lt1").innerText.toLowerCase()){
+        if (event.key === document.getElementById("lt1").innerText.toLowerCase()) {
             add_letter(event.key);
         }
         if (event.key === document.getElementById("lt2").innerText.toLowerCase()) {

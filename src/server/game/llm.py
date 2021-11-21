@@ -36,48 +36,48 @@ class LeLonMo:
         print("[I] Game initialized")
 
     def add_user(
-        self, private_uuid: str, username: str, log_in_chat: bool = True
+        self, player_uuid: str, username: str, log_in_chat: bool = True
     ) -> dict:
         if self.status == 0:
-            self.admin_uuid = private_uuid
+            self.admin_uuid = player_uuid
             self.status = 1
-            return self.add_user(private_uuid, username)  # Add the admin
+            return self.add_user(player_uuid, username)  # Add the admin
         elif self.status in [1, 3]:
             username = html.escape(username)
-            self.players[private_uuid] = {
-                "private_uuid": private_uuid,
+            self.players[player_uuid] = {
+                "player_uuid": player_uuid,
                 "public_uuid": str(uuid.uuid4())[:8],
                 "username": username,
                 "status": "wait_for_start",
                 "last_update": getTime(),
                 "banned": (
-                    (private_uuid in self.players)
-                    and self.players[private_uuid]["banned"]
+                    (player_uuid in self.players)
+                    and self.players[player_uuid]["banned"]
                 ),
                 "points": 0,
                 "latest_word": "",
                 "latest_points": 0,
             }
             self.chat.add_user(
-                private_uuid,
-                self.players[private_uuid]["public_uuid"],
+                player_uuid,
+                self.players[player_uuid]["public_uuid"],
                 username,
                 log_in_chat,
             )
             return {
                 "success": True,  # Easily tell JS that everything is ok
-                **self.players[private_uuid],
+                **self.players[player_uuid],
             }
 
-    def ban_user(self, private_uuid: str) -> None:
-        self.players[private_uuid]["banned"] = True
-        self.players[private_uuid]["status"] = "banned"
+    def ban_user(self, player_uuid: str) -> None:
+        self.players[player_uuid]["banned"] = True
+        self.players[player_uuid]["status"] = "banned"
 
-        self.chat.remove_user(private_uuid)
+        self.chat.remove_user(player_uuid)
 
-    def delete_user(self, private_uuid: str) -> None:
-        print("[I] Removed player", self.players[private_uuid]["username"])
-        if self.is_admin(private_uuid):
+    def delete_user(self, player_uuid: str) -> None:
+        print("[I] Removed player", self.players[player_uuid]["username"])
+        if self.is_admin(player_uuid):
             if len(self.players) == 1:
                 self.admin_uuid = ""
                 self.initialize_game()
@@ -90,16 +90,16 @@ class LeLonMo:
                     f'[I] The admin is now {self.players[self.admin_uuid]["username"]}'
                 )
         try:
-            self.chat.remove_user(private_uuid)
+            self.chat.remove_user(player_uuid)
         except KeyError:
             pass
-        del self.players[private_uuid]
+        del self.players[player_uuid]
 
-    def is_admin(self, private_uuid: str) -> bool:
-        return private_uuid == self.admin_uuid
+    def is_admin(self, player_uuid: str) -> bool:
+        return player_uuid == self.admin_uuid
 
-    def is_banned(self, private_uuid: str) -> bool:
-        return self.players[private_uuid]["banned"]
+    def is_banned(self, player_uuid: str) -> bool:
+        return self.players[player_uuid]["banned"]
 
     def get_users(self) -> list:
         player_list = list()
@@ -132,8 +132,6 @@ class LeLonMo:
             self.delete_user(p)
 
     def validate_request(self, action: str) -> bool:
-        if action == "join":
-            return self.status in [0, 1, 3], "game_already_started"
         if action == "submit_word":
             return self.status == 2, "cannot_submit_word"
         if action == "update":
@@ -158,7 +156,7 @@ class LeLonMo:
             5th gets 0 point
         """
         wordlen_player = [
-            (len(p["latest_word"]), p["private_uuid"])
+            (len(p["latest_word"]), p["player_uuid"])
             for p in self.players.values()
             if not p["banned"]
         ]
@@ -175,12 +173,12 @@ class LeLonMo:
                 self.players[u]["points"] + self.players[u]["latest_points"]
             )
 
-    def handle_updates(self, private_uuid: str, data: dict) -> dict:
+    def handle_updates(self, player_uuid: str, data: dict) -> dict:
         try:
-            self.players[private_uuid]["last_update"] = getTime()
+            self.players[player_uuid]["last_update"] = getTime()
             if self.status == 2:
-                if not self.players[private_uuid]["latest_word"]:
-                    self.players[private_uuid]["status"] = "playing"
+                if not self.players[player_uuid]["latest_word"]:
+                    self.players[player_uuid]["status"] = "playing"
         except KeyError:
             pass
         self.check_timeouts()
@@ -205,15 +203,15 @@ class LeLonMo:
             "users": self.get_users(),
             "server_status": self.status,
             "letters": self.letters,
-            "admin": private_uuid == self.admin_uuid,
-            "in_game": private_uuid in self.players,
+            "admin": player_uuid == self.admin_uuid,
+            "in_game": player_uuid in self.players,
             "player_status": "not_in_game"
-            if private_uuid not in self.players
-            else self.players[private_uuid]["status"],
-            "should_update_messages": self.chat.has_unread(private_uuid),
+            if player_uuid not in self.players
+            else self.players[player_uuid]["status"],
+            "should_update_messages": self.chat.has_unread(player_uuid),
         }
 
-    def handle_requests(self, private_uuid: str, data: dict) -> dict:
+    def handle_requests(self, player_uuid: str, data: dict) -> dict:
 
         try:
             if not (d := self.validate_request(data["action"]))[0]:
@@ -227,15 +225,11 @@ class LeLonMo:
                         "success": False,
                         "message": d[1],
                     }
-
-            if data["action"] == "join":
-                return self.add_user(private_uuid, data["username"])
-
             if data["action"] == "update":
-                return self.handle_updates(private_uuid, data)
+                return self.handle_updates(player_uuid, data)
 
             if data["action"] == "start_game":
-                if private_uuid == self.admin_uuid:
+                if player_uuid == self.admin_uuid:
                     self.letters = game.lib_llm.generate_letters(
                         self.settings.letter_number
                     )
@@ -248,12 +242,12 @@ class LeLonMo:
                     return {"success": True, "valid": False}
                 if not game.lib_llm.check_dict(data["word"]):
                     return {"success": True, "valid": False}
-                print(f"[I] {self.players[private_uuid]['username']} finished.")
-                self.players[private_uuid]["latest_word"] = data["word"]
-                self.players[private_uuid]["status"] = "finished"
+                print(f"[I] {self.players[player_uuid]['username']} finished.")
+                self.players[player_uuid]["latest_word"] = data["word"]
+                self.players[player_uuid]["status"] = "finished"
                 return {"success": True, "valid": True}
             if data["action"] == "create_game":
-                if private_uuid == self.admin_uuid:
+                if player_uuid == self.admin_uuid:
                     self.initialize_game()
                     return {"success": True}
                 else:
@@ -262,7 +256,7 @@ class LeLonMo:
                         "message": "not_admin",
                     }
             if data["action"] == "reset_game":
-                if private_uuid == self.admin_uuid:
+                if player_uuid == self.admin_uuid:
                     self.initialize_game()
                     return {"success": True}
                 else:
@@ -271,9 +265,9 @@ class LeLonMo:
                         "message": "not_admin",
                     }
             if data["action"] == "ban_player":
-                if private_uuid == self.admin_uuid:
+                if player_uuid == self.admin_uuid:
                     if (
-                        game.lib_llm.pub_to_private_uuid(
+                        game.lib_llm.pub_to_player_uuid(
                             data["public_uuid"], self.players
                         )
                         == self.admin_uuid
@@ -281,7 +275,7 @@ class LeLonMo:
                         return {"success": False, "message": "ban_admin"}
                     else:
                         self.ban_user(
-                            game.lib_llm.pub_to_private_uuid(
+                            game.lib_llm.pub_to_player_uuid(
                                 data["public_uuid"], self.players
                             )
                         )

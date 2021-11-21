@@ -6,8 +6,9 @@ def getHex(n):
 
 
 class AccontManager:
-    def __init__(self, settings):
+    def __init__(self, settings, game):
         self.settings = settings
+        self.game = game
         self.account_storage = settings.get_account_provider()
         self.valid_tokens: list[tuple[str, str]] = []
         self.token_validator: str = getHex(8)
@@ -24,6 +25,7 @@ class AccontManager:
             )
             if valid:
                 self.settings.add_token(data["token"], user.uuid)
+                self.game.add_user(user.uuid, user.username, True)
                 return {"success": True}
             else:
                 print("[W] Failed to log in user", data["username"])
@@ -34,7 +36,7 @@ class AccontManager:
                 email=data["email"],
                 password=data["password"],
             )
-            if status['success']:
+            if status["success"]:
                 data["action"] = "login"
                 self.handle_requests(data)
 
