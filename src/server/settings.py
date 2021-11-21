@@ -74,8 +74,9 @@ class DefaultProvider(SettingsProvider):
             "dict_path": "src/dict/fr.txt",
             "time_inactive": 3,
             "log_requests": False,
-            "account_storage": "default",
+            "account_storage": "sqlite",
             "login_page": "/html/login.html",
             "authenticated_pages": ["/html/index.html"],
+            "sqlite_account_storage_path": "users.sqlite3",
         }
         return True  # return False if something wen wrong when loading the config

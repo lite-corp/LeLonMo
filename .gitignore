@@ -3,3 +3,10 @@
 **/__pycache__/**
 .DS_Store
 .vscode/*
+# Ignore databases
+**.db
+**.sqlite
+**.sqlite3
+
+# Ignore old databases
+**/.fuse_hidden*

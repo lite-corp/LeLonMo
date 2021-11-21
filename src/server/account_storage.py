@@ -1,10 +1,11 @@
-from storage_providers import DefaultAccountProvider
+from storage_providers import DefaultAccountProvider, SQLiteAccountProvider
 
 
 def register_storages(settings):
     print("[I] Registering account storage providers")
     for c in [
         DefaultAccountProvider,
+        SQLiteAccountProvider
         # Add storage providers
     ]:
         try:
