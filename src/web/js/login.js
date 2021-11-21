@@ -86,18 +86,19 @@ function main() {
 
                 })
             } else if (event.target.id == "signin_btn") {
+                auth_token = sha256(
+                    document.getElementById("signin_username").value +
+                    sha256(document.getElementById("signin_password").value) +
+                    getCookie('token_validator')
+                );
                 send_data("/account", {
                     'action': 'signin',
                     'username': document.getElementById('signin_username').value,
                     'email': document.getElementById('signin_email').value,
-                    'password': document.getElementById('signin_password').value
+                    'password': document.getElementById('signin_password').value,
+                    'token': auth_token
                 }, (status, data) => {
                     if (data.success) {
-                        auth_token = sha256(
-                            document.getElementById("signin_username").value +
-                            sha256(document.getElementById("signin_password").value) +
-                            getCookie('token_validator')
-                        )
                         setCookie("auth_token", auth_token, 365)
                     } else {
                         // something went wrong

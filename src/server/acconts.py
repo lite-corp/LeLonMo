@@ -29,9 +29,14 @@ class AccontManager:
                 print("[W] Failed to log in user", data["username"])
                 return {"success": False}
         elif data["action"] == "signin":
-            return self.settings.get_account_provider().add_user(
+            status = self.settings.get_account_provider().add_user(
                 username=data["username"],
                 email=data["email"],
                 password=data["password"],
             )
+            if status['success']:
+                data["action"] = "login"
+                self.handle_requests(data)
+
+            return status
         return {"success": False, "message": "not_implemented"}
