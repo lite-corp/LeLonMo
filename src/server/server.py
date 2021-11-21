@@ -1,5 +1,6 @@
 import json
 import os
+from typing import Collection
 import uuid
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -30,8 +31,6 @@ class LLM_Server(BaseHTTPRequestHandler):
 
     def client_cookies(self):
         cookies = SimpleCookie(self.headers.get("Cookie"))
-        if "private_uuid" not in cookies:
-            cookies["private_uuid"] = uuid.uuid4()
         cookies["token_validator"] = self.server.accounts.get_token_validator()
         return cookies
 
@@ -41,6 +40,17 @@ class LLM_Server(BaseHTTPRequestHandler):
             self.serve_file(cookies)
             return
         self.path = secure_path(self.path)
+
+        if self.path in self.server.settings.authenticated_pages:
+            # Ensure the client is authenticated before playing
+            if "auth_token" not in cookies or not self.server.settings.is_valid_token(
+                cookies["auth_token"].value
+            ):
+                print("[I] Redirrecting user to login page")
+                self.send_response(301)
+                self.send_header("Location", self.server.settings.login_page)
+                self.end_headers()
+
         if os.path.exists(self.server.settings.web_path + self.path):
             if os.path.isdir(self.server.settings.web_path + self.path):
                 self.path = self.path + "index.html"
@@ -89,23 +99,27 @@ class LLM_Server(BaseHTTPRequestHandler):
             return
         cookies = SimpleCookie(self.headers.get("Cookie"))
         try:
-            private_uuid = cookies["private_uuid"].value
+            player_uuid = self.server.settings.get_uuid(cookies["auth_token"].value)
         except KeyError:
-            private_uuid = "\0"
+            player_uuid = "\0"
         answer = None
         if self.path == "/chat":
-            answer = self.server.game.chat.handle_requests(private_uuid, post_data)
+            answer = self.server.game.chat.handle_requests(player_uuid, post_data)
             answer = json.dumps(answer).encode("utf-8")
         elif self.path == "/llm":
-            answer = self.server.game.handle_requests(private_uuid, post_data)
-            answer = json.dumps(answer).encode("utf-8")
+            answer = self.server.game.handle_requests(player_uuid, post_data)
+            try:
+                answer = json.dumps(answer).encode("utf-8")
+            except:
+                print(answer)
+                raise
         elif self.path == "/account":
-            answer = self.server.accounts.handle_requests(private_uuid, post_data)
+            answer = self.server.accounts.handle_requests(post_data)
             answer = json.dumps(answer).encode("utf-8")
         else:
-            answer = json.dumps(dict(success=False, message="invalid_request")).encode(
-                "utf-8"
-            )
+            answer = json.dumps(
+                {"success": False, "message": "invalid_request"}
+            ).encode("utf-8")
         self._send_headers(200, "text/json", len(answer))
         self.wfile.write(answer)
 

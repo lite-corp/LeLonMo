@@ -6,6 +6,7 @@ class SettingsProvider:
         if not self.load():
             raise RuntimeError("Could not load configuration")
         self.account_storage_providers = {}
+        self.valid_tokens = dict()
 
     def load(self):
         return False
@@ -46,9 +47,25 @@ class SettingsProvider:
 
         return self.account_storage_providers[self.settings["account_storage"]]
 
+    def add_token(self, token: str, uuid: str):
+        self.valid_tokens[token] = uuid
+
+    def is_valid_token(self, token: str):
+        return token in self.valid_tokens
+
+    def get_uuid(self, token: str):
+        if self.is_valid_token(token):
+            return self.valid_tokens[token]
+        return "\0"
+
 
 class DefaultProvider(SettingsProvider):
     def load(self):
+        """Loads the data from settings 
+
+        Returns:
+            bool: return False if something went wrong
+        """
         self.settings = {
             "server_port": 8080,
             "server_address": "0.0.0.0",
@@ -58,5 +75,7 @@ class DefaultProvider(SettingsProvider):
             "time_inactive": 3,
             "log_requests": False,
             "account_storage": "default",
+            "login_page": "/html/login.html",
+            "authenticated_pages": ["/html/index.html"],
         }
         return True  # return False if something wen wrong when loading the config

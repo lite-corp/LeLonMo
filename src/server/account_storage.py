@@ -13,26 +13,20 @@ class User:
         username: str = "",
         email: str = "",
         passwd_hash: str = "",
-        current_uid: str = "",
         token_validator: str = "",
     ):
         self.uuid: str = uuid
         self.username: str = username
         self.email: str = email
         self.passwd_hash: str = passwd_hash
-        self.current_uid: str = current_uid
         self.token_validator: str = token_validator
 
     def set_token_validator(self, validator):
         self.token_validator = validator
 
-    def set_current_uid(self, uid):
-        self.current_uid = uid
-
     def is_valid_token(self, token: str) -> bool:
         h = hashlib.sha256()
         h.update(self.username.encode("utf-8"))
-        h.update(self.current_uid.encode("utf-8"))
         h.update(self.passwd_hash.encode("utf-8"))
         h.update(self.token_validator.encode("utf-8"))
         return token == h.hexdigest()
@@ -120,7 +114,6 @@ class DefaultAccountProvider:
         self,
         username: str = "",
         uuid: str = "",
-        current_uid: str = "",
     ) -> User:
         if uuid:
             try:
@@ -138,17 +131,12 @@ class DefaultAccountProvider:
                     )
             print("[W] Did not find user", username)
             return User()
-        elif current_uid:
-            raise NotImplementedError()
         return User()
 
-    def authenticate_user(
-        self, username: str, token: str, validator: str, current_uid: str
-    ):
+    def authenticate_user(self, username: str, token: str, validator: str):
         u = self.get_user(username=username)
         u.set_token_validator(validator)
-        u.set_current_uid(current_uid)
-        return u.is_valid_token(token)
+        return u.is_valid_token(token), u
 
 
 def register_storages(settings):

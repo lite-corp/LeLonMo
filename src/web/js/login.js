@@ -42,6 +42,16 @@ function getCookie(name) {
     return null;
 }
 
+function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict";
+}
+
 function main() {
     set_content('login')
 
@@ -57,23 +67,22 @@ function main() {
             if (event.target.id == "login_btn") {
                 auth_token = sha256(
                     document.getElementById("login_username").value +
-                    getCookie('private_uuid') +
                     sha256(document.getElementById("login_password").value) +
                     getCookie('token_validator')
                 )
-                console.log(getCookie('token_validator'));
                 send_data("/account", {
                     'action': 'login',
                     'username': document.getElementById('login_username').value,
                     'token': auth_token
                 }, (status, data) => {
                     if (data.success) {
-                        window.location = '/html/index.html'
+                        setCookie("auth_token", auth_token, 365)
                     } else {
                         // something went wrong
                         console.error('Something went wrong while trying to login');
                         console.error(status, data);
                     }
+                    window.location = '/html/index.html'
 
                 })
             } else if (event.target.id == "signin_btn") {
@@ -84,12 +93,19 @@ function main() {
                     'password': document.getElementById('signin_password').value
                 }, (status, data) => {
                     if (data.success) {
-                        window.location = '/html/index.html'
+                        auth_token = sha256(
+                            document.getElementById("signin_username").value +
+                            sha256(document.getElementById("signin_password").value) +
+                            getCookie('token_validator')
+                        )
+                        setCookie("auth_token", auth_token, 365)
                     } else {
                         // something went wrong
                         console.error('Something went wrong while trying to sign in');
                         console.error(status, data);
                     }
+                    window.location = '/html/index.html'
+
                 })
             }
 
