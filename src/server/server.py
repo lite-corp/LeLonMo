@@ -46,8 +46,8 @@ class LLM_Server(BaseHTTPRequestHandler):
             if "auth_token" not in cookies or not self.server.settings.is_valid_token(
                 cookies["auth_token"].value
             ):
-                print("[I] Redirrecting user to login page")
-                self.send_response(301)
+                print("[I] Redirecting user to login page")
+                self.send_response(302)
                 self.send_header("Location", self.server.settings.login_page)
                 self.end_headers()
 
