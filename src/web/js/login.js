@@ -52,6 +52,19 @@ function setCookie(name, value, days) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict";
 }
 
+function badInput(bool) {
+    var inputs = document.getElementsByClassName('form')
+    if (bool) {
+        for(var i = 0; i < inputs.length; i++) {
+            inputs[i].classList.add('bad');
+        }
+    } else if (!bool) {
+        for(var i = 0; i < inputs.length; i++) {
+            inputs[i].classList.remove('bad');
+        }
+    }
+}
+
 function main() {
     set_content('login')
 

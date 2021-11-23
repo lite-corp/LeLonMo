@@ -133,6 +133,11 @@ input {
     transition: all 0.5s;
 }
 
+.form.bad input {
+    border-color: var(--error-color);
+    color: var(--error-color);
+}
+
 .form input:focus {
     border-color: var(--focus-color);
 }
