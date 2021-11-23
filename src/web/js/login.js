@@ -74,9 +74,9 @@ function main() {
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             if (document.getElementById('login').style.display === 'block'){
-                document.getElementById("login_btn").click()
+                document.getElementById("login_btn").click();
             } else if (document.getElementById('signin').style.display === 'block'){
-                document.getElementById("signin_btn").click()
+                document.getElementById("signin_btn").click();
             }
         }
     })
@@ -103,6 +103,7 @@ function main() {
                         // something went wrong
                         console.error('Something went wrong while trying to login');
                         console.error(status, data);
+                        badInput(true);
                     }
                     window.location = '/html/index.html'
 
@@ -126,6 +127,7 @@ function main() {
                         // something went wrong
                         console.error('Something went wrong while trying to sign in');
                         console.error(status, data);
+                        badInput(true);
                     }
                     window.location = '/html/index.html'
 
