@@ -1,8 +1,11 @@
 import random
 
 
-def getHex(n):
-    return "".join([random.choice(list("0123456789abcdef")) for _ in range(n)])
+def generate_validator(n=0):
+    if n:
+        return "".join([random.choice(list("0123456789abcdefghijklmnopqrstuvwxyz")) for _ in range(n)])
+    else:
+        return "0"
 
 
 class AccontManager:
@@ -11,7 +14,8 @@ class AccontManager:
         self.game = game
         self.account_storage = settings.get_account_provider()
         self.valid_tokens: list[tuple[str, str]] = []
-        self.token_validator: str = getHex(8)
+        self.token_validator: str = generate_validator(settings.token_validator_lenght)
+        
 
     def get_token_validator(self):
         return self.token_validator

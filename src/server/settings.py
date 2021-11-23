@@ -61,22 +61,26 @@ class SettingsProvider:
 
 class DefaultProvider(SettingsProvider):
     def load(self):
-        """Loads the data from settings 
+        """Loads the data from settings
 
         Returns:
             bool: return False if something went wrong
         """
         self.settings = {
+            # Server-related settings
             "server_port": 8080,
             "server_address": "0.0.0.0",
+            "log_requests": False,
             "web_path": "src/web",
+            # Game-related settings
             "letter_number": 7,
             "dict_path": "src/dict/fr.txt",
             "time_inactive": 3,
-            "log_requests": False,
+            # Security-related settings
             "account_storage": "sqlite",
             "login_page": "/html/login.html",
             "authenticated_pages": ["/html/index.html"],
             "sqlite_account_storage_path": "users.sqlite3",
+            "token_validator_lenght": 8, # Set to 0 to disable
         }
         return True  # return False if something wen wrong when loading the config
