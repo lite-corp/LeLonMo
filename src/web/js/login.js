@@ -1,12 +1,12 @@
 function set_content(content) {
     console.log('Changing content to', content);
-    if (content === 'login' && (document.getElementById('login').style.display === 'none' || document.getElementById('signin').style.display === '')) {
+    if (content === 'login') {
         console.log('Changed content to login');
         document.getElementById('signin').style.display = 'none';
         document.getElementById('login').style.display = 'block';
         document.getElementById('title_1').style.borderBottomStyle = 'none';
         document.getElementById('title_2').style.borderBottomStyle = 'solid';
-    } else if (content === 'signin' && (document.getElementById('signin').style.display === 'none' || document.getElementById('signin').style.display === '')) {
+    } else if (content === 'signin') {
         console.log('Changed content to signin');
         document.getElementById('login').style.display = 'none';
         document.getElementById('signin').style.display = 'block';
@@ -58,6 +58,15 @@ function main() {
 
 
     var buttons = document.getElementsByClassName("validation_btn");
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            if (document.getElementById('login').style.display === 'block'){
+                document.getElementById("login_btn").click()
+            } else if (document.getElementById('signin').style.display === 'block'){
+                document.getElementById("signin_btn").click()
+            }
+        }
+    })
     for (var i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener("click", function(event) {
             event.target.classList.add("active");
