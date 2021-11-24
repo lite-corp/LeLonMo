@@ -115,7 +115,7 @@ class DefaultAccountProvider:
             try:
                 return self._data[uuid]
             except KeyError:
-                return User()
+                return None
         elif username:
             for u in self._data:
                 if self._data[u]["username"] == username:
@@ -126,13 +126,15 @@ class DefaultAccountProvider:
                         passwd_hash=self._data[u]["passwd_hash"],
                     )
             print("[W] Did not find user", username)
-            return User()
-        return User()
+            return None
+        return None
 
     def authenticate_user(self, username: str, token: str, validator: str):
         u = self.get_user(username=username)
+        if u is None:
+            return False, None, "This user does not exist"
         u.set_token_validator(validator)
-        return u.is_valid_token(token), u
+        return u.is_valid_token(token), u, "Your password is incorrect"
 
     def delete(self):
         pass

@@ -5,7 +5,7 @@ function set_content(content) {
         document.getElementById('login').style.display = 'block';
         document.getElementById('title_1').style.borderBottomStyle = 'none';
         document.getElementById('title_2').style.borderBottomStyle = 'solid';
-        badInput(false);
+        bad_input(false);
         document.getElementById('error_login').style.display = 'none';
         document.getElementById('error_signin').style.display = 'none';
     } else if (content === 'signin') {
@@ -14,7 +14,7 @@ function set_content(content) {
         document.getElementById('signin').style.display = 'block';
         document.getElementById('title_2').style.borderBottomStyle = 'none';
         document.getElementById('title_1').style.borderBottomStyle = 'solid';
-        badInput(false);
+        bad_input(false);
         document.getElementById('error_login').style.display = 'none';
         document.getElementById('error_signin').style.display = 'none';
     }
@@ -57,17 +57,17 @@ function set_cookie(name, value, days) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict";
 }
 
-function badInput(bool, msg=null) {
-    console.log(msg);
+function bad_input(bool, msg = null) {
     var inputs = document.getElementsByClassName('form')
     if (bool) {
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].classList.add('bad');
             if (document.getElementById('login').style.display === 'block') {
                 document.getElementById('error_login').style.display = 'block';
+                document.getElementById('error_login').innerText = msg;
             } else if (document.getElementById('signin').style.display === 'block') {
                 document.getElementById('error_signin').style.display = 'block';
-                document.getElementById('error_signin').innerText = msg
+                document.getElementById('error_signin').innerText = msg;
             }
         }
     } else if (!bool) {
@@ -135,11 +135,11 @@ function main() {
                                     window.location = '/html/index.html'
                                 } else {
                                     console.error(data);
-                                    badInput(true, data.message);
+                                    bad_input(true, data.message);
                                 }
                             })
                         } else {
-                            badInput(true, data.message);
+                            bad_input(true, data.message);
                         }
                     }
 
@@ -164,7 +164,7 @@ function main() {
                         // something went wrong
                         console.error('Something went wrong while trying to sign in');
                         console.error(status, data);
-                        badInput(true, data.message);
+                        bad_input(true, data.message);
                     }
 
                 })

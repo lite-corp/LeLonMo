@@ -59,8 +59,6 @@ class SQLiteAccountProvider(DefaultAccountProvider):
             if (userdata := self._cursor.fetchone()) is not None:
                 uuid, username, email, passwd_hash = userdata
                 return User(uuid, username, email, passwd_hash)
-            else:
-                return User()
         elif username:
             self._cursor.execute(
                 """
@@ -72,8 +70,7 @@ class SQLiteAccountProvider(DefaultAccountProvider):
             if (userdata := self._cursor.fetchone()) is not None:
                 uuid, username, email, passwd_hash = userdata
                 return User(uuid, username, email, passwd_hash)
-            else:
-                return User()
+        return None
 
     def delete(self):
         print("[I] Closing database")

@@ -25,7 +25,7 @@ class AccontManager:
 
     def handle_requests(self, data: dict):
         if data["action"] == "login":
-            valid, user = self.settings.get_account_provider().authenticate_user(
+            valid, user, message = self.settings.get_account_provider().authenticate_user(
                 username=data["username"],
                 token=data["token"],
                 validator=self.token_validator,
@@ -36,7 +36,7 @@ class AccontManager:
                 return {"success": True}
             else:
                 print("[W] Failed to log in user", data["username"])
-                return {"success": False, "validator_token": self.token_validator}
+                return {"success": False, "validator_token": self.token_validator, "message": message}
         elif data["action"] == "signin":
             status = self.settings.get_account_provider().add_user(
                 username=data["username"],
