@@ -6,12 +6,18 @@ function set_content(content) {
         document.getElementById('login').style.display = 'block';
         document.getElementById('title_1').style.borderBottomStyle = 'none';
         document.getElementById('title_2').style.borderBottomStyle = 'solid';
+        badInput(false);
+        document.getElementById('error_login').style.display = 'none';
+        document.getElementById('error_signin').style.display = 'none';
     } else if (content === 'signin') {
         console.log('Changed content to signin');
         document.getElementById('login').style.display = 'none';
         document.getElementById('signin').style.display = 'block';
         document.getElementById('title_2').style.borderBottomStyle = 'none';
         document.getElementById('title_1').style.borderBottomStyle = 'solid';
+        badInput(false);
+        document.getElementById('error_login').style.display = 'none';
+        document.getElementById('error_signin').style.display = 'none';
     }
 }
 
@@ -57,6 +63,11 @@ function badInput(bool) {
     if (bool) {
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].classList.add('bad');
+            if (document.getElementById('login').style.display === 'block') {
+                document.getElementById('error_login').style.display = 'block';
+            } else if (document.getElementById('signin').style.display === 'block') {
+                document.getElementById('error_signin').style.display = 'block';
+            }
         }
     } else if (!bool) {
         for (var i = 0; i < inputs.length; i++) {
