@@ -1,17 +1,15 @@
 import json
 import os
-from typing import Collection
-import uuid
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+import account_storage
+from acconts import AccontManager
 from game.lib_llm import load_dictionnary
 from game.llm import LeLonMo
 from mime import mime_content_type
 from server_tools import file_postprocess, secure_path
 from settings import DefaultProvider
-from acconts import AccontManager
-import account_storage
 
 settings = None
 game = None

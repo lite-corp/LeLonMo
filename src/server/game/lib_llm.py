@@ -35,7 +35,7 @@ def generate_letters(n):
         else:
             r = list(set(shuffle_word))
             while len(r) < n:
-                if not (x := chr(randint(ord("a"), ord("z")))) in set(shuffle_word):
+                if not (x := chr(randint(ord("a"), ord("z")))) in r:
                     r.append(x.lower())
             return r
 
