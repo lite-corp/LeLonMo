@@ -55,11 +55,11 @@ function setCookie(name, value, days) {
 function badInput(bool) {
     var inputs = document.getElementsByClassName('form')
     if (bool) {
-        for(var i = 0; i < inputs.length; i++) {
+        for (var i = 0; i < inputs.length; i++) {
             inputs[i].classList.add('bad');
         }
     } else if (!bool) {
-        for(var i = 0; i < inputs.length; i++) {
+        for (var i = 0; i < inputs.length; i++) {
             inputs[i].classList.remove('bad');
         }
     }
@@ -73,9 +73,9 @@ function main() {
     var buttons = document.getElementsByClassName("validation_btn");
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
-            if (document.getElementById('login').style.display === 'block'){
+            if (document.getElementById('login').style.display === 'block') {
                 document.getElementById("login_btn").click();
-            } else if (document.getElementById('signin').style.display === 'block'){
+            } else if (document.getElementById('signin').style.display === 'block') {
                 document.getElementById("signin_btn").click();
             }
         }
@@ -99,13 +99,37 @@ function main() {
                 }, (status, data) => {
                     if (data.success) {
                         setCookie("auth_token", auth_token, 365)
+                        window.location = '/html/index.html'
                     } else {
                         // something went wrong
                         console.error('Something went wrong while trying to login');
                         console.error(status, data);
-                        badInput(true);
+                        if (data.validator_token !== getCookie('token_validator')) {
+                            // Retry with new token validator if the first one is wrong
+                            console.warn("Frist token validator was outdated, retrying")
+                            setCookie("token_validator", data.validator_token, 0)
+                            auth_token = sha256(
+                                document.getElementById("login_username").value +
+                                sha256(document.getElementById("login_password").value) +
+                                getCookie('token_validator')
+                            )
+                            send_data("/account", {
+                                'action': 'login',
+                                'username': document.getElementById('login_username').value,
+                                'token': auth_token
+                            }, (status, data) => {
+                                if (data.success) {
+                                    setCookie("auth_token", auth_token, 365)
+                                    window.location = '/html/index.html'
+                                } else {
+                                    console.error(data);
+                                    badInput(true);
+                                }
+                            })
+                        } else {
+                            badInput(true);
+                        }
                     }
-                    window.location = '/html/index.html'
 
                 })
             } else if (event.target.id == "signin_btn") {
@@ -123,13 +147,13 @@ function main() {
                 }, (status, data) => {
                     if (data.success) {
                         setCookie("auth_token", auth_token, 365)
+                        window.location = '/html/index.html'
                     } else {
                         // something went wrong
                         console.error('Something went wrong while trying to sign in');
                         console.error(status, data);
                         badInput(true);
                     }
-                    window.location = '/html/index.html'
 
                 })
             }

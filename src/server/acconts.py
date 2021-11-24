@@ -33,7 +33,7 @@ class AccontManager:
                 return {"success": True}
             else:
                 print("[W] Failed to log in user", data["username"])
-                return {"success": False}
+                return {"success": False, "validator_token": self.token_validator}
         elif data["action"] == "signin":
             status = self.settings.get_account_provider().add_user(
                 username=data["username"],
