@@ -52,10 +52,13 @@ function main() {
     loaditems();
 
     document.addEventListener('keydown', function(event) {
-        if (!document.getElementById("game_panel").contains(document.getElementById("panel_ingame"))) {
+        if (document.querySelector("#message") === document.activeElement) {
             return;
         }
-        if (document.querySelector("#message") === document.activeElement) {
+        if (event.key === 'Enter') {
+            document.getElementsByClassName("validation_btn")[0].click()
+        }
+        if (!document.getElementById("game_panel").contains(document.getElementById("panel_ingame"))) {
             return;
         }
         if (event.key === document.getElementById("lt1").innerText.toLowerCase()) {
@@ -81,9 +84,6 @@ function main() {
         }
         if (event.key === 'Backspace') {
             add_letter('Backspace');
-        }
-        if (event.key === 'Enter') {
-            document.getElementById("validation_btn").click()
         }
     });
 
