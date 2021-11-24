@@ -30,8 +30,12 @@ class LLM_Server(BaseHTTPRequestHandler):
         self.end_headers()
 
     def client_cookies(self):
-        cookies = SimpleCookie(self.headers.get("Cookie"))
-        cookies["token_validator"] = self.server.accounts.get_token_validator()
+        cookies = SimpleCookie()
+        if self.path in self.server.settings.cookies_pages:
+            cookies["token_validator"] = self.server.accounts.get_token_validator()
+            cookies["token_validator"]["path"] = "/"
+            cookies["token_validator"]["samesite"] = "Strict"
+
         return cookies
 
     def serve_file(self, cookies=None):
