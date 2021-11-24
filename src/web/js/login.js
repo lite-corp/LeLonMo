@@ -31,7 +31,7 @@ function send_data(page, data, callback) {
     xhr.send(data_formated);
 }
 
-function getCookie(name) {
+function get_cookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
     for (var i = 0; i < ca.length; i++) {
@@ -42,7 +42,7 @@ function getCookie(name) {
     return null;
 }
 
-function setCookie(name, value, days) {
+function set_cookie(name, value, days) {
     var expires = "";
     if (days) {
         var date = new Date();
@@ -90,7 +90,7 @@ function main() {
                 auth_token = sha256(
                     document.getElementById("login_username").value +
                     sha256(document.getElementById("login_password").value) +
-                    getCookie('token_validator')
+                    get_cookie('token_validator')
                 )
                 send_data("/account", {
                     'action': 'login',
@@ -98,20 +98,20 @@ function main() {
                     'token': auth_token
                 }, (status, data) => {
                     if (data.success) {
-                        setCookie("auth_token", auth_token, 365)
+                        set_cookie("auth_token", auth_token, 365)
                         window.location = '/html/index.html'
                     } else {
                         // something went wrong
                         console.error('Something went wrong while trying to login');
                         console.error(status, data);
-                        if (data.validator_token !== getCookie('token_validator')) {
+                        if (data.validator_token !== get_cookie('token_validator')) {
                             // Retry with new token validator if the first one is wrong
                             console.warn("Frist token validator was outdated, retrying")
-                            setCookie("token_validator", data.validator_token, 0)
+                            set_cookie("token_validator", data.validator_token, 0)
                             auth_token = sha256(
                                 document.getElementById("login_username").value +
                                 sha256(document.getElementById("login_password").value) +
-                                getCookie('token_validator')
+                                get_cookie('token_validator')
                             )
                             send_data("/account", {
                                 'action': 'login',
@@ -119,7 +119,7 @@ function main() {
                                 'token': auth_token
                             }, (status, data) => {
                                 if (data.success) {
-                                    setCookie("auth_token", auth_token, 365)
+                                    set_cookie("auth_token", auth_token, 365)
                                     window.location = '/html/index.html'
                                 } else {
                                     console.error(data);
@@ -136,7 +136,7 @@ function main() {
                 auth_token = sha256(
                     document.getElementById("signin_username").value +
                     sha256(document.getElementById("signin_password").value) +
-                    getCookie('token_validator')
+                    get_cookie('token_validator')
                 );
                 send_data("/account", {
                     'action': 'signin',
@@ -146,7 +146,7 @@ function main() {
                     'token': auth_token
                 }, (status, data) => {
                     if (data.success) {
-                        setCookie("auth_token", auth_token, 365)
+                        set_cookie("auth_token", auth_token, 365)
                         window.location = '/html/index.html'
                     } else {
                         // something went wrong
