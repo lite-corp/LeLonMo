@@ -92,12 +92,13 @@ function main() {
     window.onload = function() {
         setVisible('#page', true);
         setVisible('#loading', false);
+        update();
     };
 }
 
 function ban_player(public_uuid) {
     send_data("/llm", { 'action': 'ban_player', 'public_uuid': public_uuid }, (a, b) => {
-        send_data('/llm', { 'action': 'update' }, update_callback)
+        update()
     })
 }
 
@@ -120,6 +121,10 @@ function toast(text, blink, duration = 5) {
         }, 2000)
     }, duration * 1000)
 
+}
+
+function update() {
+    send_data('/llm', { 'action': 'update' }, update_callback)
 }
 
 main();

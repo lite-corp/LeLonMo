@@ -29,7 +29,7 @@ function submit_word() {
             if (!data['valid']) {
                 document.getElementById("validation_btn").classList.add('bad')
             } else {
-                send_data('/llm', { 'action': 'update' }, update_callback);
+                update();
             }
         }
     })
@@ -37,13 +37,13 @@ function submit_word() {
 
 function start_game() {
     send_data("/llm", { 'action': 'start_game' }, (a, b) => {
-        send_data('/llm', { 'action': 'update' }, update_callback)
+        update()
     })
 }
 
 function restart_game() {
     send_data("/llm", { 'action': 'create_game' }, (a, b) => {
-        send_data('/llm', { 'action': 'update' }, update_callback)
+        update()
     })
 }
 

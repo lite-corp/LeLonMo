@@ -39,7 +39,7 @@ function loaditems() {
     fetch("templates/default_game_panel.html").then((r) => { r.text().then((d) => { default_game_panel = d }) });
 
     setInterval(() => {
-        send_data('/llm', { 'action': 'update' }, update_callback);
+        update();
     }, 1000);
 }
 
