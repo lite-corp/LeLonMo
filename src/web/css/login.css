@@ -51,6 +51,8 @@ input {
     content: url(../assets/pictures/Logo_128x128.png);
     margin-left: auto;
     margin-right: auto;
+    height: 10em;
+    width: auto
 }
 
 .box {

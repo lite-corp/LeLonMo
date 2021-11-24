@@ -5,6 +5,7 @@
     <title>LeLonMo - Login</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/login-responsive.css">
     <link rel="stylesheet" href="../css/fonts.css">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/pictures/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/pictures/favicon-32x32.png">
@@ -28,10 +29,10 @@
             <div id="login" class="box_content">
 
                 <div class="form">
-                    <input type="text" placeholder="Username" tabindex="1" id="login_username" onclick="badInput(false)">
+                    <input type="text" placeholder="Username" tabindex="1" id="login_username" onclick="bad_input(false)" autofocus>
                 </div>
                 <div class="form">
-                    <input type="password" placeholder="Password" tabindex="3" id="login_password" onclick="badInput(false)">
+                    <input type="password" placeholder="Password" tabindex="3" id="login_password" onclick="bad_input(false)">
                 </div>
                 <p class="error_msg" id="error_login">Bad username or password</p>
                 <div class="validation_btn" tabindex="4" id="login_btn">LOGIN</div>
@@ -41,13 +42,13 @@
             <div id="signin" class="box_content">
 
                 <div class="form">
-                    <input type="text" placeholder="Username" tabindex="1" id="signin_username" onclick="badInput(false)">
+                    <input type="text" placeholder="Username" tabindex="1" id="signin_username" onclick="bad_input(false)">
                 </div>
                 <div class="form">
-                    <input type="text" placeholder="Email" tabindex="2" id="signin_email" onclick="badInput(false)">
+                    <input type="text" placeholder="Email" tabindex="2" id="signin_email" onclick="bad_input(false)">
                 </div>
                 <div class="form">
-                    <input type="password" placeholder="Password" tabindex="3" id="signin_password" onclick="badInput(false)">
+                    <input type="password" placeholder="Password" tabindex="3" id="signin_password" onclick="bad_input(false)">
                 </div>
                 <p class="error_msg" id="error_signin"></p>
                 <div class="validation_btn" tabindex="4" id="signin_btn">SIGN IN</div>

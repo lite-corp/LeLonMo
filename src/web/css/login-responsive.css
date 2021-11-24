@@ -1,0 +1,16 @@
+@media only screen and (max-device-width: 768px) {
+    html,
+    body,
+    #page {
+        margin: 0;
+        height: 100%;
+        font-size: 130%;
+    }
+    .box {
+        margin: 0;
+        border-style: none;
+        border-radius: 0;
+        height: 100%;
+        border-top: solid 2px var(--border-color);
+    }
+}
