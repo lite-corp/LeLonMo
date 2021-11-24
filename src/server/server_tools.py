@@ -1,5 +1,4 @@
 from __version__ import __version_str__
-import random
 
 
 def secure_path(path):
