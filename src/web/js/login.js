@@ -1,5 +1,4 @@
 function set_content(content) {
-    console.log('Changing content to', content);
     if (content === 'login') {
         console.log('Changed content to login');
         document.getElementById('signin').style.display = 'none';
@@ -58,7 +57,8 @@ function set_cookie(name, value, days) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict";
 }
 
-function badInput(bool) {
+function badInput(bool, msg=null) {
+    console.log(msg);
     var inputs = document.getElementsByClassName('form')
     if (bool) {
         for (var i = 0; i < inputs.length; i++) {
@@ -67,6 +67,7 @@ function badInput(bool) {
                 document.getElementById('error_login').style.display = 'block';
             } else if (document.getElementById('signin').style.display === 'block') {
                 document.getElementById('error_signin').style.display = 'block';
+                document.getElementById('error_signin').innerText = msg
             }
         }
     } else if (!bool) {
@@ -134,11 +135,11 @@ function main() {
                                     window.location = '/html/index.html'
                                 } else {
                                     console.error(data);
-                                    badInput(true);
+                                    badInput(true, data.message);
                                 }
                             })
                         } else {
-                            badInput(true);
+                            badInput(true, data.message);
                         }
                     }
 
@@ -163,7 +164,7 @@ function main() {
                         // something went wrong
                         console.error('Something went wrong while trying to sign in');
                         console.error(status, data);
-                        badInput(true);
+                        badInput(true, data.message);
                     }
 
                 })
