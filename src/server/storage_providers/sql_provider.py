@@ -75,7 +75,7 @@ class SQLiteAccountProvider(DefaultAccountProvider):
             else:
                 return User()
 
-    def __delete__(self):
+    def delete(self):
         print("[I] Closing database")
         self._database.commit()
         self._database.close()

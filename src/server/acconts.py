@@ -15,6 +15,9 @@ class AccontManager:
         self.account_storage = settings.get_account_provider()
         self.valid_tokens: list[tuple[str, str]] = []
         self.token_validator: str = generate_validator(settings.token_validator_lenght)
+    
+    def delete(self):
+        self.account_storage.delete()
         
 
     def get_token_validator(self):

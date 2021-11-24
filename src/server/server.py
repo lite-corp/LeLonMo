@@ -158,7 +158,8 @@ def main(settings_provider):
         pass
 
     web_server.server_close()
-    print("[I] Closed HTTP server. ")
+    print("\r[I] Closed HTTP server. ")
+    web_server.accounts.delete()
 
 
 if __name__ == "__main__":

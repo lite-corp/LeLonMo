@@ -133,3 +133,6 @@ class DefaultAccountProvider:
         u = self.get_user(username=username)
         u.set_token_validator(validator)
         return u.is_valid_token(token), u
+
+    def delete(self):
+        pass
