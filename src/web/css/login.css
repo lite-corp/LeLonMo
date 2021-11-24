@@ -142,6 +142,10 @@ input {
     border-color: var(--focus-color);
 }
 
+.form.bad input:focus {
+    border-color: var(--error-color);
+}
+
 .error_msg {
     display: none;
     margin: 0px;
