@@ -29,10 +29,10 @@
             <div id="login" class="box_content">
 
                 <div class="form">
-                    <input type="text" placeholder="Username" tabindex="1" id="login_username" onclick="bad_input(false)" autofocus>
+                    <input type="text" placeholder="Username" tabindex="1" id="login_username" autocomplete="username" onclick="bad_input(false)" autofocus>
                 </div>
                 <div class="form">
-                    <input type="password" placeholder="Password" tabindex="3" id="login_password" onclick="bad_input(false)">
+                    <input type="password" placeholder="Password" tabindex="3" id="login_password" autocomplete="current-password" onclick="bad_input(false)">
                 </div>
                 <p class="error_msg" id="error_login">Bad username or password</p>
                 <div class="validation_btn" tabindex="4" id="login_btn">LOGIN</div>
@@ -42,13 +42,13 @@
             <div id="signin" class="box_content">
 
                 <div class="form">
-                    <input type="text" placeholder="Username" tabindex="1" id="signin_username" onclick="bad_input(false)">
+                    <input type="text" placeholder="Username" tabindex="1" id="signin_username" autocomplete="off" onclick="bad_input(false)">
                 </div>
                 <div class="form">
-                    <input type="text" placeholder="Email" tabindex="2" id="signin_email" onclick="bad_input(false)">
+                    <input type="text" placeholder="Email" tabindex="2" id="signin_email" autocomplete="off" onclick="bad_input(false)">
                 </div>
                 <div class="form">
-                    <input type="password" placeholder="Password" tabindex="3" id="signin_password" onclick="bad_input(false)">
+                    <input type="password" placeholder="Password" tabindex="3" id="signin_password" autocomplete="off" onclick="bad_input(false)">
                 </div>
                 <p class="error_msg" id="error_signin"></p>
                 <div class="validation_btn" tabindex="4" id="signin_btn">SIGN IN</div>
