@@ -2,6 +2,7 @@ import hashlib
 import sqlite3
 
 from settings import SettingsProvider
+from __version__ import __version__
 
 from .default_provider import DefaultAccountProvider, User
 
@@ -18,19 +19,47 @@ class SQLiteAccountProvider(DefaultAccountProvider):
             self.settings.sqlite_account_storage_path, check_same_thread=False
         )
         self._cursor = self._database.cursor()
-        self._cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS Users(
-                uuid CHAR(36) PRIMARY KEY NOT NULL, 
-                username VARCHAR(32) UNIQUE NOT NULL,
-                passwd_hash CHAR(32) NOT NULL,
-                email TEXT
-                );
-            """
-        )
+        while self._get_database_version() < __version__:
+            print(f"[D] Database version is {self._get_database_version()}, upgrading to", end=" ")
+            self._upgrade_database()
+            print(self._get_database_version())
+
         self._database.commit()
         self.initialized = True
         print("[I] SQLite account storage initialized")
+
+    def _get_database_version(self):
+        try:
+            self._cursor.execute("""SELECT version FROM DatabaseInfo""")
+            v = self._cursor.fetchone()[0]
+        except sqlite3.OperationalError:
+            v = 0
+        return v
+
+    def _upgrade_database(self):
+        if self._get_database_version() < 210:
+
+            self._cursor.execute(
+                """
+                CREATE TABLE IF NOT EXISTS Users(
+                    uuid CHAR(36) PRIMARY KEY NOT NULL, 
+                    username VARCHAR(32) UNIQUE NOT NULL,
+                    passwd_hash CHAR(32) NOT NULL,
+                    email TEXT
+                    );
+                """
+            )
+            self._cursor.execute(
+                "CREATE TABLE IF NOT EXISTS DatabaseInfo(version INTEGER NOT NULL);"
+            )
+            self._cursor.execute("DELETE FROM DatabaseInfo;")
+            self._cursor.execute("INSERT INTO DatabaseInfo(version) VALUES (210);")
+            self._database.commit()
+        else:
+            self._cursor.execute("DELETE FROM DatabaseInfo;")
+            self._cursor.execute("INSERT INTO DatabaseInfo(version) VALUES (?);", (str(__version__), ))
+            self._database.commit()
+
 
     def add_user(self, username: str, email: str, password: str) -> bool:
         if len(password) < 4:
