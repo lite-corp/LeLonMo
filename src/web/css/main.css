@@ -567,7 +567,7 @@ body {
 
 /* Slideshow container */
 .slideshow-container {
-    max-width: 1000px;
+    width: 70%;
     position: relative;
     margin: auto;
   }
@@ -615,6 +615,7 @@ body {
 }
 
   .text {
+    text-align: center;
     margin: 10px 10px 5px 5px;
     font-size:x-large ;
   }
