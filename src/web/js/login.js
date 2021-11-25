@@ -104,7 +104,7 @@ function main() {
                     sha256(document.getElementById("login_password").value) +
                     get_cookie('token_validator')
                 )
-                send_data("/account", {
+                send_data("/auth", {
                     'action': 'login',
                     'username': document.getElementById('login_username').value,
                     'token': auth_token
@@ -125,7 +125,7 @@ function main() {
                                 sha256(document.getElementById("login_password").value) +
                                 get_cookie('token_validator')
                             )
-                            send_data("/account", {
+                            send_data("/auth", {
                                 'action': 'login',
                                 'username': document.getElementById('login_username').value,
                                 'token': auth_token
@@ -150,7 +150,7 @@ function main() {
                     sha256(document.getElementById("signin_password").value) +
                     get_cookie('token_validator')
                 );
-                send_data("/account", {
+                send_data("/auth", {
                     'action': 'signin',
                     'username': document.getElementById('signin_username').value,
                     'email': document.getElementById('signin_email').value,

@@ -111,21 +111,16 @@ class LLM_Server(BaseHTTPRequestHandler):
         answer = None
         if self.path == "/chat":
             answer = self.server.game.chat.handle_requests(player_uuid, post_data)
-            answer = json.dumps(answer).encode("utf-8")
         elif self.path == "/llm":
             answer = self.server.game.handle_requests(player_uuid, post_data)
-            try:
-                answer = json.dumps(answer).encode("utf-8")
-            except:
-                print(answer)
-                raise
-        elif self.path == "/account":
-            answer = self.server.accounts.handle_requests(post_data)
-            answer = json.dumps(answer).encode("utf-8")
+        elif self.path == "/auth":
+            answer = self.server.accounts.handle_auth_requests(post_data)
+        elif self.path == "/user":
+            answer = self.server.accounts.handle_user_requests(player_uuid, post_data)
         else:
-            answer = json.dumps(
-                {"success": False, "message": "invalid_request"}
-            ).encode("utf-8")
+            answer = json.dumps({"success": False, "message": "invalid_request"})
+
+        answer = json.dumps(answer).encode("utf-8")
         self._send_headers(200, "text/json", len(answer))
         self.wfile.write(answer)
 

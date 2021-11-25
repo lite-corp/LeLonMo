@@ -14,7 +14,9 @@ class SQLiteAccountProvider(DefaultAccountProvider):
 
     def initialize(self):
 
-        self._database = sqlite3.connect(self.settings.sqlite_account_storage_path, check_same_thread=False)
+        self._database = sqlite3.connect(
+            self.settings.sqlite_account_storage_path, check_same_thread=False
+        )
         self._cursor = self._database.cursor()
         self._cursor.execute(
             """
@@ -54,7 +56,7 @@ class SQLiteAccountProvider(DefaultAccountProvider):
                 SELECT uuid, username, email, passwd_hash FROM Users
                 WHERE uuid=?;
                 """,
-                (uuid,)
+                (uuid,),
             )
             if (userdata := self._cursor.fetchone()) is not None:
                 uuid, username, email, passwd_hash = userdata
@@ -65,7 +67,7 @@ class SQLiteAccountProvider(DefaultAccountProvider):
                 SELECT uuid, username, email, passwd_hash FROM Users
                 WHERE username = ?;
                 """,
-                (username,)
+                (username,),
             )
             if (userdata := self._cursor.fetchone()) is not None:
                 uuid, username, email, passwd_hash = userdata

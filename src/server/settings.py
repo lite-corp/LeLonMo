@@ -47,7 +47,6 @@ class SettingsProvider:
         return self.account_storage_providers[self.settings["account_storage"]]
 
 
-
 class DefaultProvider(SettingsProvider):
     def load(self):
         """Loads the data from settings
