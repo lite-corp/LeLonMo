@@ -1,0 +1,60 @@
+@media only screen and (max-device-width: 768px) {
+    html,
+    body,
+    #page {
+        margin: 0;
+        height: 100%;
+        font-size: 100%;
+        overflow: visible;
+        font-size: 130%;
+    }
+    #home_btn {
+        width: auto;
+        margin-top: 0;
+        border-right-style: none;
+    }
+    .header_menu {
+        display: none;
+    }
+    header {
+        margin-bottom: 0.5em;
+    }
+    #main_box {
+        margin: 0 5% 5% 0;
+        display: flex;
+        flex-direction: column;
+    }
+    #players {
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-bottom: 2em;
+        order: 3;
+        width: 100%;
+        height: auto;
+        min-height: 10em;
+    }
+    #chat {
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-bottom: 2em;
+        order: 2;
+        width: 100%;
+        height: auto;
+        min-height: 10em;
+    }
+    #game_panel {
+        order: 1;
+        max-width: 100%;
+        width: 100%;
+    }
+    #random_letters span {
+        margin-left: 0.25em;
+        margin-right: 0.25em;
+    }
+    .validation_btn.bad:hover {
+        box-shadow: inset 0 0.25em 0 0 var(--error-color);
+    }
+    .validation_btn:hover {
+        box-shadow: inset 0 0.25em 0 0 var(--valid-color);
+    }
+}

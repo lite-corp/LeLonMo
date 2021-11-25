@@ -1,14 +1,11 @@
 from random import choice, randint
 import unicodedata
 
-from settings import DefaultProvider
-
 word_dict = {}
 
-def load_dictionnary():
-    global word_dict
 
-    settings = DefaultProvider()
+def load_dictionnary(settings):
+    global word_dict
 
     f = open(settings.dict_path, "r")
     for i in f.readlines():
@@ -29,7 +26,7 @@ def generate_letters(n):
 
     valid = False
     while not valid:
-        shuffle_word = choice( word_dict[ choice(list(word_dict.keys())) ]).lower()
+        shuffle_word = choice(word_dict[choice(list(word_dict.keys()))]).lower()
         if len(set(shuffle_word)) > n:
             valid = False
             pass
@@ -38,7 +35,7 @@ def generate_letters(n):
         else:
             r = list(set(shuffle_word))
             while len(r) < n:
-                if not (x:=chr(randint(ord("a"), ord("z")))) in set(shuffle_word):
+                if not (x := chr(randint(ord("a"), ord("z")))) in r:
                     r.append(x.lower())
             return r
 
@@ -54,14 +51,16 @@ def check_dict(word):
     except IndexError:
         return False
 
+
 def check_list(word, letters):
     for l in remove_accents(word):
         if not l.lower() in letters:
             return False
     return True
 
-def pub_to_private_uuid(public_uuid: str, player_list: dict)-> str:
+
+def pub_to_private_uuid(public_uuid: str, player_list: dict) -> str:
     for private_uuid in player_list:
-        if player_list[private_uuid]['public_uuid'] == public_uuid:
+        if player_list[private_uuid]["public_uuid"] == public_uuid:
             return private_uuid
     return None

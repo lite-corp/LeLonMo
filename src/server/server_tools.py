@@ -1,4 +1,6 @@
 from __version__ import __version_str__
+
+
 def secure_path(path):
     # Prevent accessing files outside /web
     path = path.replace("/..", "/")
@@ -9,7 +11,10 @@ def secure_path(path):
 
     return path
 
+
 def file_postprocess(content: str, content_type: str) -> str:
-    if content_type == 'text/html':
-        content = content.replace("{version}".encode('utf-8'), __version_str__.encode('utf-8'))
+    if content_type == "text/html":
+        content = content.replace(
+            "{version}".encode("utf-8"), __version_str__.encode("utf-8")
+        )
     return content

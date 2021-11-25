@@ -4,7 +4,7 @@ var messages = document.getElementById('chat_messages');
 function setupChat() {
     var input = document.getElementById("message");
     input.addEventListener("keyup", function(event) {
-        if (event.keyCode === 13) {
+        if (event.key === 'Enter') {
             sendMessage(document.getElementById("message").value)
             document.getElementById("message").value = "";
         }

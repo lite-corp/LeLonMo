@@ -1,9 +1,10 @@
 import json
 import os
-import uuid
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+import account_storage
+from acconts import AccontManager
 from game.lib_llm import load_dictionnary
 from game.llm import LeLonMo
 from mime import mime_content_type
@@ -28,10 +29,16 @@ class LLM_Server(BaseHTTPRequestHandler):
 
     def client_cookies(self):
         cookies = SimpleCookie(self.headers.get("Cookie"))
-        if "private_uuid" in cookies:
-            return
-        cookies["private_uuid"] = uuid.uuid4()
-        return cookies
+        if self.path in self.server.settings.cookies_pages:
+            cookies["token_validator"] = self.server.accounts.get_token_validator()
+            cookies["token_validator"]["path"] = "/"
+            cookies["token_validator"]["samesite"] = "Strict"
+            if "auth_token" in cookies:
+                cookies["auth_token"]["path"] = "/"
+                cookies["auth_token"]["samesite"] = "Strict"
+            return cookies
+        else:
+            return SimpleCookie()
 
     def serve_file(self, cookies=None):
         if self.path == "/":
@@ -39,6 +46,17 @@ class LLM_Server(BaseHTTPRequestHandler):
             self.serve_file(cookies)
             return
         self.path = secure_path(self.path)
+
+        if self.path in self.server.settings.authenticated_pages:
+            # Ensure the client is authenticated before playing
+            if "auth_token" not in cookies or not self.server.accounts.is_valid_token(
+                cookies["auth_token"].value
+            ):
+                print("[I] Redirecting user to login page")
+                self.send_response(302)
+                self.send_header("Location", self.server.settings.login_page)
+                self.end_headers()
+
         if os.path.exists(self.server.settings.web_path + self.path):
             if os.path.isdir(self.server.settings.web_path + self.path):
                 self.path = self.path + "index.html"
@@ -66,7 +84,7 @@ class LLM_Server(BaseHTTPRequestHandler):
         try:
             self.serve_file(cookies)
         except BrokenPipeError:
-            print('[W] A file could not get delivered properly')
+            print("[W] A file could not get delivered properly")
 
     def do_POST(self):
         content_len = int(self.headers.get("Content-Length"))
@@ -87,43 +105,45 @@ class LLM_Server(BaseHTTPRequestHandler):
             return
         cookies = SimpleCookie(self.headers.get("Cookie"))
         try:
-            private_uuid = cookies["private_uuid"].value
+            player_uuid = self.server.accounts.get_uuid(cookies["auth_token"].value)
         except KeyError:
-            private_uuid = "\0"
+            player_uuid = "\0"
         answer = None
         if self.path == "/chat":
-            answer = self.server.game.chat.handle_requests(private_uuid, post_data)
-            answer = json.dumps(answer).encode("utf-8")
+            answer = self.server.game.chat.handle_requests(player_uuid, post_data)
         elif self.path == "/llm":
-            answer = self.server.game.handle_requests(private_uuid, post_data)
-            answer = json.dumps(answer).encode("utf-8")
+            answer = self.server.game.handle_requests(player_uuid, post_data)
+        elif self.path == "/auth":
+            answer = self.server.accounts.handle_auth_requests(post_data)
+        elif self.path == "/user":
+            answer = self.server.accounts.handle_user_requests(player_uuid, post_data)
         else:
-            answer = json.dumps(dict(success=False, message="invalid_request")).encode(
-                "utf-8"
-            )
+            answer = json.dumps({"success": False, "message": "invalid_request"})
+
+        answer = json.dumps(answer).encode("utf-8")
         self._send_headers(200, "text/json", len(answer))
         self.wfile.write(answer)
-    
 
-    def log_request(self, code = '-', size = '-') -> None:
+    def log_request(self, code="-", size="-") -> None:
         if self.server.settings.log_requests:
             super().log_request(code=code, size=size)
 
-class GameServerHTTP(ThreadingHTTPServer):
-    def __init__(self, server_address, RequestHandlerClass, game_settings, game_class, bind_and_activate=True) -> None:
-        self.game = game_class
-        self.settings = game_settings
-        super().__init__(server_address, RequestHandlerClass, bind_and_activate)
 
-def main():
+def main(settings_provider):
+    settings = settings_provider()
+
+    account_storage.register_storages(settings)
+
+    web_server = ThreadingHTTPServer(settings.get_address(), LLM_Server)
+
     # Load settings
-    settings = DefaultProvider()
-    game = LeLonMo(settings)
+    web_server.settings = settings
+    web_server.game = LeLonMo(settings)
+    web_server.accounts = AccontManager(settings, web_server.game)
 
-    load_dictionnary()
+    load_dictionnary(settings)
 
-    web_server = GameServerHTTP(settings.get_address(), LLM_Server, settings, game)
-    print(f"Server started http://{settings.server_address}:{settings.get_port()}")
+    print(f"[I] Server started http://{settings.server_address}:{settings.get_port()}")
 
     try:
         web_server.serve_forever()
@@ -131,8 +151,9 @@ def main():
         pass
 
     web_server.server_close()
-    print("Closed HTTP server. ")
+    print("\r[I] Closed HTTP server. ")
+    web_server.accounts.delete()
 
 
 if __name__ == "__main__":
-    main()
+    main(DefaultProvider)
