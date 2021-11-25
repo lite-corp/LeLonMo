@@ -49,12 +49,12 @@ class AccontManager:
                 token=data["token"],
                 validator=self.token_validator,
             )
+            print(f"[I] Trying to log in as {data['username']}, success={valid}")
             if valid:
                 self.add_token(data["token"], user.uuid)
                 self.game.add_user(user.uuid, user.username, True)
                 return {"success": True}
             else:
-                print("[W] Failed to log in user", data["username"])
                 return {
                     "success": False,
                     "validator_token": self.token_validator,
@@ -66,6 +66,7 @@ class AccontManager:
                 email=data["email"],
                 password=data["password"],
             )
+            print(f"[I] Creating user account {data['username']}, {status=}")
             if status["success"]:
                 data["action"] = "login"
                 self.handle_auth_requests(data)
