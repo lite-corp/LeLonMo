@@ -49,7 +49,7 @@ class LLM_Server(BaseHTTPRequestHandler):
 
         if self.path in self.server.settings.authenticated_pages:
             # Ensure the client is authenticated before playing
-            if "auth_token" not in cookies or not self.server.settings.is_valid_token(
+            if "auth_token" not in cookies or not self.server.accounts.is_valid_token(
                 cookies["auth_token"].value
             ):
                 print("[I] Redirecting user to login page")
@@ -105,7 +105,7 @@ class LLM_Server(BaseHTTPRequestHandler):
             return
         cookies = SimpleCookie(self.headers.get("Cookie"))
         try:
-            player_uuid = self.server.settings.get_uuid(cookies["auth_token"].value)
+            player_uuid = self.server.accounts.get_uuid(cookies["auth_token"].value)
         except KeyError:
             player_uuid = "\0"
         answer = None

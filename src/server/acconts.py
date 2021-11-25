@@ -13,12 +13,22 @@ class AccontManager:
         self.settings = settings
         self.game = game
         self.account_storage = settings.get_account_provider()
-        self.valid_tokens: list[tuple[str, str]] = []
+        self.valid_tokens: dict = {}
         self.token_validator: str = generate_validator(settings.token_validator_lenght)
     
     def delete(self):
         self.account_storage.delete()
-        
+    
+    def add_token(self, token: str, uuid: str):
+        self.valid_tokens[token] = uuid
+
+    def is_valid_token(self, token: str):
+        return token in self.valid_tokens
+
+    def get_uuid(self, token: str):
+        if self.is_valid_token(token):
+            return self.valid_tokens[token]
+        return None
 
     def get_token_validator(self):
         return self.token_validator
@@ -31,7 +41,7 @@ class AccontManager:
                 validator=self.token_validator,
             )
             if valid:
-                self.settings.add_token(data["token"], user.uuid)
+                self.add_token(data["token"], user.uuid)
                 self.game.add_user(user.uuid, user.username, True)
                 return {"success": True}
             else:

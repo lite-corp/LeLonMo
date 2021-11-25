@@ -6,7 +6,6 @@ class SettingsProvider:
         if not self.load():
             raise RuntimeError("Could not load configuration")
         self.account_storage_providers = {}
-        self.valid_tokens = dict()
 
     def load(self):
         return False
@@ -47,16 +46,6 @@ class SettingsProvider:
 
         return self.account_storage_providers[self.settings["account_storage"]]
 
-    def add_token(self, token: str, uuid: str):
-        self.valid_tokens[token] = uuid
-
-    def is_valid_token(self, token: str):
-        return token in self.valid_tokens
-
-    def get_uuid(self, token: str):
-        if self.is_valid_token(token):
-            return self.valid_tokens[token]
-        return "\0"
 
 
 class DefaultProvider(SettingsProvider):
