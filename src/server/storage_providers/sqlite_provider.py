@@ -20,13 +20,18 @@ class SQLiteAccountProvider(DefaultAccountProvider):
         )
         self._cursor = self._database.cursor()
         while self._get_database_version() < __version__:
-            print(f"[D] Database version is {self._get_database_version()}, upgrading to", end=" ")
+            print(
+                f"[D] Database version is {self._get_database_version()}, upgrading to",
+                end=" ",
+            )
             self._upgrade_database()
             print(self._get_database_version())
 
         self._database.commit()
         self.initialized = True
-        print("[I] SQLite account storage initialized")
+        print(
+            f"[I] SQLite account storage initialized, database version is {self._get_database_version()}"
+        )
 
     def _get_database_version(self):
         try:
@@ -35,6 +40,13 @@ class SQLiteAccountProvider(DefaultAccountProvider):
         except sqlite3.OperationalError:
             v = 0
         return v
+
+    def _set_database_version(self, version):
+        self._cursor.execute("DELETE FROM DatabaseInfo;")
+        self._cursor.execute(
+            "INSERT INTO DatabaseInfo(version) VALUES (?);", (str(version),)
+        )
+        self._database.commit()
 
     def _upgrade_database(self):
         if self._get_database_version() < 210:
@@ -52,14 +64,19 @@ class SQLiteAccountProvider(DefaultAccountProvider):
             self._cursor.execute(
                 "CREATE TABLE IF NOT EXISTS DatabaseInfo(version INTEGER NOT NULL);"
             )
-            self._cursor.execute("DELETE FROM DatabaseInfo;")
-            self._cursor.execute("INSERT INTO DatabaseInfo(version) VALUES (210);")
-            self._database.commit()
+            self._set_database_version(210)
+        elif self._get_database_version() < 211:
+            self._cursor.execute(
+                """
+                CREATE TABLE UserMeta(
+                    uuid CHAR(36) REFERENCES User PRIMARY KEY NOT NULL,
+                    profile_image BLOB
+                );
+                """
+            )
+            self._set_database_version(211)
         else:
-            self._cursor.execute("DELETE FROM DatabaseInfo;")
-            self._cursor.execute("INSERT INTO DatabaseInfo(version) VALUES (?);", (str(__version__), ))
-            self._database.commit()
-
+            self._set_database_version(__version__)
 
     def add_user(self, username: str, email: str, password: str) -> bool:
         if len(password) < 4:

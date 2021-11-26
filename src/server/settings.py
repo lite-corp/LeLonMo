@@ -17,9 +17,9 @@ class SettingsProvider:
         return self.settings[key]
 
     def __getattr__(self, name: str) -> Any:
-        try:
+        if name in self.settings:
             s = self.settings[name]
-        except KeyError:
+        else:
             super().load(to_temp_variable=True)
             if name in self._default_settings:
                 print(f"[W] Property {name} was not found in the settings, using default value")
