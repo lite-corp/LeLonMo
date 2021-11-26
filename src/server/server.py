@@ -9,7 +9,7 @@ from game.lib_llm import load_dictionnary
 from game.llm import LeLonMo
 from mime import mime_content_type
 from server_tools import file_postprocess, secure_path
-from settings import DefaultProvider
+from settings import DefaultProvider, JSONProvider
 
 settings = None
 game = None
@@ -156,4 +156,4 @@ def main(settings_provider):
 
 
 if __name__ == "__main__":
-    main(DefaultProvider)
+    main(JSONProvider)

@@ -10,3 +10,6 @@
 
 # Ignore old databases
 **/.fuse_hidden*
+
+# Ignore settings file
+settings.json
