@@ -1,2 +1,2 @@
 from .default_provider import DefaultAccountProvider
-from .sql_provider import SQLiteAccountProvider
+from .sqlite_provider import SQLiteAccountProvider
