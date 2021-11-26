@@ -20,6 +20,16 @@ function send_data(page, data, callback) {
     xhr.send(data_formated);
 }
 
+function set_cookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict";
+}
+
 function update_callback(status, data) {
     if (status == 200 && data["success"]) {
         player_list.innerHTML = "";
@@ -121,6 +131,12 @@ function toast(text, blink, duration = 5) {
         }, 2000)
     }, duration * 1000)
 
+}
+
+function logout() {
+    set_cookie("auth_token");
+    console.log("User logged out");
+    window.location.replace("/html/login.html");
 }
 
 function update() {
