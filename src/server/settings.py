@@ -1,8 +1,11 @@
 from typing import Any, Tuple
+import json
 
 
 class SettingsProvider:
     def __init__(self) -> None:
+        self.settings: dict = {}
+        self._default_settings: dict = {}
         if not self.load():
             raise RuntimeError("Could not load configuration")
         self.account_storage_providers = {}
@@ -14,7 +17,18 @@ class SettingsProvider:
         return self.settings[key]
 
     def __getattr__(self, name: str) -> Any:
-        return self.settings[name]
+        if name in self.settings:
+            s = self.settings[name]
+        else:
+            super().load(to_temp_variable=True)
+            if name in self._default_settings:
+                print(f"[W] Property {name} was not found in the settings, using default value")
+                s = self._default_settings[name]
+            else:
+                raise
+        return s
+
+            
 
     # Server-related things
     def get_address(self) -> Tuple[str, int]:
@@ -48,13 +62,13 @@ class SettingsProvider:
 
 
 class DefaultProvider(SettingsProvider):
-    def load(self):
+    def load(self, to_temp_variable = False):
         """Loads the data from settings
 
         Returns:
             bool: return False if something went wrong
         """
-        self.settings = {
+        self._default_settings = {
             # Server-related settings
             "server_port": 8080,
             "server_address": "0.0.0.0",
@@ -72,4 +86,26 @@ class DefaultProvider(SettingsProvider):
             "sqlite_account_storage_path": "users.sqlite3",
             "token_validator_lenght": 8,  # Set to 0 to disable
         }
+
+        if to_temp_variable:
+            self.settings = self._default_settings
+
         return True  # return False if something wen wrong when loading the config
+class JSONProvider(DefaultProvider):
+    def load(self):
+        super().load(to_temp_variable=True)
+        try:
+            with open("settings.json", "r") as f:
+                self.settings = json.load(f)
+            return True
+        except FileNotFoundError:
+            try:
+                print("[W] settings.json not found, creating it ...")
+                with open("settings.json", 'w') as fw:
+                    json.dump(self._default_settings, fw)
+                return self.load()
+            except:
+                False
+        except:
+            return False
+
