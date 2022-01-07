@@ -1,10 +1,17 @@
 import html
+import __version__
 
 
 class Chat:
     def __init__(self) -> None:
         self.userlist = dict()
-        self.messagelist = list()
+        self.messagelist = [
+            {
+                "text": f"Welcome to {__version__.__version_str__}",
+                "username": "Console",
+                "uuid": "",
+            }
+        ]
 
     def add_user(
         self, private_uuid: str, public_uuid: str, username: str, log: bool = True
@@ -25,6 +32,15 @@ class Chat:
     def remove_user(self, private_uuid: str):
         self.send_message(private_uuid, "left the game")
         del self.userlist[private_uuid]
+
+        if not self.userlist:  # No player online
+            self.messagelist = [
+                {
+                    "text": f"Welcome to {__version__.__version_str__}",
+                    "username": "Console",
+                    "uuid": "",
+                }
+            ]
 
     def get_messages(self, private_uuid: str):
         if private_uuid in self.userlist:

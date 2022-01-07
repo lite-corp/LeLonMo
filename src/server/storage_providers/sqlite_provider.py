@@ -50,11 +50,10 @@ class SQLiteAccountProvider(DefaultAccountProvider):
 
     def _upgrade_database(self):
         if self._get_database_version() < 210:
-
             self._cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS Users(
-                    uuid CHAR(36) PRIMARY KEY NOT NULL, 
+                    uuid CHAR(36) PRIMARY KEY NOT NULL,
                     username VARCHAR(32) UNIQUE NOT NULL,
                     passwd_hash CHAR(32) NOT NULL,
                     email TEXT
