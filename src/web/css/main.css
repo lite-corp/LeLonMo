@@ -43,7 +43,7 @@
 
 html {
     scroll-behavior: smooth;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 a {
@@ -170,6 +170,8 @@ body {
     transform: translate(-100%, 0%);
     top: 6.5em;
     padding: 1em;
+    padding-left: 2em;
+    padding-right: 2em;
     border-style: solid;
     border-left-style: none;
     border-width: 2px;

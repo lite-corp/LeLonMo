@@ -209,6 +209,7 @@ class LeLonMo:
             if player_uuid not in self.players
             else self.players[player_uuid]["status"],
             "should_update_messages": self.chat.has_unread(player_uuid),
+            "self": self.players[player_uuid],
         }
 
     def handle_requests(self, player_uuid: str, data: dict) -> dict:

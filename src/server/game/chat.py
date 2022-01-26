@@ -5,13 +5,7 @@ import __version__
 class Chat:
     def __init__(self) -> None:
         self.userlist = dict()
-        self.messagelist = [
-            {
-                "text": f"Welcome to {__version__.__version_str__}",
-                "username": "Console",
-                "uuid": "",
-            }
-        ]
+        self.messagelist = []
 
     def add_user(
         self, private_uuid: str, public_uuid: str, username: str, log: bool = True
@@ -34,13 +28,7 @@ class Chat:
         del self.userlist[private_uuid]
 
         if not self.userlist:  # No player online
-            self.messagelist = [
-                {
-                    "text": f"Welcome to {__version__.__version_str__}",
-                    "username": "Console",
-                    "uuid": "",
-                }
-            ]
+            self.messagelist = []
 
     def get_messages(self, private_uuid: str):
         if private_uuid in self.userlist:

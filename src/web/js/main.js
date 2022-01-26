@@ -1,8 +1,9 @@
-var data_me = {}
+var data_last = {}
 
 var player_list = document.getElementById("player_list");
 var msg_template = ""
 var player_template = ""
+var logged = false;
 
 
 function send_data(page, data, callback) {
@@ -33,6 +34,7 @@ function set_cookie(name, value, days) {
 function update_callback(status, data) {
     if (status == 200 && data["success"]) {
         player_list.innerHTML = "";
+        data_last = data;
         data["users"].forEach(function(player, i) {
             player_list.innerHTML += player_template.replace(
                 "{name}", player['username']
@@ -45,6 +47,10 @@ function update_callback(status, data) {
         update_game_panel(data["player_status"], data["admin"], data);
         if (data["should_update_messages"]) {
             send_data("/chat", { "action": "get_msg" }, messages_update_callback)
+        }
+        if(!logged){
+            toast("Welcome to LeLonMo "+data["self"]["username"]+" !",false);
+            logged = true;
         }
     }
 }
@@ -95,7 +101,7 @@ function main() {
         if (event.key === 'Backspace') {
             add_letter('Backspace');
         }
-    });
+    })
 
     setupChat();
 
