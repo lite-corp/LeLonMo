@@ -49,7 +49,7 @@ function update_callback(status, data) {
             send_data("/chat", { "action": "get_msg" }, messages_update_callback)
         }
         if(!logged){
-            toast("Welcome to LeLonMo "+data["self"]["username"]+" !",false);
+            toast("Welcome "+data["self"]["username"]+" to LeLonMo !",false);
             logged = true;
         }
     }

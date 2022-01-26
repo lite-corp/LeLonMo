@@ -1,7 +1,7 @@
 :root,
  :root.dark {
-    --backgound-main: #0d1117;
-    --backgroun-header: #161b22;
+    --background-main: #0d1117;
+    --background-header: #161b22;
     --border-color: #30363d;
     --button-color: #151c25;
     --button-color-hover: #2b3747;
@@ -14,8 +14,8 @@
 }
 
  :root.light {
-    --backgound-main: #ffffff;
-    --backgroun-header: #f6f8fa;
+    --background-main: #ffffff;
+    --background-header: #f6f8fa;
     --border-color: #d0d7de;
     --button-color: #dddddd;
     --button-color-hover: #cccccc;
@@ -65,7 +65,7 @@ input {
 
 header {
     font-family: "varela", sans-serif;
-    background-color: var(--backgroun-header);
+    background-color: var(--background-header);
     border-bottom-width: 2px;
     border-color: var(--border-color);
     border-bottom-style: solid;
@@ -149,7 +149,7 @@ header {
 
 body {
     font-family: "varela", sans-serif;
-    background-color: var(--backgound-main);
+    background-color: var(--background-main);
     color: var(--secondary-color);
     margin: 0px;
 }
@@ -167,7 +167,7 @@ body {
     display: block;
     position: fixed;
     left: 0;
-    transform: translate(-100%, 0%);
+    transform: translate(-105%, 0%);
     top: 6.5em;
     padding: 1em;
     padding-left: 2em;
@@ -176,12 +176,13 @@ body {
     border-left-style: none;
     border-width: 2px;
     border-color: var(--border-color);
-    background-color: var(--backgroun-header);
+    color: black;
+    background-color: #bbb;
     border-radius: 0px 10px 10px 0px;
     transition: transform 0.5s ease-in;
     min-width: 1em;
     z-index: 10;
-    box-shadow: 3px 3px 5px black;
+    box-shadow: 3px 3px 5px #000000a0;
 }
 
 .active.notif {
@@ -312,7 +313,7 @@ body {
 
 #chat_bottom input {
     color: var(--secondary-color);
-    background-color: var(--backgound-main);
+    background-color: var(--background-main);
     width: 90%;
     border-style: solid;
     border-color: var(--border-color);
@@ -372,7 +373,7 @@ body {
 
 /*#game_panel input{
     color: var(--secondary-color);
-    background-color: var(--backgound-main);
+    background-color: var(--background-main);
     width: 50%;
     text-align: center;
     border-style: solid;
@@ -505,7 +506,7 @@ body {
 }
 
 .box_title {
-    background-color: var(--backgroun-header);
+    background-color: var(--background-header);
     border-style: solid;
     border-width: 1px;
     border-bottom-width: 2px;
@@ -516,7 +517,7 @@ body {
 }
 
 .box_bottom {
-    background-color: var(--backgroun-header);
+    background-color: var(--background-header);
     border-style: solid;
     border-width: 1px;
     border-top-width: 2px;
@@ -544,6 +545,7 @@ body {
     width: 70%;
     position: relative;
     margin: auto;
+    display: flex;
   }
   
   /* Hide the images by default */
@@ -583,17 +585,10 @@ body {
   .cont-txt{
     width: 100%;
     height: auto;
-    border: 1px solid #000;
-    box-shadow: 0 10px 10px rgba(0,0,0,0.3);
-    display: flex;
-}
-
-  .text {
     text-align: center;
-    margin: 10px 10px 5px 5px;
-    font-size:x-large ;
-  }
-
+    margin: 10px;
+    font-size: x-large ;
+}
 
   .imge{
     width: 100%;
@@ -605,30 +600,31 @@ body {
     height: 15px;
     width: 15px;
     margin: 0 2px;
-    background-color: #bbb;
+    margin-bottom: 3em;
+    background-color: #717171;
     border-radius: 50%;
     display: inline-block;
     transition: background-color 0.6s ease;
   }
   
   .active, .dot:hover {
-    background-color: #717171;
+    background-color: #bbbbbb;
   }
   
   /* Fading animation */
   .fade {
     -webkit-animation-name: fade;
-    -webkit-animation-duration: 1.5s;
+    -webkit-animation-duration: 0.5s;
     animation-name: fade;
-    animation-duration: 1.5s;
+    animation-duration: 0.5s;
   }
   
   @-webkit-keyframes fade {
-    from {opacity: .4}
+    from {opacity: .6}
     to {opacity: 1}
   }
   
   @keyframes fade {
-    from {opacity: .4}
+    from {opacity: .6}
     to {opacity: 1}
   }
