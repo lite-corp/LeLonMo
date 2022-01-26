@@ -108,18 +108,26 @@ header {
     padding-left: 7%;
 }
 
+.logout{
+    height: 3em;
+    width: 3em;
+    padding: 1em;
+    content: url("../assets/pictures/logout.svg");
+}
+
+.logout:hover{
+    cursor: pointer;
+}
+
 .theme_btn {
     height: 3em;
     width: 3em;
-    margin-left: auto;
     padding: 1em;
+    margin-left: auto;
     content: var(--theme);
 }
 
 .theme_btn:hover {
-    height: 3em;
-    width: 3em;
-    margin-left: auto;
     cursor: pointer;
 }
 
