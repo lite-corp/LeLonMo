@@ -113,6 +113,10 @@ function main() {
 }
 
 function ban_player(public_uuid) {
+    if(public_uuid === data_last["self"]["public_uuid"]){
+        toast("You cannot kick yourself",true,3);
+        return
+    }
     send_data("/llm", { 'action': 'ban_player', 'public_uuid': public_uuid }, (a, b) => {
         update()
     })
