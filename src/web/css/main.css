@@ -165,7 +165,7 @@ body {
 
 .notif {
     display: block;
-    position: absolute;
+    position: fixed;
     left: 0;
     transform: translate(-100%, 0%);
     top: 6.5em;
@@ -190,7 +190,7 @@ body {
 
 .blink {
     animation: blinking_border 0.25s ease-in-out;
-    animation-iteration-count: 10;
+    animation-iteration-count: 6;
 }
 
 @keyframes blinking_border {
