@@ -2,7 +2,7 @@ import time
 import uuid
 import html
 
-import game.lib_llm
+import game.lib_llm as lib_llm
 from .chat import Chat
 
 
@@ -209,7 +209,7 @@ class LeLonMo:
             if player_uuid not in self.players
             else self.players[player_uuid]["status"],
             "should_update_messages": self.chat.has_unread(player_uuid),
-            "self": self.players[player_uuid],
+            "self": self.players[player_uuid] if player_uuid in self.players else {},
         }
 
     def handle_requests(self, player_uuid: str, data: dict) -> dict:
@@ -231,7 +231,7 @@ class LeLonMo:
 
             if data["action"] == "start_game":
                 if player_uuid == self.admin_uuid:
-                    self.letters = game.lib_llm.generate_letters(
+                    self.letters = lib_llm.generate_letters(
                         self.settings.letter_number
                     )
                     self.status = 2
@@ -239,9 +239,9 @@ class LeLonMo:
                     return {"success": True}
 
             if data["action"] == "submit_word":
-                if not game.lib_llm.check_list(data["word"], self.letters):
+                if not lib_llm.check_list(data["word"], self.letters):
                     return {"success": True, "valid": False}
-                if not game.lib_llm.check_dict(data["word"]):
+                if not lib_llm.check_dict(data["word"]):
                     return {"success": True, "valid": False}
                 print(f"[I] {self.players[player_uuid]['username']} finished.")
                 self.players[player_uuid]["latest_word"] = data["word"]
@@ -268,7 +268,7 @@ class LeLonMo:
             if data["action"] == "ban_player":
                 if player_uuid == self.admin_uuid:
                     if (
-                        game.lib_llm.pub_to_player_uuid(
+                        lib_llm.pub_to_player_uuid(
                             data["public_uuid"], self.players
                         )
                         == self.admin_uuid
@@ -276,7 +276,7 @@ class LeLonMo:
                         return {"success": False, "message": "ban_admin"}
                     else:
                         self.ban_user(
-                            game.lib_llm.pub_to_player_uuid(
+                            lib_llm.pub_to_player_uuid(
                                 data["public_uuid"], self.players
                             )
                         )

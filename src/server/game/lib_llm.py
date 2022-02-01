@@ -59,7 +59,7 @@ def check_list(word, letters):
     return True
 
 
-def pub_to_private_uuid(public_uuid: str, player_list: dict) -> str:
+def pub_to_player_uuid(public_uuid: str, player_list: dict) -> str:
     for private_uuid in player_list:
         if player_list[private_uuid]["public_uuid"] == public_uuid:
             return private_uuid
