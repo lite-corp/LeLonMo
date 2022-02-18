@@ -86,6 +86,9 @@ class LeLonMo:
                 self.admin_uuid = list(self.players.keys())[
                     1 if self.admin_uuid == list(self.players.keys())[0] else 0
                 ]
+                if self.players[self.admin_uuid]["banned"]:
+                    self.admin_uuid = ""
+                    self.initialize_game()
                 print(
                     f'[I] The admin is now {self.players[self.admin_uuid]["username"]}'
                 )
