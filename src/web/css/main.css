@@ -602,6 +602,14 @@ body {
     width: 100%;
   }
   
+  .history_box{
+    position: relative;
+    padding: 10px;
+    text-align: justify;
+    border: 5px solid;
+    border-radius: 10px;
+  }
+
   /* The dots/bullets/indicators */
   .dot {
     cursor: pointer;
