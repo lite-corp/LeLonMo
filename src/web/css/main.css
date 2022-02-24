@@ -542,11 +542,9 @@ body {
 .box_text {
     font-size: 1em;
     background-color: var(--background-header);
-    position: relative;
-    padding: 10px;
-    text-align: justify;
-    border: 1px solid;
+    border: 2px solid var(--border-color);
     border-radius: 15px;
+    text-align: justify;
     padding: 1em;
 }
 
@@ -604,14 +602,6 @@ body {
 
 .imge{
     width: 100%;
-}
-
-.history_box{
-    position: relative;
-    padding: 10px;
-    text-align: justify;
-    border: 5px solid;
-    border-radius: 10px;
 }
 
   /* The dots/bullets/indicators */
