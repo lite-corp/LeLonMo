@@ -19,7 +19,7 @@ function update() {
     send_data('/llm', { 'action': 'update' }, (status, data) => {
         if (status == 200 && data["success"]) {
             if (data["should_update_messages"] && !message_received) {
-                toast("You have new messages in chat, click <a href=\"/html/index.html\">here</a> to see them", true, 10);
+                toast("You have new messages in chat, click <a href=\"/html/index.html\" id=\"link-chat\">here</a> to see them", false, 10);
                 message_received = true;
             }
         }

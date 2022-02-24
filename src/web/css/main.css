@@ -591,6 +591,11 @@ body {
     background-color: rgba(0,0,0,0.8);
 }
 
+#link-chat{
+    color: inherit;
+    font-weight: bold;
+}
+
 /* Caption text */
 .cont-txt{
     width: 100%;
