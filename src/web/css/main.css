@@ -541,8 +541,13 @@ body {
 
 .box_text {
     font-size: 1em;
+    background-color: var(--background-header);
+    position: relative;
+    padding: 10px;
+    text-align: justify;
+    border: 1px solid;
+    border-radius: 15px;
     padding: 1em;
-    transition: all 2s;
 }
 
 
@@ -554,15 +559,15 @@ body {
     position: relative;
     margin: auto;
     display: flex;
-  }
-  
-  /* Hide the images by default */
-  .mySlides {
+}
+
+/* Hide the images by default */
+.mySlides {
     display: none;
-  }
-  
-  /* Next & previous buttons */
-  .prev, .next {
+}
+
+/* Next & previous buttons */
+.prev, .next {
     cursor: pointer;
     position: absolute;
     top: 50%;
@@ -575,22 +580,21 @@ body {
     transition: 0.6s ease;
     border-radius: 0 3px 3px 0;
     user-select: none;
-  }
-  
-  /* Position the "next button" to the right */
-  .next {
+}
+
+/* Position the "next button" to the right */
+.next {
     right: 0;
     border-radius: 3px 0 0 3px;
-  }
-  
-  /* On hover, add a black background color with a little bit see-through */
-  .prev:hover, .next:hover {
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
     background-color: rgba(0,0,0,0.8);
-  }
+}
 
-  /* Caption text */
-
-  .cont-txt{
+/* Caption text */
+.cont-txt{
     width: 100%;
     height: auto;
     text-align: center;
@@ -598,20 +602,20 @@ body {
     font-size: x-large ;
 }
 
-  .imge{
+.imge{
     width: 100%;
-  }
-  
-  .history_box{
+}
+
+.history_box{
     position: relative;
     padding: 10px;
     text-align: justify;
     border: 5px solid;
     border-radius: 10px;
-  }
+}
 
   /* The dots/bullets/indicators */
-  .dot {
+.dot {
     cursor: pointer;
     height: 15px;
     width: 15px;
@@ -622,25 +626,25 @@ body {
     display: inline-block;
     transition: background-color 0.6s ease;
   }
-  
-  .active, .dot:hover {
+
+.active, .dot:hover {
     background-color: #bbbbbb;
-  }
-  
-  /* Fading animation */
-  .fade {
+}
+
+/* Fading animation */
+.fade {
     -webkit-animation-name: fade;
     -webkit-animation-duration: 0.5s;
     animation-name: fade;
     animation-duration: 0.5s;
-  }
-  
-  @-webkit-keyframes fade {
+}
+
+@-webkit-keyframes fade {
     from {opacity: .6}
     to {opacity: 1}
-  }
-  
-  @keyframes fade {
+}
+
+@keyframes fade {
     from {opacity: .6}
     to {opacity: 1}
-  }
+}
