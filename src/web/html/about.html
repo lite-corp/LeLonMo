@@ -10,7 +10,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/pictures/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/pictures/favicon-16x16.png">
     <link rel="manifest" href="../assets/pictures/site.webmanifest">
-
+    
+    
 </head>
 
 <body>
@@ -19,20 +20,31 @@
         <a class="header_menu" href="index.html">Game</a>
         <a class="header_menu" href="rules.html">Rules</a>
         <a class="header_menu" href="">About</a>
+
+        <div class="dropdown">
+            <button class="dropbtn">Language</button>
+            <div class="dropdown-content">
+              <a onclick="toggleLanguage('Français')">Français</a>
+              <a onclick="toggleLanguage('English')">English</a>
+            </div>
+          </div>
+
         <a class="theme_btn light" onclick="setTheme('light')"></a>
         <a class="theme_btn dark" onclick="setTheme('dark')"></a>
     </header>
 
     <div id="about_box">
         <div class="box_text">
-            Hello and welcome !<br>
-            <br>
-            Everything began with a project in class where we had to create a little game. We had letters and with those letters we had to find the longest word.
-            After that’s just the craziness of three classmates and some ideas. First we created the terminal version with 2 players on the same computer.
-            Next step was to create an online version in the terminal, if everyone was on the same network and had the game file then we could play with several players.
-            The goal of this project was an html version with account. That's we have here today and we are very proud of that. <br>
-            <br>
-            We hope you enjoy this game !
+            <div id="description">    
+                Hello and welcome !<br>
+                <br>
+                Everything began with a project in class where we had to create a little game. We had letters and with those letters we had to find the longest word.
+                After that’s just the craziness of three classmates and some ideas. First we created the terminal version with 2 players on the same computer.
+                Next step was to create an online version in the terminal, if everyone was on the same network and had the game file then we could play with several players.
+                The goal of this project was an html version with account. That's we have here today and we are very proud of that. <br>
+                <br>
+                We hope you enjoy this game !
+            </div>
         </div>
 
         <br><br>
@@ -42,8 +54,11 @@
         <p>GitHub project repository <a href="https://github.com/lite-corp/LeLonMo" class="link" target="_blank">here</a></p>
 
     </div>
+
     <script src="../js/theme.js"></script>
     <script src="../js/keepalive.js"></script>
+    <script src="../js/language.js" ></script>    
+
 </body>
 
 </html>
