@@ -32,7 +32,7 @@ Additionally you can start the server by running the file located in `src/server
 ### Customizable Settings
 The game now includes support for settings modification. This can be done by editing `settings.json`. Keep in mind that you will need to restart the server for modifications to take effect. \
 Here are the default settings in JSON with some informations :
-```json
+```jsonc
 {
     "server_port": 8080, // The port on which the server is available
 	// Some ports like 80 require an elevation, in that case launch the server as root 
