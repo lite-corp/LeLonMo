@@ -30,7 +30,32 @@ if you are on Windows or `cd` to `LeLonMo` and run
 Additionally you can start the server by running the file located in `src/server/server.py` with the python interpreter. Always make sure that you are running this file from the root of the clonned repository to avoid errors.
 
 ### Customizable Settings
-The game will soon include more customizations, but for now you can edit some of the settings by modifying [`src/server/settings.py`](https://github.com/lite-corp/LeLonMo/blob/llm2/src/server/settings.py), and edit the [`DefaultProvider`](https://github.com/lite-corp/LeLonMo/blob/f006fdfaeb86ad30ddb983f6fd2e41254b85187c/src/server/settings.py#L23) class.
+The game now includes support for settings modification. This can be done by editing `settings.json`. Keep in mind that you will need to restart the server for modifications to take effect. \
+Here are the default settings in JSON with some informations :
+```json
+{
+    "server_port": 8080, // The port on which the server is available
+	// Some ports like 80 require an elevation, in that case launch the server as root 
+    "server_address": "0.0.0.0", // The address of the server, leave it that way if you want it to be accessible from everywhere
+    "log_requests": false, // Should the server log every http request 
+    "web_path": "src/web", // Path for the web server files
+    "letter_number": 7, // WIP : Number of letters available to the player 
+    "dict_path": "src/dict/fr.txt", // List of all valid words, you can add your own
+    "time_inactive": 3, // Number of seconds of innactivity from the client before being kicked out,
+	// The client is normally sending update packets every seconds
+    "account_storage": "sqlite", // Method used to store user accounts, use default when testing
+    "login_page": "/html/login.html", // Path to the login page relative to $web_path
+    "authenticated_pages": [ // Pages where the user needs to be authenticated
+        "/html/index.html"
+    ],
+    "cookies_pages": [ // Pages where the user will get authentication cookies
+        "/html/index.html",
+        "/html/login.html"
+    ],
+    "sqlite_account_storage_path": "users.sqlite3", // Account storage path for sqlite provider
+    "token_validator_lenght": 8 // Lenght of the salt for the username/password authentication
+}
+```
 
 ## Contributors
  - [@FXCourel](https://github.com/FXCourel)
