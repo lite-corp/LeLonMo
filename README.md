@@ -10,9 +10,9 @@ Open your browser and enter the ip of the server you want to play on. Make sure 
 
 For example if you want to play on the server with the ip 192.168.1.16, you have to go to http://192.168.1.16:8080/
 
-You will have to choose a username, which will be visible to other players. The first person to join gains control over the server, and is the one who decides when the game starts and end.
+You will have to login with an username and your password, or create your account if you don't have one. Note that each server has its accounts database. Your username will be visible to other players. The first person to join gains control over the server, and is the one who decides when the game starts and end.
 
-Note that visiting other pages (even the Rules or About pages) might disconnect you from the server.
+Note that visiting other pages (except the Rules or About pages) might disconnect you from the server.
 
 ## Installation
 If you want to install the server on your machine, you need to clone this repository
