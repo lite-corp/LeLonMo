@@ -9,12 +9,17 @@ from .default_provider import DefaultAccountProvider, User
 
 class SQLiteAccountProvider(DefaultAccountProvider):
     def __init__(self, settings: SettingsProvider):
+        """Create the storage provider
+
+        Args:
+            settings (SettingsProvider): The settings provider to be used for the storage
+        """
         self.settings = settings
         self.initialized = False
         settings.register_account_storage("sqlite", self)
 
     def initialize(self):
-
+        """Initialize the storage provider"""
         self._database = sqlite3.connect(
             self.settings.sqlite_account_storage_path, check_same_thread=False
         )
@@ -34,6 +39,7 @@ class SQLiteAccountProvider(DefaultAccountProvider):
         )
 
     def _get_database_version(self):
+        """Get the database version"""
         try:
             self._cursor.execute("""SELECT version FROM DatabaseInfo""")
             v = self._cursor.fetchone()[0]
@@ -42,6 +48,11 @@ class SQLiteAccountProvider(DefaultAccountProvider):
         return v
 
     def _set_database_version(self, version):
+        """Set the database version
+
+        Args:
+            version (int): The version to set
+        """
         self._cursor.execute("DELETE FROM DatabaseInfo;")
         self._cursor.execute(
             "INSERT INTO DatabaseInfo(version) VALUES (?);", (str(version),)
@@ -49,6 +60,7 @@ class SQLiteAccountProvider(DefaultAccountProvider):
         self._database.commit()
 
     def _upgrade_database(self):
+        """Upgrade the database to the current program version version"""
         if self._get_database_version() < 210:
             self._cursor.execute(
                 """
@@ -74,27 +86,44 @@ class SQLiteAccountProvider(DefaultAccountProvider):
                 """
             )
             self._set_database_version(211)
+        elif self._get_database_version() < 213:
+            # Add all users to metadata db
+            self._cursor.execute("SELECT uuid FROM Users;")
+            for uuid in self._cursor.fetchall():
+                uuid = uuid[0]
+                self._cursor.execute("INSERT INTO UserMeta(uuid) VALUES (?);", (uuid,))
+            self._set_database_version(213)
         else:
             self._set_database_version(__version__)
 
     def add_user(self, username: str, email: str, password: str) -> bool:
+        """Add a user to the database"""
         if len(password) < 4:
             return dict(success=False, message="Password too short")
         p = hashlib.sha256()
         p.update(password.encode("utf-8"))
         try:
+            uuid = self.get_uuid()
             self._cursor.execute(
                 """
                 INSERT INTO Users(uuid, username, email, passwd_hash) VALUES (?, ?, ?, ?);
                 """,
-                (self.get_uuid(), username, email, p.hexdigest()),
+                (uuid, username, email, p.hexdigest()),
             )
+            # Add users to metadata table
+            self._cursor.execute(
+                """
+                INSERT INTO UserMeta(uuid) VALUES (?);
+                """,
+                (uuid,),
+            )
+            self._database.commit()
+            return dict(success=True)
         except sqlite3.IntegrityError:
             return dict(success=False, message="This username already exists")
-        self._database.commit()
-        return dict(success=True)
 
     def get_user(self, username: str = "", uuid: str = "") -> User:
+        """Get a user from the database"""
         if uuid:
             self._cursor.execute(
                 """
@@ -120,6 +149,7 @@ class SQLiteAccountProvider(DefaultAccountProvider):
         return None
 
     def delete(self):
+        """Close the database"""
         print("[I] Closing database")
         self._database.commit()
         self._database.close()
