@@ -2,6 +2,7 @@ import random
 
 
 def generate_validator(n=0):
+    """Generate a random string of length n"""
     if n:
         return "".join(
             [
@@ -22,23 +23,54 @@ class AccontManager:
         self.token_validator: str = generate_validator(settings.token_validator_lenght)
 
     def delete(self):
+        """Destroy the storage provider before exit"""
         self.account_storage.delete()
 
     def add_token(self, token: str, uuid: str):
+        """Save the token for the user with the given uuid for the current session"""
         self.valid_tokens[token] = uuid
 
-    def is_valid_token(self, token: str):
+    def is_valid_token(self, token: str) -> bool:
+        """Check if the token provided by the client is valid
+
+        Args:
+            token (str): The token provided by the client
+
+        Returns:
+            bool: True if the token is valid, False otherwise
+        """
         return token in self.valid_tokens
 
-    def get_uuid(self, token: str):
+    def get_uuid(self, token: str) -> str:
+        """Retrieve the uuid associated with the token provided by the client
+
+        Args:
+            token (str): The token provided by the client
+
+        Returns:
+            str : The uuid associated with the token if the token is valid, None otherwise
+        """
         if self.is_valid_token(token):
             return self.valid_tokens[token]
         return None
 
-    def get_token_validator(self):
+    def get_token_validator(self) -> str:
+        """Salt for the clients to generate a token that is session-specific
+
+        Returns:
+            str: The salt
+        """
         return self.token_validator
 
-    def handle_auth_requests(self, data: dict):
+    def handle_auth_requests(self, data: dict) -> dict:
+        """This method handles the authentication requests
+
+        Args:
+            data (dict): The data provided by the client (action, and optional username, token, email, password)
+
+        Returns:
+            dict: A dictionary containing the result of the request
+        """
         if data["action"] == "login":
             (
                 valid,
@@ -74,6 +106,8 @@ class AccontManager:
         return {"success": False, "message": "Invalid request"}
 
     def handle_user_requests(self, player_uuid: str, data: dict):
+        """This method handles the user requests about user metadata and settings
+        Nothing is implemented yet"""
         if player_uuid is None:
             return {"success": False, "message": "Unauthenticated user"}
         return {"success": False, "message": "Invalid request"}

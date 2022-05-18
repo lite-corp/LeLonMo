@@ -1,7 +1,12 @@
 from storage_providers import DefaultAccountProvider, SQLiteAccountProvider
 
 
-def register_storages(settings):
+def register_storages(settings: "SettingsProvider"):
+    """Register the storage providers
+
+    Args:
+        settings (SettingsProvider): The settings provider to be used for the storage
+    """
     print("[I] Registering account storage providers")
     for c in [
         DefaultAccountProvider,
