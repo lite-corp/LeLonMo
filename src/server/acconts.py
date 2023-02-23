@@ -84,8 +84,10 @@ class AccontManager:
             print(f"[I] Trying to log in as {data['username']}, success={valid}")
             if valid:
                 self.add_token(data["token"], user.uuid)
-                self.game.add_user(user.uuid, user.username, True)
-                return {"success": True}
+
+                result = self.game.add_user(user.uuid, user.username, True)
+                result["validator_token"] = self.token_validator
+                return result
             else:
                 return {
                     "success": False,
