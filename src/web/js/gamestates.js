@@ -67,6 +67,19 @@ function update_game_panel(player_status, admin, data) {
             player_template = player_template_normal;
         }
     }
+
+    player_list.innerHTML = "";
+    data["users"].forEach(function (player, i) {
+        player_list.innerHTML += player_template.replace(
+            "{name}", player['username'],
+        ).replace(
+            "{points}", player['points']
+        ).replace(
+            "{public_uuid}", player["public_uuid"]
+        );
+    })
+
+
     if ((last_game_state !== player_status || last_admin_state !== admin)) {
         console.log("Changing game state to " + player_status);
         switch (player_status) {

@@ -1,4 +1,4 @@
-var data_last = {}
+var data_last = null;
 
 var player_list = document.getElementById("player_list");
 var msg_template = ""
@@ -6,12 +6,23 @@ var player_template = ""
 var logged = false;
 
 
+
+function updatesEqual(a, b) {
+    if (a == null || b == null) {
+        return false;
+    }
+    a.self.last_update = 0;
+    b.self.last_update = 0;
+    return JSON.stringify(a) == JSON.stringify(b);
+}
+
+
 function send_data(page, data, callback) {
     var xhr = new XMLHttpRequest();
 
     xhr.open("POST", page, true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             var json = JSON.parse(xhr.responseText);
             callback(xhr.status, json);
@@ -32,24 +43,14 @@ function set_cookie(name, value, days) {
 }
 
 function update_callback(status, data) {
-    if (status == 200 && data["success"]) {
-        player_list.innerHTML = "";
+    if (status == 200 && data["success"] && !updatesEqual(data_last, data)) {
         data_last = data;
-        data["users"].forEach(function(player, i) {
-            player_list.innerHTML += player_template.replace(
-                "{name}", player['username']
-            ).replace(
-                "{points}", player['points']
-            ).replace(
-                "{public_uuid}", player["public_uuid"]
-            );
-        })
         update_game_panel(data["player_status"], data["admin"], data);
         if (data["should_update_messages"]) {
             send_data("/chat", { "action": "get_msg" }, messages_update_callback)
         }
-        if(!logged){
-            toast("Welcome "+data["self"]["username"]+" to LeLonMo !",false);
+        if (!logged) {
+            toast("Welcome " + data["self"]["username"] + " to LeLonMo !", false);
             logged = true;
         }
     }
@@ -67,7 +68,7 @@ function main() {
 
     loaditems();
 
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function (event) {
         if (document.querySelector("#message") === document.activeElement) {
             return;
         }
@@ -105,7 +106,7 @@ function main() {
 
     setupChat();
 
-    window.onload = function() {
+    window.onload = function () {
         setVisible('#page', true);
         setVisible('#loading', false);
         update();
@@ -113,8 +114,8 @@ function main() {
 }
 
 function ban_player(public_uuid) {
-    if(public_uuid === data_last["self"]["public_uuid"]){
-        toast("You cannot kick yourself",true,3);
+    if (public_uuid === data_last["self"]["public_uuid"]) {
+        toast("You cannot kick yourself", true, 3);
         return
     }
     send_data("/llm", { 'action': 'ban_player', 'public_uuid': public_uuid }, (a, b) => {
