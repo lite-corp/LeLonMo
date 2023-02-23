@@ -1,5 +1,6 @@
 import hashlib
 import sqlite3
+import re
 
 from settings import SettingsProvider
 from __version__ import __version__
@@ -100,6 +101,10 @@ class SQLiteAccountProvider(DefaultAccountProvider):
         """Add a user to the database"""
         if len(password) < 4:
             return dict(success=False, message="Password too short")
+        if len(username) < 4:
+            return dict(success=False, message="Username too short")
+        if re.match(r"^[a-zA-Z0-9_]*$", username) is None:
+            return dict(success=False, message="Username contains invalid characters")
         p = hashlib.sha256()
         p.update(password.encode("utf-8"))
         try:
