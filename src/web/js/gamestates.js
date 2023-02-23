@@ -70,8 +70,9 @@ function update_game_panel(player_status, admin, data) {
 
     player_list.innerHTML = "";
     data["users"].forEach(function (player, i) {
+        is_finished = player["status"] === "finished";
         player_list.innerHTML += player_template.replace(
-            "{name}", player['username'],
+            "{name}", player['username'] + (is_finished ? " ✓" : ""),
         ).replace(
             "{points}", player['points']
         ).replace(
