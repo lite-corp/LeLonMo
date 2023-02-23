@@ -16,3 +16,4 @@ screenlog.*
 
 # Ignore settings file
 settings.json
+wait_admin.txt

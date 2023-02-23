@@ -48,7 +48,7 @@ class SettingsProvider:
         if name in self.settings:
             s = self.settings[name]
         else:
-            super().load(to_temp_variable=True)
+            DefaultProvider().load(to_temp_variable=True)
             if name in self._default_settings:
                 print(
                     f"[W] Property {name} was not found in the settings, using default value"
@@ -130,6 +130,7 @@ class DefaultProvider(SettingsProvider):
             "letter_number": 7,
             "dict_path": "src/dict/fr.txt",
             "time_inactive": 3,
+            "wait_admin_file": "wait_admin.txt",
             # Security-related settings
             "account_storage": "sqlite",
             "login_page": "/html/login.html",

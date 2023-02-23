@@ -26,7 +26,7 @@ class LeLonMo:
             2 : Game started
             3 : Waiting for admin to restart (game finished)
         """
-        if self.admin_uuid and self.players[self.admin_uuid]["banned"]:
+        if self.admin_uuid and self.is_banned(self.admin_uuid):
             self.admin_uuid = ""
         self.status = 1 if self.admin_uuid else 0
         self.letters = list()
@@ -39,10 +39,22 @@ class LeLonMo:
         self, player_uuid: str, username: str, log_in_chat: bool = True
     ) -> dict:
         if self.status == 0:
+            try:
+                with open(self.settings.wait_admin_file) as f:
+                    content = f.read()
+                    if not content:
+                        raise RuntimeError()  # Do not require a specific admin
+                    elif content != player_uuid:
+                        return {
+                            "success": False,
+                            "message": "You are not the admin",
+                        }
+            except (FileNotFoundError, RuntimeError):
+                print("[I] Admin added (no server admin specified)")
             self.admin_uuid = player_uuid
             self.status = 1
             return self.add_user(player_uuid, username)  # Add the admin
-        elif self.status in [1, 3]:
+        elif self.status in [1, 2, 3]:
             username = html.escape(username)
             self.players[player_uuid] = {
                 "player_uuid": player_uuid,
@@ -51,8 +63,7 @@ class LeLonMo:
                 "status": "wait_for_start",
                 "last_update": getTime(),
                 "banned": (
-                    (player_uuid in self.players)
-                    and self.players[player_uuid]["banned"]
+                    (player_uuid in self.players) and self.is_banned(player_uuid)
                 ),
                 "points": 0,
                 "latest_word": "",
@@ -67,6 +78,11 @@ class LeLonMo:
             return {
                 "success": True,  # Easily tell JS that everything is ok
                 **self.players[player_uuid],
+            }
+        else:
+            return {
+                "success": False,
+                "message": "The game is not in a valid state. Please contact the admin",
             }
 
     def ban_user(self, player_uuid: str) -> None:
@@ -86,7 +102,7 @@ class LeLonMo:
                 self.admin_uuid = list(self.players.keys())[
                     1 if self.admin_uuid == list(self.players.keys())[0] else 0
                 ]
-                if self.players[self.admin_uuid]["banned"]:
+                if self.is_banned(self.admin_uuid):
                     self.admin_uuid = ""
                     self.initialize_game()
                 print(
@@ -107,7 +123,7 @@ class LeLonMo:
     def get_users(self) -> list:
         player_list = list()
         for k in self.players:
-            if not self.players[k]["banned"]:
+            if not self.is_banned(k):
                 player_list.append(
                     {
                         "public_uuid": self.players[k]["public_uuid"],
@@ -126,10 +142,9 @@ class LeLonMo:
     def check_timeouts(self):
         remove_players = list()
         for p in self.players:
-            if (
-                self.players[p]["last_update"] + self.settings.time_inactive < getTime()
-                and not self.players[p]["banned"]
-            ):
+            if self.players[p][
+                "last_update"
+            ] + self.settings.time_inactive < getTime() and not self.is_banned(p):
                 remove_players.append(p)
         for p in remove_players:
             self.delete_user(p)
@@ -188,9 +203,8 @@ class LeLonMo:
         if self.status == 2:
             game_finished = True
             for player in self.players:
-                if (
-                    self.players[player]["status"] != "finished"
-                    and not self.players[player]["banned"]
+                if self.players[player]["status"] != "finished" and not self.is_banned(
+                    player
                 ):
                     game_finished = False
             if game_finished:
@@ -199,7 +213,7 @@ class LeLonMo:
                     self.players[player]["status"] = "game_ended"
                 self.give_points()
         for player in self.players:
-            if self.players[player]["banned"]:
+            if self.is_banned(player):
                 self.players[player]["status"] = "banned"
         return {
             "success": True,
@@ -234,9 +248,7 @@ class LeLonMo:
 
             if data["action"] == "start_game":
                 if player_uuid == self.admin_uuid:
-                    self.letters = lib_llm.generate_letters(
-                        self.settings.letter_number
-                    )
+                    self.letters = lib_llm.generate_letters(self.settings.letter_number)
                     self.status = 2
                     print("[I] Game started")
                     return {"success": True}
@@ -271,9 +283,7 @@ class LeLonMo:
             if data["action"] == "ban_player":
                 if player_uuid == self.admin_uuid:
                     if (
-                        lib_llm.pub_to_player_uuid(
-                            data["public_uuid"], self.players
-                        )
+                        lib_llm.pub_to_player_uuid(data["public_uuid"], self.players)
                         == self.admin_uuid
                     ):
                         return {"success": False, "message": "ban_admin"}
