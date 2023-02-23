@@ -27,7 +27,7 @@ if you are on Windows or `cd` to `LeLonMo` and run
 
 	./start_unix.sh
 
-Additionally you can start the server by running the file located in `src/server/server.py` with the python interpreter. Always make sure that you are running this file from the root of the clonned repository to avoid errors.
+Additionally you can start the server by running the file located in `src/server/server.py` with the python interpreter. Always make sure that you are running this file from the root of the cloned repository to avoid errors.
 
 ### Customizable Settings
 The game now includes support for settings modification. This can be done by editing `settings.json`. Keep in mind that you will need to restart the server for modifications to take effect. \
@@ -41,7 +41,7 @@ Here are the default settings in JSON with some informations :
     "web_path": "src/web", // Path for the web server files
     "letter_number": 7, // WIP : Number of letters available to the player 
     "dict_path": "src/dict/fr.txt", // List of all valid words, you can add your own
-    "time_inactive": 3, // Number of seconds of innactivity from the client before being kicked out,
+    "time_inactive": 3, // Number of seconds of inactivity from the client before being kicked out,
 	// The client is normally sending update packets every seconds
     "account_storage": "sqlite", // Method used to store user accounts, use default when testing
     "login_page": "/html/login.html", // Path to the login page relative to $web_path
@@ -53,7 +53,9 @@ Here are the default settings in JSON with some informations :
         "/html/login.html"
     ],
     "sqlite_account_storage_path": "users.sqlite3", // Account storage path for sqlite provider
-    "token_validator_lenght": 8 // Lenght of the salt for the username/password authentication
+    "token_validator_length": 8 // Lenght of the salt for the username/password authentication
+    "wait_admin_file": "wait_admin.txt" // File that contains the id of the only player that can be admin
+    // if the file is empty or non-existant, the first player to join will be admin
 }
 ```
 

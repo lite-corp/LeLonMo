@@ -137,7 +137,7 @@ class DefaultProvider(SettingsProvider):
             "authenticated_pages": ["/html/index.html"],
             "cookies_pages": ["/html/index.html", "/html/login.html"],
             "sqlite_account_storage_path": "users.sqlite3",
-            "token_validator_lenght": 8,  # Set to 0 to disable
+            "token_validator_length": 8,  # Set to 0 to disable
         }
 
         if to_temp_variable:

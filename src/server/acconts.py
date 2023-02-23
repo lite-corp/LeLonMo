@@ -20,7 +20,7 @@ class AccontManager:
         self.game = game
         self.account_storage = settings.get_account_provider()
         self.valid_tokens: dict = {}
-        self.token_validator: str = generate_validator(settings.token_validator_lenght)
+        self.token_validator: str = generate_validator(settings.token_validator_length)
 
     def delete(self):
         """Destroy the storage provider before exit"""
