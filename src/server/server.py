@@ -1,5 +1,6 @@
 import json
 import os
+import ssl
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -135,6 +136,10 @@ def main(settings_provider):
     account_storage.register_storages(settings)
 
     web_server = ThreadingHTTPServer(settings.get_address(), LLM_Server)
+    if settings.ssl_enabled:
+        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ssl_context.load_cert_chain(settings.ssl_certificate, settings.ssl_key)
+        web_server.socket = ssl_context.wrap_socket(web_server.socket, server_side=True)
 
     # Load settings
     web_server.settings = settings

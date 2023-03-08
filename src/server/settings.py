@@ -137,7 +137,11 @@ class DefaultProvider(SettingsProvider):
             "authenticated_pages": ["/html/index.html"],
             "cookies_pages": ["/html/index.html", "/html/login.html"],
             "sqlite_account_storage_path": "users.sqlite3",
-            "token_validator_length": 8,  # Set to 0 to disable
+            "token_validator_length": 8,  # Set to 0 to disable token validation
+            # SSL-related settings
+            "ssl_enabled": False,
+            "ssl_certificate": "cert.pem",
+            "ssl_key": "key.pem",
         }
 
         if to_temp_variable:
